@@ -1,9 +1,6 @@
 # Dotfiles
 :wrench: This is a repository for my personal dotfiles.
 
-# Table of Contents
-[[_TOC_]]
-
 # :rocket: Tools I use on a daily basis
 - [alacritty](https://github.com/alacritty/alacritty) - Terminal
 - [conky](https://github.com/brndnmtthws/conky) - Free, light-weight system monitor for X
