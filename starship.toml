@@ -1,0 +1,45 @@
+# prevents inserting a blank line between shell prompts
+add_newline = false
+
+# Disables the line_break module, make prompt a single line instead of two lines
+[line_break]
+disabled = true
+
+# Replace the "❯" symbol in the prompt with "➜"
+[character]
+success_symbol = "[-> ](bold green)"
+error_symbol = "[-> ](bold red)"
+
+
+[package]
+symbol = " "
+format = "[$symbol$version](bold blue) "
+
+[java]
+symbol = " "
+format = "[$symbol$version](bold red) "
+
+[lua]
+symbol = "🌕 "
+format = "via [$symbol$version](bold blue) "
+
+[perl]
+symbol = " "
+format = "[$symbol$version](bold yellow) "
+
+[php]
+symbol = "🔹 "
+format = "[$symbol$version](bold yelllow) "
+
+[python]
+symbol = " "
+format = "[$symbol$version](bold green) "
+
+[ruby]
+symbol = " "
+format = "[$symbol$version](bold red) "
+
+[rust]
+symbol = " "
+format = "[$symbol$version](bold orange) "
+

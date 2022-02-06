@@ -1,0 +1,29 @@
+configuration {
+ modi: "drun";
+ show-icons: true;
+ icon-theme: "Gruvbox-Material-Dark";
+ font: "Iosevka 10";
+ drun-match-fields: "name,generic,exec,categories";
+ terminal: "alacritty";
+ }
+
+ window {
+     border: 0px;
+}
+
+inputbar {
+    spacing: -4px;
+}
+
+listview {
+    columns: 1;
+    scrollbar: false;
+    border: 0px;
+}
+
+element-text,
+element-icon {
+    background-color: transparent;
+}
+
+@import "/usr/share/rofi/themes/gruvbox-dark.rasi"
