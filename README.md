@@ -6,10 +6,12 @@
 - [conky](https://github.com/brndnmtthws/conky) - Free, light-weight system monitor for X
 - [doom-emacs](https://github.com/hlissner/doom-emacs) - An Emacs framework for the stubborn martian hacker
 - [dunst](https://dunst-project.org/) - Dunst notification Daemon
+- [leftwm](https://github.com/leftwm/leftwm) - A a tiling window manager written in Rust
 - [mpd](https://github.com/MusicPlayerDaemon/MPD) - Music Player Daemon
 - [mpv](https://github.com/mpv-player/mpv) - Media player
 - [ncmpcpp](https://github.com/ncmpcpp/ncmpcpp) - NCurses Music Player Client (Plus Plus)
 - [neovim](https://github.com/neovim/neovim) - Vim-fork focused on extensibility and usability
+- [polybar](https://github.com/polybar/polybar) -  A fast and easy-to-use tool for creating status bars
 - [qutebrowser](https://github.com/qutebrowser/qutebrowser) - Keyboard-driven, vim-like browser
 - [ranger](https://github.com/ranger/ranger) - A VIM-inspired filemanager for the console
 - [rofi](https://github.com/davatorium/rofi) - Window switcher, application launcher and dmenu replacement
