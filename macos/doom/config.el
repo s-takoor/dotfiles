@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "shashiduth takoor"
-      user-mail-address "shashiduth.takoor@gmail.com")
+(setq user-full-name "Shashiduth Takoor"
+      user-mail-address "shashiduth.takoor@checkout.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -33,6 +33,11 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-zenburn)
+(doom-themes-treemacs-config)
+(doom-themes-org-config)
+(setq zenburn-use-variable-pitch t)
+(setq zenburn-scale-org-headline t)
+(setq zenburn-scale-outline-headlines t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -75,15 +80,12 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;; All-the-icons
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+
 ;; Custom banner
 (setq fancy-splash-image "~/.emacs.d/banners/modern-doom3.png")
-
-;; Beacon
-(beacon-mode 1)
-
-;; Info colors
-(use-package! info-colors
-  :hook (info-selection . info-colors-fontify-node))
 
 ;; Corfu completion module
 ;; Reset lsp-completion provider
@@ -175,13 +177,4 @@
   (map! :map c-mode-base-map
         :i [remap c-indent-line-or-region] #'completion-at-point))
 
-(all-the-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
-
-;; Page-break lines
-(use-package! page-break-lines
-  :init
-  (setq page-break-lines-modes '(emacs-lisp-mode lisp-mode scheme-mode compilation-mode outline-mode help-mode))
-  :commands (global-page-break-lines-mode page-break-lines-mode))
-
-(global-page-break-lines-mode)
+(beacon-mode 1)
