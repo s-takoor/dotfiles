@@ -1,0 +1,13 @@
+# -*- mode: org; -*-
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/Users/st/.emacs.d/org/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/Users/st/.emacs.d/org/readtheorg/css/font-awesome.min.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/Users/st/.emacs.d/org/readtheorg/css/readtheorg.css"/>
+
+#+HTML_HEAD: <script src="/Users/st/.emacs.d/org/readtheorg/js/jquery.min.js"></script>
+#+HTML_HEAD: <script src="/Users/st/.emacs.d/org/readtheorg/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="/Users/st/.emacs.d/org/readtheorg/js/jquery.stickytableheaders.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="/Users/st/.emacs.d/org/readtheorg/js/readtheorg.js"></script>
+
+#+HTML_HEAD: <style type="text/css">
+#+HTML_HEAD:   pre.src:hover:before { display: none; }
+#+HTML_HEAD: </style>
