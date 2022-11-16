@@ -22,8 +22,8 @@
 
 # :penguin: Operating System
 - :desktop_computer: [Arch Linux](https://archlinux.org/) - A lightweight and flexible Linux® distribution that tries to Keep It Simple.
-- :laptop: [MacBook Air](https://www.apple.com) - MacBook Air with M1
-- :laptop: [MacBook Pro](https://www.apple.com) - MacBook Pro with M1
+- :computer: MacBook Air](https://www.apple.com) - MacBook Air with M1
+- :computer: [MacBook Pro](https://www.apple.com) - MacBook Pro with M1
 
 # :nut_and_bolt: Gears
 - [Razer DeathAdder V2 Mini](https://www2.razer.com/ap-en/store/razer-deathadder-v2-mini) - Gaming mouse
