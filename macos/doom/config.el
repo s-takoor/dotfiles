@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "Shashiduth Takoor"
-      user-mail-address "shashiduth.takoor@checkout.com")
+(setq user-full-name "shashiduth takoor"
+      user-mail-address "shashiduth.takoor@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -85,7 +85,92 @@
 (add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
 
 ;; Custom banner
-(setq fancy-splash-image "~/.emacs.d/banners/modern-doom3.png")
+;;(setq fancy-splash-image "~/.emacs.d/banners/modern-doom3.png")
+
+;; Org Mode
+;;(use-package! org-ref
+;;  :after org
+;;  :config
+  ;;(setq org-ref-default-bibliography '("<path/to/your/bibliography>")
+  ;;      org-ref-bibliography-notes "<path/to/your/bibliography>"
+  ;;      org-ref-pdf-directory "<path/to/your/papers/folder>"
+  ;;      org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+  ;;      bibtex-completion-pdf-field "file"
+  ;;      bibtex-completion-pdf-symbol ""
+  ;;      bibtex-completion-display-formats
+  ;;      '((t . "${title:46} ${author:20} ${year:4} ${=type=:4}${=has-pdf=:1}${=has-note=:1}")))
+;;  )
+
+(use-package! org-contrib
+  :config
+  (require 'ox-extra)
+  (ox-extras-activate '(latex-header-blocks ignore-headlines)))
+
+(add-hook 'org-mode-hook 'org-indent-mode)
+
+(setq org-src-preserve-indentation nil
+      org-src-tab-acts-natively t
+      org-edit-src-content-indentation 0)
+
+(setq org-src-fontify-natively t
+      org-src-tab-acts-natively t
+      org-confirm-babel-evaluate nil
+      org-edit-src-content-indentation 0)
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-prettify-item-bullets t ))
+
+(setq org-ellipsis " ▾ "
+      org-hide-leading-stars t
+      org-priority-highest ?A
+      org-priority-lowest ?E
+      org-priority-faces
+      '((?A . 'all-the-icons-red)
+        (?B . 'all-the-icons-orange)
+        (?C . 'all-the-icons-yellow)
+        (?D . 'all-the-icons-green)
+        (?E . 'all-the-icons-blue)))
+
+;; LaTex classes
+(require 'ox-latex)
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+             '("org-article"
+               "\\documentclass{article}
+           [NO-DEFAULT-PACKAGES]
+           [PACKAGES]
+           [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}"))))
+
+;; Use minted syntax highlighting in src code blocks
+(setq org-latex-listings 'minted
+      'org-latex-packages-alist '(("" "minted"))
+
+;; Minted options
+(setq org-latex-minted-options '(
+                                 ("frame" "lines")
+                                 ("fontsize" "\\scriptsize")
+                                 ("xleftmargin" "\\parindent")
+                                 ("linenos" "")
+                                 ("breaklines" "true")
+                                 ("breakanywhere" "true")
+                                 ))
+
+(setq org-latex-pdf-process '(
+                             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                             ))
+
+;; Line spacing
+(setq org-cycle-separator-lines -2)
+
+;; Pagebreak for table of contents
+(setq org-latex-toc-command "\\tableofcontents \\clearpage")
 
 ;; Corfu completion module
 ;; Reset lsp-completion provider
