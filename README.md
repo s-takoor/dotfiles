@@ -22,7 +22,7 @@
 
 # :penguin: Operating System
 - :desktop_computer: [Arch Linux](https://archlinux.org/) - A lightweight and flexible Linux® distribution that tries to Keep It Simple.
-- :computer: MacBook Air](https://www.apple.com) - MacBook Air with M1
+- :computer: [MacBook Air](https://www.apple.com) - MacBook Air with M1
 - :computer: [MacBook Pro](https://www.apple.com) - MacBook Pro with M1
 
 # :nut_and_bolt: Gears
