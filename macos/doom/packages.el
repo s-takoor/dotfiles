@@ -60,3 +60,4 @@
 (package! kind-icon)
 (package! corfu-doc)
 (package! cape)
+(package! org-auto-tangle)
