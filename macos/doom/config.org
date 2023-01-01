@@ -1,3 +1,4 @@
+
 #+TITLE: DOOM EMACS CONFIG
 #+DESCRIPTION: Configuration file for Doom Emacs
 #+AUTHOR: s.takoor
@@ -6,19 +7,22 @@
 #+STARTUP: showeverything
 
 * TABLE OF CONTENTS :toc:
-  - [[#overview][OVERVIEW]]
+  - [[#tldr][TL;DR]]
   - [[#about][ABOUT]]
   - [[#fonts][FONTS]]
   - [[#themes][THEMES]]
+  - [[#all-the-icon][ALL-THE-ICON]]
+  - [[#dashboard][DASHBOARD]]
+  - [[#beacon][BEACON]]
   - [[#line-numbers][LINE NUMBERS]]
   - [[#org-directory][ORG DIRECTORY]]
-  - [[#all-the-icon][ALL-THE-ICON]]
-  - [[#latex][LATEX]]
-  - [[#language-server-protocol-lsp][LANGUAGE SERVER PROTOCOL (LSP)]]
-  - [[#beacon][BEACON]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
+  - [[#environment-variables-for-mac][ENVIRONMENT VARIABLES FOR MAC]]
+  - [[#flycheck][FLYCHECK]]
+  - [[#completion][COMPLETION]]
+  - [[#latex][LATEX]]
 
-** OVERVIEW
+** TL;DR
 Personal DOOM EMACS config
 
 ** ABOUT
@@ -41,6 +45,28 @@ Personal DOOM EMACS config
 (setq zenburn-scale-outline-headlines t)
 #+end_src
 
+** ALL-THE-ICON
+#+begin_src emacs-lisp
+;;(all-the-icons-completion-mode)
+;;(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+#+end_src
+
+** DASHBOARD
+#+begin_src emacs-lisp
+(remove-hook '+doom-dashboard-functions #'doom-gashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-functions :append
+           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
+
+;; EMACSCLIENT
+
+#+end_src
+
+** BEACON
+#+begin_src emacs-lisp
+(beacon-mode 1)
+#+end_src
+
 ** LINE NUMBERS
 #+begin_src emacs-lisp
 (setq display-line-numbers-type t)
@@ -51,34 +77,44 @@ Personal DOOM EMACS config
 (setq org-directory "~/Documents/org/")
 #+end_src
 
-** ALL-THE-ICON
+** ORG-AUTO-TANGLE
+Automatically tangle when saving ~.org~ files
 #+begin_src emacs-lisp
-(all-the-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
 #+end_src
 
-** LATEX
+** ENVIRONMENT VARIABLES FOR MAC
 #+begin_src emacs-lisp
-(require 'ox-latex)
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-             '("org-article"
-               "\\documentclass{article}
-           [NO-DEFAULT-PACKAGES]
-           [PACKAGES]
-           [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}"))))
+;; Emacs GUI frame
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
-;; Pagebreak for table of contents
-(setq org-latex-toc-command "\\tableofcontents \\clearpage")
+;; Emacs daemon
+(when (daemonp)
+  (exec-path-from-shell-initialize))
 #+end_src
 
-** LANGUAGE SERVER PROTOCOL (LSP)
-*** Corfu completion module
+** FLYCHECK
 #+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+#+end_src
+
+** COMPLETION
+*** LSP SETUP CORFU COMPLETION
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :ensure t
+  :after lsp
+  :init
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-show-diagnostics t))
+
 (add-hook 'doom-init-modules-hook
           (lambda ()
             (after! lsp-mode
@@ -109,11 +145,19 @@ Personal DOOM EMACS config
 ;; Fallback cleanly to consult in TUI
 (setq-default completion-in-region-function #'consult-completion-in-region)
 
+(use-package vertico
+  :init (vertico-mode)
+  (setq vertico-cycle t))
+
 (use-package corfu
   :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.0)
+  (corfu-echo-documentation 0.25)
   (corfu-separator ?\s)          ;; Orderless field separator
   (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-auto nil)
   (corfu-on-exact-match nil)
   (corfu-quit-no-match 'separator)
   (corfu-preselect-first nil)
@@ -124,15 +168,9 @@ Personal DOOM EMACS config
          ("TAB" . corfu-next)
          ([tab] . corfu-next)
          ("S-TAB" . corfu-previous)
-         ([backtab] . corfu-previous)))
-
-(use-package corfu-doc
-  :hook
-  (corfu-mode . corfu-doc-mode)
-  :bind (:map corfu-map
-         ("M-n" . corfu-doc-scroll-down)
-         ("M-p" . corfu-doc-scroll-up)
-         ("M-d" . corfu-doc-toggle)))
+         ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode))
 
 (use-package orderless
   :when (featurep! +orderless)
@@ -142,6 +180,7 @@ Personal DOOM EMACS config
         completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package kind-icon
+  :ensure t
   :after corfu
   :custom
   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
@@ -166,19 +205,82 @@ Personal DOOM EMACS config
 (when (equal tab-always-indent 'complete)
   (map! :map c-mode-base-map
         :i [remap c-indent-line-or-region] #'completion-at-point))
-#+end_src
 
-** BEACON
-#+begin_src emacs-lisp
-(beacon-mode 1)
-#+end_src
-
-** ORG-AUTO-TANGLE
-Automatically tangle when saving ~.org~ files
-#+begin_src emacs-lisp
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode)
+(use-package marginalia
+  :ensure t
   :config
-  (setq org-auto-tangle-default t))
+  (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;; LSP for solidity
+(require 'solidity-mode)
+#+end_src
+
+** LATEX
+#+begin_src emacs-lisp
+(require 'ox-latex)
+
+(with-eval-after-load 'ox-latex
+  (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (add-to-list 'org-latex-classes
+               '("custom-latex"
+                 "\\documentclass{report}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%$}" . "\\subparagraph*{%s}"))))
+
+(with-eval-after-load 'ox-latex
+  (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (add-to-list 'org-latex-classes
+               '("custom-article"
+                 "\\documentclass{article}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%$}" . "\\subparagraph*{%s}"))))
+
+(setq org-latex-inputenc-alist '(("utf8" . "utf8x")))
+
+;; Latex Table Caption
+(setq org-latex-caption-above nil)
+
+;; Pagebreak for table of contents
+(setq org-latex-toc-command "\\tableofcontents\n\\pagebreak\n\n")
+
+;; Source Code Blocks
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")
+                                 ("mathescape")
+                                 ("frame" "lines")))
 #+end_src

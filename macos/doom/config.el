@@ -9,28 +9,46 @@
 (setq zenburn-scale-org-headlines t)
 (setq zenburn-scale-outline-headlines t)
 
+;;(all-the-icons-completion-mode)
+;;(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+
+(remove-hook '+doom-dashboard-functions #'doom-gashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-functions :append
+           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
+
+;; EMACSCLIENT
+
+(beacon-mode 1)
+
 (setq display-line-numbers-type t)
 
 (setq org-directory "~/Documents/org/")
 
-(all-the-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
 
-(require 'ox-latex)
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-             '("org-article"
-               "\\documentclass{article}
-           [NO-DEFAULT-PACKAGES]
-           [PACKAGES]
-           [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}"))))
+;; Emacs GUI frame
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
-;; Pagebreak for table of contents
-(setq org-latex-toc-command "\\tableofcontents \\clearpage")
+;; Emacs daemon
+(when (daemonp)
+  (exec-path-from-shell-initialize))
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package lsp-ui
+  :ensure t
+  :after lsp
+  :init
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-show-diagnostics t))
 
 (add-hook 'doom-init-modules-hook
           (lambda ()
@@ -62,11 +80,19 @@
 ;; Fallback cleanly to consult in TUI
 (setq-default completion-in-region-function #'consult-completion-in-region)
 
+(use-package vertico
+  :init (vertico-mode)
+  (setq vertico-cycle t))
+
 (use-package corfu
   :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.0)
+  (corfu-echo-documentation 0.25)
   (corfu-separator ?\s)          ;; Orderless field separator
   (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-auto nil)
   (corfu-on-exact-match nil)
   (corfu-quit-no-match 'separator)
   (corfu-preselect-first nil)
@@ -77,15 +103,9 @@
          ("TAB" . corfu-next)
          ([tab] . corfu-next)
          ("S-TAB" . corfu-previous)
-         ([backtab] . corfu-previous)))
-
-(use-package corfu-doc
-  :hook
-  (corfu-mode . corfu-doc-mode)
-  :bind (:map corfu-map
-         ("M-n" . corfu-doc-scroll-down)
-         ("M-p" . corfu-doc-scroll-up)
-         ("M-d" . corfu-doc-toggle)))
+         ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode))
 
 (use-package orderless
   :when (featurep! +orderless)
@@ -95,6 +115,7 @@
         completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package kind-icon
+  :ensure t
   :after corfu
   :custom
   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
@@ -120,10 +141,77 @@
   (map! :map c-mode-base-map
         :i [remap c-indent-line-or-region] #'completion-at-point))
 
-(beacon-mode 1)
-
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode)
+(use-package marginalia
+  :ensure t
   :config
-  (setq org-auto-tangle-default t))
+  (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;; LSP for solidity
+(require 'solidity-mode)
+
+(require 'ox-latex)
+
+(with-eval-after-load 'ox-latex
+  (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (add-to-list 'org-latex-classes
+               '("custom-latex"
+                 "\\documentclass{report}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%$}" . "\\subparagraph*{%s}"))))
+
+(with-eval-after-load 'ox-latex
+  (setq org-latex-pdf-process '("latexmk -xelatex -quiet -shell-escape -f %f"))
+  (add-to-list 'org-latex-classes
+               '("custom-article"
+                 "\\documentclass{article}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%$}" . "\\subparagraph*{%s}"))))
+
+(setq org-latex-inputenc-alist '(("utf8" . "utf8x")))
+
+;; Latex Table Caption
+(setq org-latex-caption-above nil)
+
+;; Pagebreak for table of contents
+(setq org-latex-toc-command "\\tableofcontents\n\\pagebreak\n\n")
+
+;; Source Code Blocks
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")
+                                 ("mathescape")
+                                 ("frame" "lines")))
