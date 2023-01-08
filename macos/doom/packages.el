@@ -49,10 +49,14 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+
 (package! beacon)
+(package! page-break-lines)
+(package! info-colors)
 (package! flycheck)
 (package! rainbow-mode)
 (package! consult)
+(package! consult-flycheck)
 (package! embark)
 (package! embark-consult)
 (package! marginalia)
@@ -60,3 +64,4 @@
 (package! kind-icon)
 (package! cape)
 (package! org-auto-tangle)
+(package! org-alert)

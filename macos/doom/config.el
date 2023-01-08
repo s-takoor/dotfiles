@@ -9,8 +9,8 @@
 (setq zenburn-scale-org-headlines t)
 (setq zenburn-scale-outline-headlines t)
 
-;;(all-the-icons-completion-mode)
-;;(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
 
 (remove-hook '+doom-dashboard-functions #'doom-gashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-functions :append
@@ -23,13 +23,22 @@
 
 (setq display-line-numbers-type t)
 
-(setq org-directory "~/Documents/org/")
+(setq org-directory "~/Documents/OrgFiles/"
+      org-agenda-files '("~/Documents/OrgFiles/agenda.org"))
+(setq org-agenda-block-separator 45)
+
+(setq org-src-preserve-indentation nil
+      org-src-tab-acts-natively t
+      org-edit-src-content-indentation 0)
 
 (use-package! org-auto-tangle
   :defer t
   :hook (org-mode . org-auto-tangle-mode)
   :config
   (setq org-auto-tangle-default t))
+
+(use-package exec-path-from-shell
+  :ensure t)
 
 ;; Emacs GUI frame
 (when (memq window-system '(mac ns x))
@@ -43,47 +52,6 @@
   :ensure t
   :init (global-flycheck-mode))
 
-(use-package lsp-ui
-  :ensure t
-  :after lsp
-  :init
-  (setq lsp-ui-sideline-show-code-actions t)
-  (setq lsp-ui-sideline-show-diagnostics t))
-
-(add-hook 'doom-init-modules-hook
-          (lambda ()
-            (after! lsp-mode
-              (setq lsp-completion-provider :none))))
-
-;; Pad before lsp modeline error info
-(add-hook 'lsp-mode-hook
-          (lambda ()
-            (setf (caadr
-                   (assq 'global-mode-string mode-line-misc-info))
-                  " ")))
-
-;; Set orderless filtering for LSP-mode completions
-(add-hook 'lsp-completion-mode-hook
-          (lambda ()
-            (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless))))))
-
-;; Set bindings
-(map! :i "C-@" #'completion-at-point
-      :i "C-SPC" #'completion-at-point
-      (:prefix "C-x"
-       :i "C-k" #'cape-dict
-       :i "C-f" #'cape-file
-       :i "s" #'cape-ispell
-       :i "C-n" #'cape-keyword
-       :i "C-s" #'dabbrev-completion))
-
-;; Fallback cleanly to consult in TUI
-(setq-default completion-in-region-function #'consult-completion-in-region)
-
-(use-package vertico
-  :init (vertico-mode)
-  (setq vertico-cycle t))
-
 (use-package corfu
   :custom
   (corfu-cycle t)
@@ -91,8 +59,8 @@
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.0)
   (corfu-echo-documentation 0.25)
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-preview-current nil)    ;; Disable current candidate preview
+  (corfu-separator ?\s)
+  (corfu-preview-current 'insert)
   (corfu-on-exact-match nil)
   (corfu-quit-no-match 'separator)
   (corfu-preselect-first nil)
@@ -103,58 +71,73 @@
          ("TAB" . corfu-next)
          ([tab] . corfu-next)
          ("S-TAB" . corfu-previous)
-         ([backtab] . corfu-previous))
+         ([backtab] . corfu-previous)
+         ("S-<return>" . corfu-insert)
+         ("RET" . nil))
   :init
   (global-corfu-mode))
 
-(use-package orderless
-  :when (featurep! +orderless)
+(use-package cape
+  :bind (("C-c p p" . completion-at-point)
+         ("C-c p t" . complete-tag)
+         ("C-c p d" . cape-dabbrev)
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-symbol)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p i" . cape-ispell)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p \\" . cape-tex)
+         ("C-c p _" . cape-tex)
+         ("C-c p ^" . cape-tex)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
   :init
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+)
 
 (use-package kind-icon
   :ensure t
   :after corfu
   :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package cape
-  :defer t
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-file-capf)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
-  (add-to-list 'completion-at-point-functions #'cape-keyword-capf))
-
-(setq completion-cycle-threshold 1)
-
-;; Enable indentation+completion using the TAB key.
-;; Completion is often bound to M-TAB.
-(setq tab-always-indent 'complete)
-
-;; Dirty hack to get c completion running
-;; Discussion in https://github.com/minad/corfu/issues/34
-(when (equal tab-always-indent 'complete)
-  (map! :map c-mode-base-map
-        :i [remap c-indent-line-or-region] #'completion-at-point))
-
 (use-package marginalia
   :ensure t
+  :custom
+  (marginalia-annotators '(marginalia-annonators-heavy marginalia-annotators-light nil))
   :config
   (marginalia-mode))
 
 (use-package embark
   :ensure t
+
   :bind
   (("C-." . embark-act)
    ("C-;" . embark-dwim)
    ("C-h B" . embark-bindings))
+
   :init
+
   (setq prefix-help-command #'embark-prefix-help-command)
+
   :config
+
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
@@ -162,13 +145,69 @@
 
 (use-package embark-consult
   :ensure t
-  :after (embark consult)
-  :demand t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
+(use-package vertico
+  :ensure t
+  :demand
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-preselect 'directory)
+  :init
+  (vertico-mode)
+  (defun my/vertico-insert ()
+    (interactive)
+    (let* ((mb (minibuffer-contents-no-properties))
+           (lc (if (string= mb "") mb (substring mb -1))))
+      (cond ((string-match-p "^[/~:]" lc) (self-insert-command 1 ?/))
+            ((file-directory-p (vertico--candidate)) (vertico-insert))
+            (t (self-insert-command 1 ?/)))))
+  :bind (:map vertico-map
+              ("/" . #'my/vertico-insert)))
+
+(use-package vertico-directory
+  :after vertico
+  :ensure t
+  :demand
+  :bind (:map vertico-map
+              ("RET"   . vertico-directory-enter)
+              ("DEL"   . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless partial-completion basic)
+        completion-category-defaults nil
+        completion-category-overrides nil))
+
+(use-package lsp-mode
+  :custom
+  (lsp-completion-provider :none)
+
+  :init
+  (defun my/orderless-dispatch-flex-first (_pattern index _total)
+    (and (eq index 0) 'orderless-flex))
+
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
+
+  (add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+
+  (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point)))
+
+  :hook
+  (lsp-completion-mode . my/lsp-mode-setup-completion))
+
 ;; LSP for solidity
 (require 'solidity-mode)
+
+(use-package savehist
+  :config
+  (setq history-length 25)
+  (savehist-mode 1))
 
 (require 'ox-latex)
 
