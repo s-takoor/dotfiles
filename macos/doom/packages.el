@@ -51,8 +51,11 @@
 
 
 (package! beacon)
+<<<<<<< HEAD
 (package! page-break-lines)
 (package! info-colors)
+=======
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
 (package! flycheck)
 (package! rainbow-mode)
 (package! consult)

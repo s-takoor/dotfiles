@@ -9,6 +9,7 @@
 (setq zenburn-scale-org-headlines t)
 (setq zenburn-scale-outline-headlines t)
 
+<<<<<<< HEAD
 (all-the-icons-completion-mode)
 (add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
 
@@ -18,6 +19,48 @@
            (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
 
 ;; EMACSCLIENT
+=======
+;;(all-the-icons-completion-mode)
+;;(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+
+(remove-hook '+doom-dashboard-functions #'doom-gashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-functions :append
+           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
+
+;; EMACSCLIENT
+
+(beacon-mode 1)
+
+(setq display-line-numbers-type t)
+
+(setq org-directory "~/Documents/org/")
+
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
+
+;; Emacs GUI frame
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+;; Emacs daemon
+(when (daemonp)
+  (exec-path-from-shell-initialize))
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package lsp-ui
+  :ensure t
+  :after lsp
+  :init
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-show-diagnostics t))
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
 
 (beacon-mode 1)
 
@@ -52,6 +95,10 @@
   :ensure t
   :init (global-flycheck-mode))
 
+(use-package vertico
+  :init (vertico-mode)
+  (setq vertico-cycle t))
+
 (use-package corfu
   :custom
   (corfu-cycle t)
@@ -59,8 +106,13 @@
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.0)
   (corfu-echo-documentation 0.25)
+<<<<<<< HEAD
   (corfu-separator ?\s)
   (corfu-preview-current 'insert)
+=======
+  (corfu-separator ?\s)          ;; Orderless field separator
+  (corfu-preview-current nil)    ;; Disable current candidate preview
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
   (corfu-on-exact-match nil)
   (corfu-quit-no-match 'separator)
   (corfu-preselect-first nil)
@@ -71,9 +123,18 @@
          ("TAB" . corfu-next)
          ([tab] . corfu-next)
          ("S-TAB" . corfu-previous)
+<<<<<<< HEAD
          ([backtab] . corfu-previous)
          ("S-<return>" . corfu-insert)
          ("RET" . nil))
+=======
+         ([backtab] . corfu-previous))
+  :init
+  (global-corfu-mode))
+
+(use-package orderless
+  :when (featurep! +orderless)
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
   :init
   (global-corfu-mode))
 
@@ -117,20 +178,48 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+<<<<<<< HEAD
 (use-package marginalia
   :ensure t
   :custom
   (marginalia-annotators '(marginalia-annonators-heavy marginalia-annotators-light nil))
+=======
+(use-package cape
+  :defer t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file-capf)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
+  (add-to-list 'completion-at-point-functions #'cape-keyword-capf))
+
+(setq completion-cycle-threshold 1)
+
+;; Enable indentation+completion using the TAB key.
+;; Completion is often bound to M-TAB.
+(setq tab-always-indent 'complete)
+
+;; Dirty hack to get c completion running
+;; Discussion in https://github.com/minad/corfu/issues/34
+(when (equal tab-always-indent 'complete)
+  (map! :map c-mode-base-map
+        :i [remap c-indent-line-or-region] #'completion-at-point))
+
+(use-package marginalia
+  :ensure t
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
   :config
   (marginalia-mode))
 
 (use-package embark
   :ensure t
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
   :bind
   (("C-." . embark-act)
    ("C-;" . embark-dwim)
    ("C-h B" . embark-bindings))
+<<<<<<< HEAD
 
   :init
 
@@ -138,6 +227,11 @@
 
   :config
 
+=======
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
@@ -145,6 +239,7 @@
 
 (use-package embark-consult
   :ensure t
+<<<<<<< HEAD
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
@@ -209,6 +304,16 @@
   (setq history-length 25)
   (savehist-mode 1))
 
+=======
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;; LSP for solidity
+(require 'solidity-mode)
+
+>>>>>>> 9af1a6c (Minor edit to Emacs completion with corfu)
 (require 'ox-latex)
 
 (with-eval-after-load 'ox-latex
