@@ -64,4 +64,3 @@
 (package! kind-icon)
 (package! cape)
 (package! org-auto-tangle)
-(package! org-alert)

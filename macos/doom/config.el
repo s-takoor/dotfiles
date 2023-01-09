@@ -4,20 +4,21 @@
 (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'semi-light)
       doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 13))
 
-(setq doom-theme 'doom-zenburn)
-(setq zenburn-use-variable-pitch t)
-(setq zenburn-scale-org-headlines t)
-(setq zenburn-scale-outline-headlines t)
+(setq doom-theme 'doom-gruvbox)
+;(setq doom-theme 'doom-zenburn)
+;;(setq zenburn-use-variable-pitch t)
+;;(setq zenburn-scale-org-headlines t)
+;;(setq zenburn-scale-outline-headlines t)
 
-(all-the-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #' all-the-icons-completion-marginalia-setup)
+;;(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+;;(add-hook! '+doom-dashboard-functions :append
+;;           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list t))
+;;           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
 
-(remove-hook '+doom-dashboard-functions #'doom-gashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-functions :append
-           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
-
-;; EMACSCLIENT
+(use-package all-the-icons-dired
+     :hook
+     (dired-mode . all-the-icons-dired-mode)
+     (marginalia-mode . all-the-icons-completion-marginalia-setup))
 
 (beacon-mode 1)
 
@@ -26,6 +27,7 @@
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org"))
 (setq org-agenda-block-separator 45)
+(setq org-log-done t)
 
 (setq org-src-preserve-indentation nil
       org-src-tab-acts-natively t
@@ -52,6 +54,68 @@
   :ensure t
   :init (global-flycheck-mode))
 
+(use-package vertico
+  :ensure t
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-preselect 'directory)
+  :init
+  (vertico-mode)
+  (defun my/vertico-insert ()
+    (interactive)
+    (let* ((mb (minibuffer-contents-no-properties))
+           (lc (if (string= mb "") mb (substring mb -1))))
+      (cond ((string-match-p "^[/~:]" lc) (self-insert-command 1 ?/))
+            ((file-directory-p (vertico--candidate)) (vertico-insert))
+            (t (self-insert-command 1 ?/)))))
+  :bind (:map vertico-map
+              ("/" . #'my/vertico-insert)))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file) (styles-partial-completion))))
+
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  :bind (:map vertico-map
+              ("RET"   . vertico-directory-enter)
+              ("DEL"   . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package marginalia
+  :ensure t
+  :custom
+  (marginalia-annotators '(marginalia-annonators-heavy marginalia-annotators-light nil))
+  :config
+  (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package corfu
   :custom
   (corfu-cycle t)
@@ -77,6 +141,14 @@
   :init
   (global-corfu-mode))
 
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default)
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
 (use-package cape
   :bind (("C-c p p" . completion-at-point)
          ("C-c p t" . complete-tag)
@@ -96,91 +168,7 @@
          ("C-c p r" . cape-rfc1345))
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-)
-
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default)
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
-(use-package marginalia
-  :ensure t
-  :custom
-  (marginalia-annotators '(marginalia-annonators-heavy marginalia-annotators-light nil))
-  :config
-  (marginalia-mode))
-
-(use-package embark
-  :ensure t
-
-  :bind
-  (("C-." . embark-act)
-   ("C-;" . embark-dwim)
-   ("C-h B" . embark-bindings))
-
-  :init
-
-  (setq prefix-help-command #'embark-prefix-help-command)
-
-  :config
-
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
-(use-package vertico
-  :ensure t
-  :demand
-  :config
-  (setq vertico-cycle t)
-  (setq vertico-preselect 'directory)
-  :init
-  (vertico-mode)
-  (defun my/vertico-insert ()
-    (interactive)
-    (let* ((mb (minibuffer-contents-no-properties))
-           (lc (if (string= mb "") mb (substring mb -1))))
-      (cond ((string-match-p "^[/~:]" lc) (self-insert-command 1 ?/))
-            ((file-directory-p (vertico--candidate)) (vertico-insert))
-            (t (self-insert-command 1 ?/)))))
-  :bind (:map vertico-map
-              ("/" . #'my/vertico-insert)))
-
-(use-package vertico-directory
-  :after vertico
-  :ensure t
-  :demand
-  :bind (:map vertico-map
-              ("RET"   . vertico-directory-enter)
-              ("DEL"   . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless partial-completion basic)
-        completion-category-defaults nil
-        completion-category-overrides nil))
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
 (use-package lsp-mode
   :custom
@@ -203,11 +191,6 @@
 
 ;; LSP for solidity
 (require 'solidity-mode)
-
-(use-package savehist
-  :config
-  (setq history-length 25)
-  (savehist-mode 1))
 
 (require 'ox-latex)
 
