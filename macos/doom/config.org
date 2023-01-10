@@ -15,12 +15,11 @@
   - [[#all-the-icon][ALL-THE-ICON]]
   - [[#beacon][BEACON]]
   - [[#line-numbers][LINE NUMBERS]]
-  - [[#org-directory][ORG DIRECTORY]]
+  - [[#org-mode][ORG-MODE]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#environment-variables-for-mac][ENVIRONMENT VARIABLES FOR MAC]]
   - [[#flycheck][FLYCHECK]]
   - [[#completion][COMPLETION]]
-  - [[#icons-for-completion][ICONS FOR COMPLETION]]
   - [[#latex][LATEX]]
 
 ** TL;DR
@@ -73,15 +72,16 @@ Personal DOOM EMACS config
 (setq display-line-numbers-type t)
 #+end_src
 
-** ORG DIRECTORY
+** ORG-MODE
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/OrgFiles/"
-      org-agenda-files '("~/Documents/OrgFiles/agenda.org"))
-(setq org-agenda-block-separator 45)
-(setq org-log-done t)
-
-(setq org-src-preserve-indentation nil
+      org-agenda-files '("~/Documents/OrgFiles/agenda.org")
+      org-agenda-block-separator 45
+      org-log-done t
+      org-hide-emphasis-markers t
+      org-src-preserve-indentation nil
       org-src-tab-acts-natively t
+      org-ellipsis " ▼ "
       org-edit-src-content-indentation 0)
 #+end_src
 
@@ -126,6 +126,7 @@ Automatically tangle when saving ~.org~ files
   (setq vertico-preselect 'directory)
   :init
   (vertico-mode)
+
   (defun my/vertico-insert ()
     (interactive)
     (let* ((mb (minibuffer-contents-no-properties))
@@ -156,7 +157,7 @@ Automatically tangle when saving ~.org~ files
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 #+end_src
 
-*** COMPLETION ANNOTATIONS WITH MARGINALIA | COMPLETION ACTIONS WITH EMBARK
+*** ANNOTATIONS WITH MARGINALIA | ACTIONS WITH EMBARK
 #+begin_src emacs-lisp
 (use-package marginalia
   :ensure t
@@ -185,7 +186,7 @@ Automatically tangle when saving ~.org~ files
   (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
-*** COMPLETION IN REGION WITH CORFU
+*** CORFU
 #+begin_src emacs-lisp
 (use-package corfu
   :custom
@@ -213,7 +214,7 @@ Automatically tangle when saving ~.org~ files
   (global-corfu-mode))
 #+end_src
 
-** ICONS FOR COMPLETION
+*** KIND-ICON
 #+begin_src emacs-lisp
 (use-package kind-icon
   :ensure t
@@ -224,7 +225,7 @@ Automatically tangle when saving ~.org~ files
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
 
-*** COMPLETION AT POINT EXTENSION WITH CAPE
+*** CAPE
 #+begin_src emacs-lisp
 (use-package cape
   :bind (("C-c p p" . completion-at-point)
@@ -248,7 +249,7 @@ Automatically tangle when saving ~.org~ files
   (add-to-list 'completion-at-point-functions #'cape-file))
 #+end_src
 
-*** LSP-MODE WITH CORFU
+*** LSP-MODE
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :custom

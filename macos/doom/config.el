@@ -25,12 +25,13 @@
 (setq display-line-numbers-type t)
 
 (setq org-directory "~/Documents/OrgFiles/"
-      org-agenda-files '("~/Documents/OrgFiles/agenda.org"))
-(setq org-agenda-block-separator 45)
-(setq org-log-done t)
-
-(setq org-src-preserve-indentation nil
+      org-agenda-files '("~/Documents/OrgFiles/agenda.org")
+      org-agenda-block-separator 45
+      org-log-done t
+      org-hide-emphasis-markers t
+      org-src-preserve-indentation nil
       org-src-tab-acts-natively t
+      org-ellipsis " ▼ "
       org-edit-src-content-indentation 0)
 
 (use-package! org-auto-tangle
@@ -61,6 +62,7 @@
   (setq vertico-preselect 'directory)
   :init
   (vertico-mode)
+
   (defun my/vertico-insert ()
     (interactive)
     (let* ((mb (minibuffer-contents-no-properties))
