@@ -57,7 +57,7 @@
 (use-package org-superstar
   :config
   (setq org-superstar-leading-bullet " ")
-  (setq org-superstar-special-todo-items t)
+  (setq org-superstar-special-todo-items t) ;; checkboxes for todo items
   )
 
 (use-package! org-auto-tangle

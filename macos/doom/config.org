@@ -21,7 +21,7 @@
   - [[#remove-extra-ui][REMOVE EXTRA UI]]
   - [[#vim-like-scrolling][VIM-LIKE SCROLLING]]
   - [[#org-mode][ORG-MODE]]
-  - [[#org-superstar-checkboxes-for-todos][ORG SUPERSTAR [CHECKBOXES FOR TODOS]]]
+  - [[#org-superstar][ORG SUPERSTAR]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#environment-variables-for-mac][ENVIRONMENT VARIABLES FOR MAC]]
   - [[#flycheck][FLYCHECK]]
@@ -130,12 +130,12 @@ Growl-work-alike for Emacs
       org-edit-src-content-indentation 0)
 #+end_src
 
-** ORG SUPERSTAR [CHECKBOXES FOR TODOS]
+** ORG SUPERSTAR
 #+begin_src emacs-lisp
 (use-package org-superstar
   :config
   (setq org-superstar-leading-bullet " ")
-  (setq org-superstar-special-todo-items t)
+  (setq org-superstar-special-todo-items t) ;; checkboxes for todo items
   )
 #+end_src
 
