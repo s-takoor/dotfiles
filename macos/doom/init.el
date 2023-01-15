@@ -39,11 +39,11 @@
        (ligatures +extra)         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
-       ;;nav-flash         ; blink cursor line after big motions
+       nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
-       tabs              ; a tab bar for Emacs
+       (tabs +centaur-tabs)              ; a tab bar for Emacs
        (treemacs +lsp)          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
@@ -67,9 +67,9 @@
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       dired             ; making dired pretty [functional]
+       (dired +icons)             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ;;ibuffer         ; interactive buffer management
+       (ibuffer +icons)         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -81,15 +81,15 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;;(spell +flyspell) ; tasing you for misspelling mispelling
-       ;;grammar           ; tasing grammar mistake every you make
+       (spell +flyspell) ; tasing you for misspelling mispelling
+       grammar           ; tasing grammar mistake every you make
 
        :tools
-       ;;ansible
+       ansible
        ;;biblio            ; Writes a PhD for you (citation needed)
-       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
-       ;;docker
+       docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
@@ -101,7 +101,7 @@
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       ;;rgb               ; creating color strings
+       rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux

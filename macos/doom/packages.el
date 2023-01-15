@@ -49,7 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-
+(package! alert)
 (package! beacon)
 (package! page-break-lines)
 (package! info-colors)
@@ -64,3 +64,5 @@
 (package! kind-icon)
 (package! cape)
 (package! org-auto-tangle)
+(package! org-alert)
+(package! exec-path-from-shell)

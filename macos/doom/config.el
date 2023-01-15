@@ -4,35 +4,61 @@
 (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'semi-light)
       doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 13))
 
-(setq doom-theme 'doom-gruvbox)
-;(setq doom-theme 'doom-zenburn)
-;;(setq zenburn-use-variable-pitch t)
-;;(setq zenburn-scale-org-headlines t)
-;;(setq zenburn-scale-outline-headlines t)
+(setq doom-theme 'doom-zenburn)
 
 ;;(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 ;;(add-hook! '+doom-dashboard-functions :append
 ;;           (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list t))
 ;;           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
 
+(setq centaur-tabs-set-bar 'over
+      centaur-tabs-set-icons t
+      centaur-tabs-gray-out-icons 'buffer
+      centaur-tabs-height 24
+      centaur-tabs-set-modified-marker t
+      centaur-tabs-style "bar"
+      centaur-tabs-modified-marker "•")
+
 (use-package all-the-icons-dired
      :hook
-     (dired-mode . all-the-icons-dired-mode)
-     (marginalia-mode . all-the-icons-completion-marginalia-setup))
+     (dired-mode . all-the-icons-dired-mode))
+
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
 (beacon-mode 1)
 
 (setq display-line-numbers-type t)
 
+(use-package org-alert
+  :ensure t
+  :custom (alert-default-style 'osx-notifier)
+  :config
+  (setq org-alert-interval 3600
+        org-alert-notification-title "Org Alert Reminder!")
+  (org-alert-enable))
+
+(fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
+(show-paren-mode 1) ;; highlight parenthesis
+
+(setq scroll-step 1
+      scroll-conservatively 10000)
+
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org")
       org-agenda-block-separator 45
       org-log-done t
-      org-hide-emphasis-markers t
+      org-hide-emphasis-markers t ;; hide emphasis markup (e.g. bold, italics, etc.)
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-ellipsis " ▼ "
       org-edit-src-content-indentation 0)
+
+(use-package org-superstar
+  :config
+  (setq org-superstar-leading-bullet " ")
+  (setq org-superstar-special-todo-items t)
+  )
 
 (use-package! org-auto-tangle
   :defer t
@@ -91,6 +117,15 @@
               ("DEL"   . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+         ("M-g g" . consult-goto-line)
+         ("C-c n" . consult-org-agenda))
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  :config
+  (add-hook 'completion-setup-hook #'hl-line-mode))
 
 (use-package marginalia
   :ensure t

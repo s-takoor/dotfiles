@@ -12,10 +12,16 @@
   - [[#fonts][FONTS]]
   - [[#themes][THEMES]]
   - [[#dashboard][DASHBOARD]]
-  - [[#all-the-icon][ALL-THE-ICON]]
+  - [[#centaur-tabs][CENTAUR TABS]]
+  - [[#dired][DIRED]]
+  - [[#all-the-icons][ALL THE ICONS]]
   - [[#beacon][BEACON]]
   - [[#line-numbers][LINE NUMBERS]]
+  - [[#alert][ALERT]]
+  - [[#remove-extra-ui][REMOVE EXTRA UI]]
+  - [[#vim-like-scrolling][VIM-LIKE SCROLLING]]
   - [[#org-mode][ORG-MODE]]
+  - [[#org-superstar-checkboxes-for-todos][ORG SUPERSTAR [CHECKBOXES FOR TODOS]]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#environment-variables-for-mac][ENVIRONMENT VARIABLES FOR MAC]]
   - [[#flycheck][FLYCHECK]]
@@ -39,11 +45,7 @@ Personal DOOM EMACS config
 
 ** THEMES
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-gruvbox)
-;(setq doom-theme 'doom-zenburn)
-;;(setq zenburn-use-variable-pitch t)
-;;(setq zenburn-scale-org-headlines t)
-;;(setq zenburn-scale-outline-headlines t)
+(setq doom-theme 'doom-zenburn)
 #+end_src
 
 ** DASHBOARD
@@ -54,12 +56,28 @@ Personal DOOM EMACS config
 ;;           (setq fancy-splash-image (concat doom-user-dir "cacochan.png")))
 #+end_src
 
-** ALL-THE-ICON
+** CENTAUR TABS
+#+begin_src emacs-lisp
+(setq centaur-tabs-set-bar 'over
+      centaur-tabs-set-icons t
+      centaur-tabs-gray-out-icons 'buffer
+      centaur-tabs-height 24
+      centaur-tabs-set-modified-marker t
+      centaur-tabs-style "bar"
+      centaur-tabs-modified-marker "•")
+#+end_src
+
+** DIRED
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
      :hook
-     (dired-mode . all-the-icons-dired-mode)
-     (marginalia-mode . all-the-icons-completion-marginalia-setup))
+     (dired-mode . all-the-icons-dired-mode))
+#+end_src
+
+** ALL THE ICONS
+#+begin_src emacs-lisp
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 #+end_src
 
 ** BEACON
@@ -72,17 +90,53 @@ Personal DOOM EMACS config
 (setq display-line-numbers-type t)
 #+end_src
 
+** ALERT
+Growl-work-alike for Emacs
+*Additional Info*
++ Requires installing both the `alert` and `org-alert` packages
++ Ensure allow notifications for Emacs is enabled in `System Settings`
+#+begin_src emacs-lisp
+(use-package org-alert
+  :ensure t
+  :custom (alert-default-style 'osx-notifier)
+  :config
+  (setq org-alert-interval 3600
+        org-alert-notification-title "Org Alert Reminder!")
+  (org-alert-enable))
+#+end_src
+
+** REMOVE EXTRA UI
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
+(show-paren-mode 1) ;; highlight parenthesis
+#+end_src
+
+** VIM-LIKE SCROLLING
+#+begin_src emacs-lisp
+(setq scroll-step 1
+      scroll-conservatively 10000)
+#+end_src
+
 ** ORG-MODE
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org")
       org-agenda-block-separator 45
       org-log-done t
-      org-hide-emphasis-markers t
+      org-hide-emphasis-markers t ;; hide emphasis markup (e.g. bold, italics, etc.)
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-ellipsis " ▼ "
       org-edit-src-content-indentation 0)
+#+end_src
+
+** ORG SUPERSTAR [CHECKBOXES FOR TODOS]
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :config
+  (setq org-superstar-leading-bullet " ")
+  (setq org-superstar-special-todo-items t)
+  )
 #+end_src
 
 ** ORG-AUTO-TANGLE
@@ -155,6 +209,18 @@ Automatically tangle when saving ~.org~ files
               ("DEL"   . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+#+end_src
+
+*** CONSULT
+#+begin_src emacs-lisp
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+         ("M-g g" . consult-goto-line)
+         ("C-c n" . consult-org-agenda))
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  :config
+  (add-hook 'completion-setup-hook #'hl-line-mode))
 #+end_src
 
 *** ANNOTATIONS WITH MARGINALIA | ACTIONS WITH EMBARK
