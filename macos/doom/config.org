@@ -1,4 +1,3 @@
-
 #+TITLE: DOOM EMACS CONFIG
 #+DESCRIPTION: Configuration file for Doom Emacs
 #+AUTHOR: s.takoor
@@ -9,8 +8,8 @@
 * TABLE OF CONTENTS :toc:
   - [[#tldr][TL;DR]]
   - [[#about][ABOUT]]
-  - [[#fonts][FONTS]]
-  - [[#themes][THEMES]]
+  - [[#font][FONT]]
+  - [[#theme][THEME]]
   - [[#dashboard][DASHBOARD]]
   - [[#centaur-tabs][CENTAUR TABS]]
   - [[#dired][DIRED]]
@@ -18,35 +17,39 @@
   - [[#beacon][BEACON]]
   - [[#line-numbers][LINE NUMBERS]]
   - [[#alert][ALERT]]
-  - [[#remove-extra-ui][REMOVE EXTRA UI]]
   - [[#vim-like-scrolling][VIM-LIKE SCROLLING]]
+  - [[#remove-extra-ui][REMOVE EXTRA UI]]
+  - [[#frame-borders-and-windows-dividers][FRAME BORDERS AND WINDOWS DIVIDERS]]
+  - [[#zen-writeroom-mode][ZEN WRITEROOM MODE]]
   - [[#org-mode][ORG-MODE]]
-  - [[#org-superstar][ORG SUPERSTAR]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
+  - [[#org-modern][ORG-MODERN]]
   - [[#environment-variables-for-mac][ENVIRONMENT VARIABLES FOR MAC]]
   - [[#flycheck][FLYCHECK]]
   - [[#completion][COMPLETION]]
   - [[#latex][LATEX]]
 
 ** TL;DR
-Personal DOOM EMACS config
+Personal DOOM EMACS ~config~
 
 ** ABOUT
 #+begin_src emacs-lisp
-(setq user-full-name "Shashiduth Takoor"
+(setq user-full-name "shashiduth takoor"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
-** FONTS
+** FONT
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 12)
-      doom-big-font (font-spec :family "Iosevka Nerd Font" :size 15))
+(setq doom-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
+      doom-big-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
+      doom-serif-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
+      doom-unicode-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light))
 #+end_src
 
-** THEMES
+** THEME
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-zenburn)
+(setq doom-theme 'doom-tomorrow-night)
 #+end_src
 
 ** DASHBOARD
@@ -56,13 +59,14 @@ Personal DOOM EMACS config
 
 ** CENTAUR TABS
 #+begin_src emacs-lisp
-(setq centaur-tabs-set-bar 'over
+(setq centaur-tabs-set-bar 'right ;;over
       centaur-tabs-set-icons t
       centaur-tabs-gray-out-icons 'buffer
       centaur-tabs-height 24
       centaur-tabs-set-modified-marker t
       centaur-tabs-style "bar"
-      centaur-tabs-modified-marker "•")
+      centaur-tabs-close-button "⨂"
+      centaur-tabs-modified-marker "⨀")
 #+end_src
 
 ** DIRED
@@ -95,9 +99,10 @@ Personal DOOM EMACS config
 
 ** ALERT
 Growl-work-alike for Emacs
+
 *Additional Info*
-+ Requires installing both the `alert` and `org-alert` packages
-+ Ensure allow notifications for Emacs is enabled in `System Settings`
++ Requires installing both the ~alert~ and ~org-alert~ packages
++ Ensure allow notifications for Emacs is enabled in ~System Settings~
 #+begin_src emacs-lisp
 (use-package org-alert
   :ensure t
@@ -108,37 +113,61 @@ Growl-work-alike for Emacs
   (org-alert-enable))
 #+end_src
 
-** REMOVE EXTRA UI
-#+begin_src emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
-(show-paren-mode 1) ;; highlight parenthesis
-#+end_src
-
 ** VIM-LIKE SCROLLING
 #+begin_src emacs-lisp
 (setq scroll-step 1
       scroll-conservatively 10000)
 #+end_src
 
+** REMOVE EXTRA UI
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
+(show-paren-mode 1) ;; highlight parenthesis
+#+end_src
+
+** FRAME BORDERS AND WINDOWS DIVIDERS
+#+begin_src emacs-lisp
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel)))
+#+end_src
+
+** ZEN WRITEROOM MODE
+#+begin_src emacs-lisp
+(after! writeroom-mode
+  (setq writeroom-mode-line t))
+
+#+end_src
 ** ORG-MODE
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org")
       org-agenda-block-separator 45
+      org-agenda-tags-column 0
+      org-agenda-block-separator ?─
+      org-auto-align-tags nil
+      org-catch-invisible-edits 'show-and-error
+      org-edit-src-content-indentation 0
+      org-ellipsis " ▼ "
+      org-hide-emphasis-markers t
+      org-hide-leading-stars t
+      org-insert-heading-respect-content t
       org-log-done t
-      org-hide-emphasis-markers t ;; hide emphasis markup (e.g. bold, italics, etc.)
+      org-pretty-entities t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
-      org-ellipsis " ▼ "
-      org-edit-src-content-indentation 0)
-#+end_src
-
-** ORG SUPERSTAR
-#+begin_src emacs-lisp
-(use-package org-superstar
-  :config
-  (setq org-superstar-leading-bullet " ")
-  (setq org-superstar-special-todo-items t))
+      org-special-ctrl-a/e t
+      org-startup-indented t
+      org-tags-column 0
+      org-agenda-time-grid
+      '((daily today require-timed)
+        (800 1000 1200 1400 1600 1800 2000)
+        " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+      org-agenda-current-time-string
+      "⭠ now ─────────────────────────────────────────────────")
 #+end_src
 
 ** ORG-AUTO-TANGLE
@@ -149,6 +178,33 @@ Automatically tangle when saving ~.org~ files
   :hook (org-mode . org-auto-tangle-mode)
   :config
   (setq org-auto-tangle-default t))
+#+end_src
+
+** ORG-MODERN
+#+begin_src emacs-lisp
+(use-package! org-modern
+  :ensure t
+  :hook
+  (org-mode . global-org-modern-mode)
+  :config
+  (setq org-modern-star '("◉" "○" "◈" "◇" "✳" "◆" "✸" "▶")
+        org-modern-block-fringe t
+        org-modern-block-name t
+        org-modern-checkbox t
+        org-modern-footnote (cons nil (cadr org-script-display))
+        org-modern-table-vertical 2
+        org-modern-table-horizontal 4
+        org-modern-priority t
+        org-modern-progress '("○" "◔" "◐" "◕" "●")
+        org-modern-todo t
+        org-modern-keyword t
+        org-modern-tag t
+        org-modern-statistics t
+        org-modern-horizontal-rule t)
+
+  ;; Change faces
+  (custom-set-faces! '(org-modern-tag :inherit (region org-modern-label)))
+  (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
 #+end_src
 
 ** ENVIRONMENT VARIABLES FOR MAC
@@ -208,9 +264,9 @@ Automatically tangle when saving ~.org~ files
 *** CONSULT
 #+begin_src emacs-lisp
 (use-package consult
-  :bind (("C-x b" . consult-buffer)
-         ("M-g g" . consult-goto-line)
-         ("C-c n" . consult-org-agenda))
+  :bind (("C-c b" . consult-buffer)
+         ("C-c l" . consult-goto-line)
+         ("C-c a" . consult-org-agenda))
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   :config
