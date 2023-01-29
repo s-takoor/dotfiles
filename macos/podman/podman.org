@@ -1,0 +1,128 @@
+#+TITLE: PODMAN CONFIG
+#+DESCRIPTION: Containerfile for BlackArch Linux
+#+AUTHOR: s.takoor
+#+PROPERTY: header-args :tangle Containerfile
+#+AUTO_TANGLE: t
+#+STARTUP: showeverything
+
+* TABLE OF CONTENTS :toc:
+  - [[#tldr][TL;DR]]
+  - [[#containerfile][CONTAINERFILE]]
+  - [[#build-the-image][BUILD THE IMAGE]]
+  - [[#running-the-container][RUNNING THE CONTAINER]]
+  - [[#share-information-with-local-directory][SHARE INFORMATION WITH LOCAL DIRECTORY]]
+  - [[#additional-info][ADDITIONAL INFO]]
+
+** TL;DR
+Containerfile for Penetration Testing based on BlackArch Linux
+
+** CONTAINERFILE
+creating the ~Containerfile~
+#+begin_src docker
+FROM blackarchlinux/blackarch:latest
+
+MAINTAINER s.takoor <https://github.com/s-takoor>
+
+ENV TERM xterm-256color
+
+# minor tweaks to pacman.conf
+RUN sed -i "s/#Color/Color/" /etc/pacman.conf && \
+    sed -i "/^Color/a ILoveCandy" /etc/pacman.conf && \
+    sed -i "s/NoProgressBar/#NoProgressBar/" /etc/pacman.conf && \
+    sed -i "s/VerbosePkgLists/#VerbosePkgLists/" /etc/pacman.conf && \
+    pacman -Syyu --noconfirm
+
+# essential packages
+RUN \
+    pacman -Syu --noconfirm \
+    amass \
+    bat \
+    binwalk \
+    cewl \
+    ctags \
+    crackmapexec \
+    dirb \
+    enum4linux-ng \
+    exa \
+    fd \
+    ffuf \
+    fzf \
+    git \
+    gobuster \
+    hashcat \
+    htop \
+    hydra \
+    john \
+    jwt-tool \
+    kiterunner \
+    linenum \
+    masscan \
+    metasploit \
+    neovim \
+    nikto \
+    nmap \
+    openssh \
+    p7zip \
+    peass \
+    perl-image-exiftool \
+    python \
+    recon-ng \
+    responder \
+    ripgrep \
+    seclists \
+    smbclient \
+    sqlmap \
+    steghide \
+    sublist3r \
+    tcpdump \
+    tmux \
+    tree \
+    ttf-iosevka-nerd \
+    unzip \
+    wfuzz \
+    wget \
+    whatweb \
+    whois \
+    wpscan \
+    xsstrike \
+    zsh \
+    zoxide
+
+# timezone
+RUN \
+    ln -sf /usr/share/zoneinfo/Indian/Mauritius /etc/localtime
+
+# exploit-db
+RUN \
+    git clone https://gitlab.com/exploit-database/exploitdb.git /opt/exploitdb && \
+    ln -sf /opt/exploitdb/searchsploit /sbin/searchsploit
+
+# custom shell
+COPY shell/ /tmp
+RUN \
+    cat /tmp/zshrc >> /root/.zshrc
+#+end_src
+
+** BUILD THE IMAGE
+setting the architecture to ~amd64~ along with an ~image name~ tag
+#+begin_example
+podman build --arch=amd64 --tag <container-image:tag> --file Containerfile
+#+end_example
+
+** RUNNING THE CONTAINER
+#+begin_example
+podman run --arch=amd64 --rm -it <container-image> /bin/zsh
+#+end_example
+
+** SHARE INFORMATION WITH LOCAL DIRECTORY
+~-v~ maps the bind mount ~/tmp/data~ on the host to ~/opt~ in the container
+#+begin_example
+podman run --rm -it -v $(pwd)/tmp/data:tmp <container-image> /bin/zsh
+#+end_example
+
+** ADDITIONAL INFO
+#+begin_example
+podman ps -a
+podman ps --all --storage
+podman rmi --force <container-image-id>
+#+end_example
