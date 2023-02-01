@@ -1,3 +1,4 @@
+
 #+TITLE: DOOM EMACS CONFIG
 #+DESCRIPTION: Configuration file for Doom Emacs
 #+AUTHOR: s.takoor
@@ -12,14 +13,15 @@
   - [[#theme][THEME]]
   - [[#dashboard][DASHBOARD]]
   - [[#centaur-tabs][CENTAUR TABS]]
-  - [[#dired][DIRED]]
   - [[#all-the-icons][ALL THE ICONS]]
+  - [[#doom-modeline][DOOM MODELINE]]
   - [[#beacon][BEACON]]
   - [[#line-numbers][LINE NUMBERS]]
+  - [[#rainbow-mode][RAINBOW-MODE]]
   - [[#alert][ALERT]]
-  - [[#vim-like-scrolling][VIM-LIKE SCROLLING]]
   - [[#remove-extra-ui][REMOVE EXTRA UI]]
   - [[#frame-borders-and-windows-dividers][FRAME BORDERS AND WINDOWS DIVIDERS]]
+  - [[#highlight-indent-guide][HIGHLIGHT INDENT GUIDE]]
   - [[#zen-writeroom-mode][ZEN WRITEROOM MODE]]
   - [[#org-mode][ORG-MODE]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
@@ -69,14 +71,8 @@ Personal DOOM EMACS ~config~
       centaur-tabs-modified-marker "⨀")
 #+end_src
 
-** DIRED
-#+begin_src emacs-lisp
-(use-package all-the-icons-dired
-     :hook
-     (dired-mode . all-the-icons-dired-mode))
-#+end_src
-
 ** ALL THE ICONS
++ Requires installing all-the-icons-completion using M-x package-install
 #+begin_src emacs-lisp
 (use-package all-the-icons-completion
   :after
@@ -87,6 +83,22 @@ Personal DOOM EMACS ~config~
   (all-the-icons-completion-mode))
 #+end_src
 
+** DOOM MODELINE
+#+begin_src emacs-lisp
+(after! doom-modeline
+(let ((battery-str (battery)))
+  (unless (or (equal "Battery status not available" battery-str)
+              (string-match-p (regexp-quote "unknown") battery-str)
+              (string-match-p (regexp-quote "N/A") battery-str))
+    (display-battery-mode 1))))
+
+(after! doom-modeline
+  (setq doom-modeline-bar-width 4
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-buffer-file-name-style 'truncate-upto-project))
+#+end_src
+
 ** BEACON
 #+begin_src emacs-lisp
 (beacon-mode 1)
@@ -95,6 +107,11 @@ Personal DOOM EMACS ~config~
 ** LINE NUMBERS
 #+begin_src emacs-lisp
 (setq display-line-numbers-type t)
+#+end_src
+
+** RAINBOW-MODE
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'rainbow-mode)
 #+end_src
 
 ** ALERT
@@ -113,12 +130,6 @@ Growl-work-alike for Emacs
   (org-alert-enable))
 #+end_src
 
-** VIM-LIKE SCROLLING
-#+begin_src emacs-lisp
-(setq scroll-step 1
-      scroll-conservatively 10000)
-#+end_src
-
 ** REMOVE EXTRA UI
 #+begin_src emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
@@ -128,24 +139,31 @@ Growl-work-alike for Emacs
 ** FRAME BORDERS AND WINDOWS DIVIDERS
 #+begin_src emacs-lisp
 (modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
+ '((right-divider-width . 20)
+   (internal-border-width . 20)))
 (dolist (face '(window-divider
                 window-divider-first-pixel
                 window-divider-last-pixel)))
+(set-face-background 'fringe (face-attribute 'default :background))
+#+end_src
+
+** HIGHLIGHT INDENT GUIDE
+#+begin_src emacs-lisp
+(after! highlight-indent-guides
+  (setq highlight-indent-guides-character ?│
+        highlight-indent-guides-responsive 'top))
 #+end_src
 
 ** ZEN WRITEROOM MODE
 #+begin_src emacs-lisp
 (after! writeroom-mode
   (setq writeroom-mode-line t))
-
 #+end_src
+
 ** ORG-MODE
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org")
-      org-agenda-block-separator 45
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
       org-auto-align-tags nil
@@ -154,6 +172,7 @@ Growl-work-alike for Emacs
       org-ellipsis " ▼ "
       org-hide-emphasis-markers t
       org-hide-leading-stars t
+      org-indent-mode t
       org-insert-heading-respect-content t
       org-log-done t
       org-pretty-entities t
@@ -184,27 +203,12 @@ Automatically tangle when saving ~.org~ files
 #+begin_src emacs-lisp
 (use-package! org-modern
   :ensure t
-  :hook
-  (org-mode . global-org-modern-mode)
   :config
-  (setq org-modern-star '("◉" "○" "◈" "◇" "✳" "◆" "✸" "▶")
-        org-modern-block-fringe t
-        org-modern-block-name t
-        org-modern-checkbox t
-        org-modern-footnote (cons nil (cadr org-script-display))
-        org-modern-table-vertical 2
-        org-modern-table-horizontal 4
-        org-modern-priority t
-        org-modern-progress '("○" "◔" "◐" "◕" "●")
-        org-modern-todo t
-        org-modern-keyword t
-        org-modern-tag t
-        org-modern-statistics t
+  (setq org-modern-table-vertical 1
+        org-modern-table-horizontal 1
         org-modern-horizontal-rule t)
-
-  ;; Change faces
-  (custom-set-faces! '(org-modern-tag :inherit (region org-modern-label)))
-  (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
+  :init
+  (global-org-modern-mode))
 #+end_src
 
 ** ENVIRONMENT VARIABLES FOR MAC

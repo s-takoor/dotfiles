@@ -20,10 +20,6 @@
       centaur-tabs-close-button "⨂"
       centaur-tabs-modified-marker "⨀")
 
-(use-package all-the-icons-dired
-     :hook
-     (dired-mode . all-the-icons-dired-mode))
-
 (use-package all-the-icons-completion
   :after
   (marginalia all-the-icons)
@@ -32,9 +28,24 @@
   :init
   (all-the-icons-completion-mode))
 
+(after! doom-modeline
+(let ((battery-str (battery)))
+  (unless (or (equal "Battery status not available" battery-str)
+              (string-match-p (regexp-quote "unknown") battery-str)
+              (string-match-p (regexp-quote "N/A") battery-str))
+    (display-battery-mode 1))))
+
+(after! doom-modeline
+  (setq doom-modeline-bar-width 4
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-buffer-file-name-style 'truncate-upto-project))
+
 (beacon-mode 1)
 
 (setq display-line-numbers-type t)
+
+(add-hook 'prog-mode-hook 'rainbow-mode)
 
 (use-package org-alert
   :ensure t
@@ -44,25 +55,26 @@
         org-alert-notification-title "Org Alert Reminder!")
   (org-alert-enable))
 
-(setq scroll-step 1
-      scroll-conservatively 10000)
-
 (fset 'yes-or-no-p 'y-or-n-p) ;; don't ask to spell out "yes"
 (show-paren-mode 1) ;; highlight parenthesis
 
 (modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
+ '((right-divider-width . 20)
+   (internal-border-width . 20)))
 (dolist (face '(window-divider
                 window-divider-first-pixel
                 window-divider-last-pixel)))
+(set-face-background 'fringe (face-attribute 'default :background))
+
+(after! highlight-indent-guides
+  (setq highlight-indent-guides-character ?│
+        highlight-indent-guides-responsive 'top))
 
 (after! writeroom-mode
   (setq writeroom-mode-line t))
 
 (setq org-directory "~/Documents/OrgFiles/"
       org-agenda-files '("~/Documents/OrgFiles/agenda.org")
-      org-agenda-block-separator 45
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
       org-auto-align-tags nil
@@ -71,6 +83,7 @@
       org-ellipsis " ▼ "
       org-hide-emphasis-markers t
       org-hide-leading-stars t
+      org-indent-mode t
       org-insert-heading-respect-content t
       org-log-done t
       org-pretty-entities t
@@ -94,27 +107,12 @@
 
 (use-package! org-modern
   :ensure t
-  :hook
-  (org-mode . global-org-modern-mode)
   :config
-  (setq org-modern-star '("◉" "○" "◈" "◇" "✳" "◆" "✸" "▶")
-        org-modern-block-fringe t
-        org-modern-block-name t
-        org-modern-checkbox t
-        org-modern-footnote (cons nil (cadr org-script-display))
-        org-modern-table-vertical 2
-        org-modern-table-horizontal 4
-        org-modern-priority t
-        org-modern-progress '("○" "◔" "◐" "◕" "●")
-        org-modern-todo t
-        org-modern-keyword t
-        org-modern-tag t
-        org-modern-statistics t
+  (setq org-modern-table-vertical 1
+        org-modern-table-horizontal 1
         org-modern-horizontal-rule t)
-
-  ;; Change faces
-  (custom-set-faces! '(org-modern-tag :inherit (region org-modern-label)))
-  (custom-set-faces! '(org-modern-statistics :inherit org-checkbox-statistics-todo)))
+  :init
+  (global-org-modern-mode))
 
 (use-package exec-path-from-shell
   :ensure t)

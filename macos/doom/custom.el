@@ -3,12 +3,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(catppuccin-theme vertica org-alert alert writegood-mode docker-tramp exec-path-from-shell)))
+ '(package-selected-packages '(org-modern all-the-icons-completion)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-modern-statistics ((t (:inherit org-checkbox-statistics-todo))))
- '(org-modern-tag ((t (:inherit (region org-modern-label))))))
+ )
