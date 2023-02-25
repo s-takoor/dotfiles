@@ -38,8 +38,11 @@ RUN \
     masscan \
     metasploit \
     neovim \
+    nosqlmap \
     nikto \
     nmap \
+    nuclei \
+    nuclei-templates \
     openssh \
     p7zip \
     peass \
@@ -52,6 +55,7 @@ RUN \
     smbclient \
     sqlmap \
     steghide \
+    subfinder \
     sublist3r \
     tcpdump \
     tmux \
