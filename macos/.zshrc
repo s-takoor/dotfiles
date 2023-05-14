@@ -1,25 +1,29 @@
-# zshoptions
-setopt autocd extendedglob nomatch menucomplete
-setopt interactive_comments
+# CUSTOM PROMPT
+autoload -Uz vcs_info
+autoload -U colors && colors
 
-# colors
-autoload -Uz colors && colors
+zstyle ':vcs_info:*' enable git 
 
-# completions
-autoload -Uz compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-zstyle ':completion:*' complete-options true
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
 
-# including hidden files
-compinit
-_comp_options+=(globdots)
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+# 
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep '??' &> /dev/null ; then
+        hook_com[staged]+='!' # signify new files with a bang
+    fi
+}
 
-# custom_prompt
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:git:*' formats " %{$fg[blue]%}(%{$fg[red]%}%m%u%c%{$fg[yellow]%}%{$fg[magenta]%} %b%{$fg[blue]%})%{$reset_color%}"
+
 PROMPT="%B%{$fg[blue]%}[%{$fg[white]%}shashi%{$fg[red]%}@%{$fg[white]%}mac%{$fg[blue]%}] %(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} )%{$fg[cyan]%} %c %{$reset_color%}"
+PROMPT+="\$vcs_info_msg_0_ "
 
-# aliases
-alias sync='doom sync && doom doctor'
+# ALIASES
 alias purge='brew autoremove && brew cleanup'
 alias list='brew list'
 alias update='brew update && brew upgrade'
@@ -44,26 +48,46 @@ alias pull='podman pull'
 alias py='python3'
 alias reboot='sudo reboot'
 alias src='source .zshrc'
-alias top='htop'
-alias hist='nvim .zsh_history'
-alias profile='nvim .zprofile'
-alias zsh='nvim .zshrc'
+alias zhist='nvim .zsh_history'
+alias zprofile='nvim .zprofile'
+alias zshrc='nvim .zshrc'
 alias vim='nvim'
-alias v='nvim'
-alias doom='doom sync && doom doctor'
+alias vi='nvim'
+alias ..='z ..'
 
-# zoxide
+# EXPORTS
+# ZOXIDE
 eval "$(zoxide init zsh)"
 
-# zsh-autosuggestions
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# BUN
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
-# zsh-syntax-highlighting
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# BUN COMPLETION
+[ -s "/Users/shashiduth.takoor/.bun/_bun" ] && source "/Users/shashiduth.takoor/.bun/_bun"
 
-# terraform autocompletion
+# TERRAFORM COMPLETION
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
+# PLUGINS
+# AUTOSUGGESTIONS
+[ -f ~/.config/zsh/plugins/autosuggestions.zsh ] && source ~/.config/zsh/plugins/autosuggestions.zsh
+
+# BREW
+[ -f ~/.config/zsh/plugins/brew.zsh ] && source ~/.config/zsh/plugins/brew.zsh
+
+# COMPLETIONS
+[ -f ~/.config/zsh/plugins/completions.zsh ] && source ~/.config/zsh/plugins/completions.zsh
+
 # FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.config/zsh/plugins/fzf.zsh ] && source ~/.config/zsh/plugins/fzf.zsh
+
+# HISTORY SUBSTRING SEARCH
+[ -f ~/.config/zsh/plugins/history-susbtring-search.zsh ] && source ~/.config/zsh/plugins/history-substring-search.zsh
+
+# VI-MODE
+[ -f ~/.config/zsh/plugins/vi-mode.zsh ] && source ~/.config/zsh/plugins/vi-mode.zsh
+
+# AUTOPAIR
+[ -f ~/.config/zsh/plugins/autopair.zsh ] && source ~/.config/zsh/plugins/autopair.zsh

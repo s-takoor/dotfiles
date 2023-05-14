@@ -1,49 +1,10 @@
-# RESTART YABAI LAUNCH AGENT
-ctrl + alt + cmd - r : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
-
-# FOCUS WINDOW
-alt - h : yabai -m window --focus west
-alt - j : yabai -m window --focus south
-alt - k : yabai -m window --focus north
-alt - l : yabai -m window --focus east
-
-# SWAP WINDOW
-shift + alt - h : yabai -m window --swap west
-shift + alt - j : yabai -m window --swap south
-shift + alt - k : yabai -m window --swap north
-shift + alt - l : yabai -m window --swap east
-
-# MOVE WINDOW
-shift + cmd - h : yabai -m window --warp west
-shift + cmd - j : yabai -m window --warp south
-shift + cmd - k : yabai -m window --warp north
-shift + cmd - l : yabai -m window --warp east
-
-# BALANCE WINDOWS SIZE
-shift + alt - 0 : yabai -m space --balance
-
-# SEND WINDOW TO DESKTOP & FOLLOW FOCUS
-shift + alt - 1 : yabai -m window --space 1; yabai -m space --focus 1
-shift + alt - 2 : yabai -m window --space 2; yabai -m space --focus 2
-shift + alt - 3 : yabai -m window --space 3; yabai -m space --focus 3
-shift + alt - 4 : yabai -m window --space 4; yabai -m space --focus 4 
-shift + alt - 5 : yabai -m window --space 5; yabai -m space --focus 5
-shift + alt - 6 : yabai -m window --space 6; yabai -m space --focus 6
-shift + alt - 7 : yabai -m window --space 7; yabai -m space --focus 7
-shift + alt - 8 : yabai -m window --space 8; yabai -m space --focus 8
-shift + alt - 9 : yabai -m window --space 9; yabai -m space --focus 9
-shift + alt - 0 : yabai -m window --space 10; yabai -m space --focus 10
-
-# TOGGLE WINDOW SPLIT
-alt - e : yabai -m window --toggle split
-
-# TOGGLE WINDOW NATIVE FULLSCREEN
-alt - f : yabai -m window --toggle native-fullscreen
-
-# ROTATE TREE
-alt - r : yabai -m space --rotate 90
-
 # LAUNCH APPLICATIONS
-shift + cmd - return : open -a "Alacritty" -n
-shift + cmd - b : open -a "Brave Browser" -n
-shift + cmd - e : emacsclient --no-wait --quiet --suppress-output --create-frame "$@"
+shift + cmd - return : open -n -a "Alacritty"
+shift + cmd - a : open -n -a "Amethyst"
+shift + cmd - b : open -n -a "Brave Browser"
+shift + cmd - d : open ~/Documents
+shift + cmd - e : emacsclient -c -n -a ''
+shift + cmd - l : open -n -a Launchpad
+shift + cmd - o : open ~/Documents/OrgFiles
+shift + cmd - s : open -n -a "Slack"
+shift + cmd - k : open -n -a "System Settings"
