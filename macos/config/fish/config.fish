@@ -1,54 +1,75 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
+# -- HOMEBREW CONFIGURATION -- #
+eval (/opt/homebrew/bin/brew shellenv)
 
-# EXPORT
-set fish_greeting
-set TERM "xterm-256color"
-set -U EDITOR "nvim"
+# -- FISH SHELL SETTINGS -- #
+set -U fish_greeting
+set -U fish_key_bindings fish_vi_key_bindings
 
-# MANPAGER
-set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+# -- TERMINAL SETTINGS -- #
+set -x TERMINAL "alacritty"
 
-# VI MODE
-function fish_user_key_bindings
-  fish_vi_key_bindings
-end
+# -- MANPAGER -- #
+set -x MANPAGER "nvim +Man!"
 
-# ALIASES
-alias sync "doom sync && doom doctor"
-alias purge "brew autoremove && brew cleanup"
-alias list "brew list"
-alias update "brew update && brew upgrade"
-alias cat "bat --color=always"
-alias fish "nvim .config/fish/config.fish"
-alias grep "grep --color=auto"
-alias df "df -h"
-alias la "exa -a --icons --color=always --group-directories-first"
-alias ll "exa -l --icons --color=always"
-alias ls "exa -al --icons --color=always --group-directories-first"
-alias lt "exa -aT --color=always"
-alias init "podman machine init"
-alias start "podman machine start"
-alias info "podman info"
-alias img "podman images -a"
-alias rmi "podman rmi --force"
-alias build "podman build --arch=amd64 --tag"
-alias strg "podman ps --all --storage"
-alias run "podman run --rm -it --arch=amd64"
-alias prune "podman system prune"
-alias psa "podman ps -a"
-alias pull "podman pull"
-alias py "python3"
-alias reboot "sudo reboot"
-alias src "source .zshrc"
-alias top "htop"
-alias hist "nvim .zsh_history"
-alias profile "nvim .zprofile"
-alias zsh "nvim .zshrc"
-alias vim "nvim"
-alias v "nvim"
-alias .. "z .."
+# -- PATH Settings -- #
+# HOMEBREW
+set -x HOMEBREW_CELLAR "/opt/homebrew/Cellar"
+set -x HOMEBREW_REPOSITORY "/opt/homebrew"
+set -x PATH "/opt/homebrew/bin" "/opt/homebrew/sbin" $PATH
+set -x MANPATH "/opt/homebrew/share/man" $MANPATH
+set -x INFOPATH "/opt/homebrew/share/info" $INFOPATH
+
+# BUN
+set -x BUN_INSTALL "$HOME/.bun"
+set -x PATH "$BUN_INSTALL/bin" $PATH
+
+# CARGO (RUST)
+set -gx PATH "$HOME/.cargo/bin" $PATH
+
+# JAVA
+set -x PATH "/opt/homebrew/opt/openjdk/bin" $PATH
+set -x PATH "/opt/homebrew/opt/java/bin" $PATH
+
+# EMACS
+set -x PATH "$HOME/.emacs.d/bin" $PATH
+
+# -- EDITOR SETTINGS -- #
+set -Ux EDITOR emacsclient
+
+# -- utility settings -- #
+# GREP
+set -x PATH "/opt/homebrew/opt/grep/libexec/gnubin" $PATH
+
+# STARSHIP PROMPT
+starship init fish | source
 
 # ZOXIDE
 zoxide init fish | source
+
+# -- ALIASES -- #
+for file in ~/.config/fish/aliases/*.fish
+    source $file
+end
+
+# HOMEBREW ALIASES
+alias purge 'brew cleanup --prune=all'
+alias list 'brew list'
+
+# FILE-RELATED ALIASES
+alias cat 'bat --color=always'
+alias df 'df -h'
+alias ls 'eza -al --icons --color=always --group-directories-first'
+alias la 'eza -a --icons --color-always --group-directories-first'
+alias ll 'eza -l --icons --color=always'
+alias lt 'eza -aT --color=always'
+
+# TEXT EDITOR ALIASES
+alias vi 'nvim'
+alias vim 'nvim'
+
+# MISCELLANEOUS ALIASES
+alias cp 'xcp'
+alias cd 'z'
+
+#RTX
+rtx activate fish | source

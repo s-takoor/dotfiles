@@ -1,0 +1,852 @@
+vi .zsh_history
+vi aliases.zsh
+vi aliases.zsh
+z
+ls
+z zsh
+vi .
+z
+vi .
+ls
+z
+vi .zshenv
+touch completions.zsh
+vi .
+z
+vi .zshenv
+vi .fzf.zsh
+z
+ls /usr/share/zsh/
+ls /opt/homebrew/share/zsh
+ls /opt/homebrew/share/zsh/site-functions/
+ls /opt/homebrew/share/zsh/
+ls /opt/homebrew/share/zsh-autosuggestions
+vi .
+z
+ls
+cat .profile
+z zsh
+vi vi-mode.zsh
+vi vi-mode.zsh
+fish
+z fish
+vi .
+fish
+fish
+fish
+fish
+fish
+fish
+z fish
+vi .
+fish
+z zsh
+vi .
+fish
+fish
+z
+z
+cp Documents/OuLearn/EOYP/project/mi-voting/src/* Documents/projects/mi-voting/src
+cp --recursive Documents/OuLearn/EOYP/project/mi-voting/src/* Documents/projects/mi-voting/src
+cp --recursive Documents/OuLearn/EOYP/project/mi-voting/public/ipfsData/* Documents/projects/mi-voting/public/ipfsdata
+z Documents/projects/mi-voting
+ls
+z public
+ls
+mv ipfsdata ipfsData
+ls
+ls -al
+l
+ls
+ls ipfsData
+z ipfsData
+bunx hardhat init
+npx hardhat init
+bun hardhat init
+bunx hardhat node
+pwd
+bun hardhat node
+npx hardhat node
+z Oulearn
+ls
+z EOYP
+ls
+ls project
+z
+z Documents
+ls
+mkdir projects
+z projects
+ls
+bun create next-app
+ls
+z mi-voting
+ls
+bun run dev
+ls
+bun add --save-dev hardhat
+bun a --dev hardhat
+ls
+cat package.json
+bun a dotenv ipfs-api
+bun a @chakra-ui/react @emotion/react @emotion/styled framer-motion
+cat package.json
+bun a @chakra-ui/icons
+bun a --dev @nomicfoundation/hardhat-ethers ethers
+cat package.json
+bunx hardhat
+cat package.json
+vi .
+z ..
+z ..
+ mi-vot
+ z mi-vo
+ls
+cat package.json
+vi .
+vi .config/starship.toml
+vi .config/starship.toml
+z mi-vo
+ls
+npx hardhat node
+z
+cp -r Documents/OuLearn/EOYP/project/mi-voting/contracts Documents/projects/mi-voting
+ls
+ls src
+rip src/app
+vi .
+bun run dev
+bun run dev
+bun a react-icons
+bun run dev
+bun --bun run dev
+z proje
+z
+z Documents/projects/mi-voting
+npx hardhat node
+vi .
+bunx hardhat node
+bunx hardhat node
+bunx hardhat node
+vi .
+ipfs daemon
+ipfs daemon
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+ls
+rip artifacts
+rip cache
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+rip artifacts
+rip cache
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+bun --bun run dev
+ipfs daemon
+rip artifacts
+rip cache
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+rip artifacts
+rip cache
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+bun --bun run dev
+ipfs daemon
+z Documents/projects/mi-voting
+bunx hardhat node
+ls
+cat README.md
+ls
+mv README.md README.org
+ls
+vi .
+ls
+rip src/contexts
+vi .
+ls
+ls contracts
+rip contracts/Lock.sol
+bunx hardhat node
+z
+podman machine start
+z
+podman images
+podman build -t Mi-Voting -f Containerfile .
+podman build -t mi-voting -f Containerfile .
+podman images
+podman run -d -p 3000:3000 mi-voting
+podman images
+podman ps
+podman stop mi-voting
+podman stop e1b21e4f78a0f646e6961c8a2032c2bd224b34acbdc5e2ae1a50267292a22c67
+podman ps
+podman machine ls
+podman images
+podman podman run -p 3000:3000 9f785113f73e
+podman podman run -it 3000:3000 9f785113f73e
+podman run --rm -it 9f785113f73e
+ls
+rip Containerfile
+sl
+ls
+podman ps
+podman stop mi-votin
+podman stop mi-voting
+podman images
+podman stop 9f785113f73e
+podman stop localhost/mi-voting
+podman ps
+bun --bun run dev
+ipfs daemon
+rip artifacts
+rip cache
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+z Documents/projects/mi-voting
+vi .
+ls
+bunx hardhat node
+pwd
+cargo-binstall tokei
+z Documents/projects/mi-voting
+tokei
+z Documents/projects/mi-voting
+tokei
+rtorrent
+rtorrent
+vi .config/starship.toml
+vi .config/zsh
+which nix\\
+
+which nix
+brew services restart mpd
+ncmpcpp
+switch
+rtorrent 
+rtorrent 
+brew services restart mpd
+ncmpcpp
+switch
+brew upgrade --cask greedy
+brew upgrade --cask --greedy
+ls
+brew services restart mpd
+ncmpcpp
+rtorrent
+vi .config/starship.toml
+vi .config/starship.toml
+vi .config/starship.toml
+z .emacs.d
+ls
+z org
+vi .config/starship.toml
+vi .config/starship.toml
+vi .config/starship.toml
+vi .config/starship.toml
+brew services restart mpd
+ncmpcpp
+rtorrent
+ls
+source .config/zsh/.zshrc
+z .emacs.d
+z .emacs.d/org
+doom sync
+z
+which doom
+ls Documents/bak
+rip Documents/bak/doom
+ls
+xcp -r .emacs.d/org Documents/bak
+xcp -r .doom.d/ Documents/bak
+lt Documents/bak
+rip .doom.d
+brew ls
+brew uninstall emacs-plus@29
+rip .emacs.d
+ls
+ls
+rip doom-emacs
+rip dotfiles
+ls temporary
+rip temporary
+ls
+vi .config/zsh/.zshrc
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+rip /Applications/Emacs.app
+xcp -r /opt/homebrew/Cellar/emacs-plus@29/29.1/Emacs.app /Applications
+ls
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+vi .zshenv
+source .zshenv
+doom sync
+ncmpcpp
+doom sync
+vi .zshenv
+vi .config/zsh/.zshrc
+finder
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+~/.emacs.d/bin/doom doctor
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom Documents
+~/.emacs.d/bin/doom doctor
+htop
+ncmpcpp
+ncmpcpp
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+which d
+htop
+doo
+rip .doom.d
+rip .emacs.d
+git clone https://github.com/s-takoor/dotfiles.git
+ls dotfiles
+z dotfiles
+ls
+z macos
+ls
+z doom
+ls
+htop
+ls
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+rip .emacs.d
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+vi .zshenv
+ncmpcpp
+source .zshenv
+rip .doom.d
+xcp -r Documents/bak/.doom.d/ .
+ls
+~/.emacs.d/bin/doom sync
+rip .emacs.d
+rip .doom.d
+brew uninstall emacs-plus@29
+brew cleanup --prune=all
+rip /Applications/Emacs.app
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+xcp -r /opt/homebrew/Cellar/emacs-plus@29/29.1/Emacs.app /Applications
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+htop
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+~/.emacs.d/bin/doom env
+doom sync
+htop
+~/.emacs.d/bin/doom env
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+ls
+~/.emacs.d/bin/doom upgrade
+htop
+rip .doom.d/*
+xcp -r Documents/bak/.doom.d/* .doom.d
+vi .doom.d
+doom sync
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+\:q
+htop
+htop
+htop
+htop
+~/.emacs.d/bin/doom sync
+htop
+rip .doom.d/
+rip .emacs.d
+brew uninstall emacs-plus@29
+rip /Applications/Emacs.app
+brew cleanup --prune=all
+brew install git ripgrep
+brew install coreutils fd
+xcode-select --install
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+xcp -r /opt/homebrew/Cellar/emacs-plus@29/29.1/Emacs.app /Applications
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+rip .emacs.d
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+~/.emacs.d/bin/doom sync
+htop
+htop
+doom sync
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+htop
+~/.emacs.d/bin/doom sync
+~/.emacs.d/bin/doom doctor
+brew services restart mpd
+ncmpcpp
+htop
+ls
+xcp -r Documents/bak/org .emacs.d
+htop
+~/.emacs.d/bin/doom doctor
+~/.emacs.d/bin/doom sync
+htop
+vi .config/zsh/
+vi .zshenv
+brew services restart mpd
+ncmpcpp
+echo $PATH
+ls .emacs.d/bin/doom
+vi .zshenv
+vi .zshenv
+vi .config/zsh/
+ls
+rip .zsh_history
+ls
+rip .zcompdump
+rip .zsh_sessions
+vi .zshenv
+vi .config/zsh/
+vi .config/zsh/
+source .config/zsh/.zshrc
+vi .config/zsh/
+source .config/zsh/.zshrc
+vi .config/zsh/
+source .config/zsh/.zshrc
+vi .config/zsh/
+vi .config/zsh/
+vi .zshenv
+ls
+vi .config/zsh/
+vi .zshenv
+source .zshenv
+doom sync
+doom sync
+doom doctor
+rip .emacs.d
+rip .doom.d
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+vi Documents/bak/.doom.d/init.el
+source .zshenv
+doom sync
+doom doctor
+doom doctor
+htop
+doom sync
+doom sync
+doom doctor
+doom sync
+doom doctor
+htop
+brew services restart mpd
+ncmpcpp
+rip .doom.d
+rip .emacs.d
+brew uninstall emacs-plus@29
+brew cleanup --prune=all
+rip /Applications/Emacs.app
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+xcp -r /opt/homebrew/Cellar/emacs-plus@29/29.1/Emacs.app /Applications
+brew services ls
+brew services stop emacs-plus@29
+brew services ls
+brew services restart emacs-plus@29
+htop
+brew services ls
+brew services stop emacs-plus@29
+brew cleanup --prune=all
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+brew uninstall emacs-plus@29
+brew cleanup --prune=all
+ls
+rip .emacs.d
+brew install emacs-plus --with-native-comp --with-modern-doom3-icon
+rip /Applications/Emacs.app
+xcp -r /opt/homebrew/Cellar/emacs-plus@29/29.1/Emacs.app /Applications
+brew services ls
+brew services start d12frosted/emacs-plus/emacs-plus@29
+brew services ls
+ls
+rip .emacs.d
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+rip .doom.d
+rip .emacs.d
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d\
+~/.emacs.d/bin/doom install
+doom sync
+doom doctor
+doom sync
+doom doctor
+doom sync
+fc-cache
+htop
+doom sync
+doom doctor
+doom sync
+doom doctor
+doom sync
+doom doctor
+htop
+rip Documents/bak/.doom.d/*
+ls cuments/bak/.doom.d/*
+ls cuments/bak/.doom.d/
+ls Documents/bak/.doom.d/
+xcp -r .doom.d/* Documents/bak/.doom.d
+vi .config/starship.toml
+vi .config/starship.toml
+ls
+kl
+vi .config/starship.toml
+z .doom
+zbak
+z bak
+vi tmux
+z tmux
+z
+z .config/tmux
+vi .
+vi .config/starship.toml
+z
+vi .config/starship.toml
+z bzk
+z bak
+vi .config/starship.toml
+swithc
+switch
+brew cleanup --prune=all
+z Down
+zl
+zl
+pwd
+z
+rtorrent
+df -h
+rtorrent
+vi .config/zsh/
+rtorrent
+brew services restart mpd
+ncmpcpp
+switch
+brew install cmake-docs
+brew upgrade --cask --greedy
+switch
+raycast
+ls
+ls
+vi .
+nix --version
+curl -L https://nixos.org/nix/install | sh
+ls .emacs.d
+xcp -r Documents/bak/org .emacs.d
+ls .emacs.d
+ls .emacs.d/org
+doom sync
+doom doctoe
+doom doctor
+echo $PATH
+brew ls | grep
+brew ls | grep grep
+vi .zshenv
+htop
+source .zshenv
+doom doctor
+z Documents/projects/mi-voting
+bun hardhat node
+ipfs daemon
+ipfs daemon
+rip artifacts
+rip cache
+bun --bun run dev
+ipfs pin ls
+npm run dev
+rip artifacts
+rip cache
+z Documents/OuLearn/EOYP/project
+ls
+z mi-voting
+ls
+npx hardhat node
+ipfs daemon
+speedtest
+cargo-binstall speedtest-rs
+speedtest-rs
+speedtest-rs
+vi .
+bun --bun run dev
+ipfs daemon
+rip artifacts
+ls
+bun compile
+bun hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+z mi-voting
+pwd
+z
+z Documents/projects/mi-voting
+bun hardhat node
+z mi-voting
+z.. 
+z ..
+z .config/nvim
+vi .
+z EOYP
+z
+vi .config/starship.toml
+z
+z EOYP
+z
+vi .config/starship.toml
+fish
+rtorrent
+switch
+rtorrent
+ls
+switch
+brew upgrade --cask --greedy
+brew cleanup --prune=all
+switch
+brew upgrade --cask --greedy
+mpv
+mpv Downloads/Gran.Turismo.2023.1080p.10bit.WEBRip.6CH.x265.HEVC-PSA/Gran.Turismo.2023.1080p.10bit.WEBRip.6CH.x265.HEVC-PSA.mkv
+mpv Downloads/Gran.Turismo.2023.1080p.10bit.WEBRip.6CH.x265.HEVC-PSA/Gran.Turismo.2023.1080p.10bit.WEBRip.6CH.x265.HEVC-PSA.mkv
+switch
+brew upgrade --cask --greedy
+speedtest-rs
+rtorrent
+ls
+sl
+ls
+brew install zellij
+zellij
+vi .config/alacritty/alacritty.yml
+ls
+htop
+zellij --version
+ls .config
+mkdir .config/zellij
+zellij setup --dump-config > ~/.config/zellij/config.kdl
+ls .config/zellij/
+z .config/zellij
+vi .
+ls
+z .config/zellij
+vi .
+ls
+ls
+z .config/zellij
+vi .
+z .config/zellij
+ls
+vi .
+z .config/zellij
+vi .
+zellij
+zellij
+zellij
+zellij options --theme Gruvbox Dark
+zellij options --theme Gruvbox
+zellij
+zellij
+zellij
+zellij
+zellij options --theme dracula
+zellij options --theme gruvbox
+zellij options --theme gruvbox dark
+zellij options --theme monokai
+zellij options --theme dracula
+zellij
+vi .config/alacritty/alacritty.yml
+z .config/zellij
+vi .
+vi .
+vi .config/alacritty/alacritty.yml
+z .config/zellij
+vi .
+\:q
+htop
+ls
+zellij options --theme dracula
+zellij options --theme gruvbox
+zellij
+zellij
+zellij options --theme gruvbox-dark
+vi .config/alacritty/alacritty.yml
+ls
+brew services restart mpd
+ncmpcpp
+vi .config/zellij/config.kdl
+vi .config/zellij/config.kdl
+vi .config/zellij/config.kdl
+vi .config/alacritty/alacritty.yml
+ll
+ls
+ll
+ll
+vi .config/zellij
+vi .config/zellij
+ls
+ll
+vi .config/zellij
+fish
+zellij
+vi .config/zellij
+vi .config/zellij
+zellij
+vi .config/zellij
+zellij
+vi .config/zellij
+zellij
+vi .config/zellij
+zellij
+zellij -a
+zellij attach
+zellij attach
+zellij
+zellij
+fish
+ls
+cat .fzf.zsh
+ls
+lf
+vi .config/zsh
+z .config/fish
+vi .
+fish
+fish
+tmux
+fish
+zelij
+zellij
+vi .config/alacritty/ala
+vi .config/alacritty/alacritty.yml
+fish
+pwd
+vi .config/fish/conf.d/fzf.fish
+ls
+fish
+fish
+fish
+vi .config/tmux/tmux.conf
+vi .config/nvim
+vi .config/nvim
+vi .config/nvim
+vi .config/nvim
+vi
+vi .config/nvim
+vi .config/nvim
+vi .config/nvim
+vi 
+vi .config/nvim
+vi Documents/projects
+z mi-voting
+vi .
+ls
+vi 
+z 
+z mi-voting
+vi .
+fis
+fish
+z fis
+vi .
+z tmux
+vi .
+which fish
+rip artifacts
+rip cache
+npx run scripts/deploy.js
+npx run scripts/deploy.js
+npx hardhat nde
+npx hardhat node
+z ..
+z ..
+z ..
+z
+z Documents/projects
+z mi-voting
+bunx hardhat node
+npx hardhat node
+ipfs pin ls
+ipfs daemon
+npx run dev
+npx run dev
+npm run dev
+rip artifacts
+rip cache
+npx hardhat run scripts/deploy.js --network localhost
+z mi-voting
+pwd
+npx hardhat nod
+npx hardhat node
+bun --bun run dev
+bunx hardhat run scripts/deploy.js --network localhost
+z Documents/projects
+ls
+z mi-voting
+ls
+rip artifacts
+rip cache
+bunx hardhat node
+ipfs daemon
+rtorrent
+ncmpcpp
+brew services restart mpd
+ncmpcpp
+brew update && brew upgrade
+brew upgrade --cask --greedy
+brew upgrade --cask --greedy
+ipfs pin ls
+ipfs daemon
+ipfs daemon
+ipfs daemon
+killall ipfs
+ipfs daemon
+fish
+rtorrent
+z mi-voting
+ls
+cat package.json
+ipfs pin ls
+ipfs daemon
+brew ls | grep ipfs
+brew uninstall ipfs
+brew cleanup --prune=all
+ls
+brew install ipfs
+ipfs daemon
+z Downloads/fs-repo-migrations
+./fs-repo-migrations
+rip Downloads/fs-repo-migrations
+z mi-voting
+fish
+ls
+rip artifacts
+rip cache
+bunx hardhat run scripts/deploy.js --network localhost
+fish
+bun --bun run dev
+ipfs daemon
+echo $SHELL
+ipfs daemon
+rip artifacts
+rip ca
+rip cache
+ls
+bunx hardhat compile
+bunx hardhat run scripts/deploy.js --network localhost
+fish
+vi .config/tmux/tmux.conf
+which $SHELL
+vi .config/tmux/tmux.conf
+ls
+eval `keychain --eval --agents ssh keyname`
+eval $(ssh-agent)
+cat .ssh/config
+ssh-add -K ~/.ssh/id_ed25519
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+ssh-add --apple-load-keychain ~/.ssh/id_ed25519
