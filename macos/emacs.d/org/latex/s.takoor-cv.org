@@ -1,0 +1,162 @@
+%-------------------------------------------------------------------------------
+%                Identification
+%-------------------------------------------------------------------------------
+#+LATEX_HEADER: \NeedsTeXFormat{LaTeX2e}
+#+LATEX_COMPILER: xelatex
+
+%-------------------------------------------------------------------------------
+%                Class options
+%
+% (need to be done before the external package loading, for example because
+% we need \paperwidth, \paperheight and \@ptsize to be defined before loading
+% geometry and fancyhdr)
+%-------------------------------------------------------------------------------
+% Options for draft or final
+#+LATEX_HEADER: \DeclareOption{draft}{\setlength\overfullrule{5pt}}
+#+LATEX_HEADER: \DeclareOption{final}{\setlength\overfullrule{0pt}}
+% Inherit options of article
+#+LATEX_HEADER: \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+#+LATEX_HEADER: \ProcessOptions\relax
+#+LATEX_HEADER: \LoadClass{article}
+
+%-------------------------------------------------------------------------------
+%                3rd party packages
+%-------------------------------------------------------------------------------
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{geometry}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{ifxetex}
+#+LATEX_HEADER: \usepackage{xifthen}
+#+LATEX_HEADER: \usepackage{xstring}
+#+LATEX_HEADER: \usepackage{etoolbox}
+#+LATEX_HEADER: \usepackage{setspace}
+#+LATEX_HEADER: \usepackage[quiet]{fontspec}
+#+LATEX_HEADER: \usepackagetures{Ligatures=TeX}
+#+LATEX_HEADER: \usepackage{unicode-math}
+#+LATEX_HEADER: \usepackage{fontawesome5}
+#+LATEX_HEADER: \usepackage{roboto}
+#+LATEX_HEADER: \usepackage[default,opentype]{sourcesanspro}
+#+LATEX_HEADER: \usepackage[skins]{tcolorbox}
+#+LATEX_HEADER: \usepackage{parskip}
+#+LATEX_HEADER: \usepackage[hidelinks,unicode,pdfpagelabels=false]{hyperref}
+#+LATEX_HEADER: \usepackagetitle={},pdfauthor={},pdfsubject={},pdfkeywords={}}
+#+LATEX_HEADER: \usepackage{bookmark}
+
+%-------------------------------------------------------------------------------
+%                Configuration for layout
+%-------------------------------------------------------------------------------
+%% Page Layout
+% Configure page margins with geometry
+#+LATEX_HEADER: \geometry{left=2.0cm, top=1.5cm, right=2.0cm, bottom=2.0cm, footskip=.5cm}
+
+%% Header & Footer
+% Set offset to each header and footer
+#+LATEX_HEADER: \fancyhfoffset{0em}
+% Remove head rule
+#+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt}
+% Clear all header & footer fields
+#+LATEX_HEADER: \fancyhf{}
+% Enable if you want to make header or footer using fancyhdr
+#+LATEX_HEADER: \pagestyle{fancy}
+
+%-------------------------------------------------------------------------------
+%                Configuration for colors
+%-------------------------------------------------------------------------------
+% Gray-scale colors
+#+LATEX_HEADER: \definecolor{white}{HTML}{FFFFFF}
+#+LATEX_HEADER: \definecolor{black}{HTML}{000000}
+#+LATEX_HEADER: \definecolor{darkgray}{HTML}{333333}
+#+LATEX_HEADER: \definecolor{gray}{HTML}{5D5D5D}
+#+LATEX_HEADER: \definecolor{lightgray}{HTML}{999999}
+% Basic colors
+#+LATEX_HEADER: \definecolor{green}{HTML}{C2E15F}
+#+LATEX_HEADER: \definecolor{orange}{HTML}{FDA333}
+#+LATEX_HEADER: \definecolor{purple}{HTML}{D3A4F9}
+#+LATEX_HEADER: \definecolor{red}{HTML}{FB4485}
+#+LATEX_HEADER: \definecolor{blue}{HTML}{6CE0F1}
+% Text colors
+#+LATEX_HEADER: \definecolor{darktext}{HTML}{414141}
+#+LATEX_HEADER: \colorlet{text}{darkgray}
+#+LATEX_HEADER: \colorlet{graytext}{gray}
+#+LATEX_HEADER: \colorlet{lighttext}{lightgray}
+#+LATEX_HEADER: \colorlet{sectiondivider}{gray}
+% Awesome colors
+#+LATEX_HEADER: \definecolor{awesome-emerald}{HTML}{00A388}
+#+LATEX_HEADER: \definecolor{awesome-skyblue}{HTML}{0395DE}
+#+LATEX_HEADER: \definecolor{awesome-red}{HTML}{DC3522}
+#+LATEX_HEADER: \definecolor{awesome-pink}{HTML}{EF4089}
+#+LATEX_HEADER: \definecolor{awesome-orange}{HTML}{FF6138}
+#+LATEX_HEADER: \definecolor{awesome-nephritis}{HTML}{27AE60}
+#+LATEX_HEADER: \definecolor{awesome-concrete}{HTML}{95A5A6}
+#+LATEX_HEADER: \definecolor{awesome-darknight}{HTML}{131A28}
+#+LATEX_HEADER: \colorlet{awesome}{awesome-red}
+
+% Boolean value to switch section color highlighting
+#+LATEX_HEADER: \newbool{acvSectionColorHighlight}
+#+LATEX_HEADER: \setbool{acvSectionColorHighlight}{true}
+
+% Awesome section color
+#+LATEX_HEADER: \def\@sectioncolor#1#2#3{\ifbool{acvSectionColorHighlight}{{\color{awesome}#1#2#3}}{#1#2#3}}
+
+%-------------------------------------------------------------------------------
+%                Configuration for fonts
+%-------------------------------------------------------------------------------
+#+LATEX_HEADER: \newcommand*{\headerfont}{\roboto}
+#+LATEX_HEADER: \newcommand*{\headerfontlight}{\robotolight}
+#+LATEX_HEADER: \newcommand*{\footerfont}{\sourcesanspro}
+#+LATEX_HEADER: \newcommand*{\bodyfont}{\sourcesanspro}
+#+LATEX_HEADER: \newcommand*{\bodyfontlight}{\sourcesansprolight}
+
+%-------------------------------------------------------------------------------
+%                Configuration for styles
+%-------------------------------------------------------------------------------
+% Configure styles for each CV elements
+% For fundamental structures
+#+LATEX_HEADER: \newcommand*{\headerfirstnamestyle}[1]{{\fontsize{32pt}{1em}\headerfontlight\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\headerlastnamestyle}[1]{{\fontsize{32pt}{1em}\headerfont\bfseries\color{text} #1}}
+#+LATEX_HEADER: \newcommand*{\headerpositionstyle}[1]{{\fontsize{7.6pt}{1em}\bodyfont\scshape\color{awesome} #1}}
+#+LATEX_HEADER: \newcommand*{\headeraddressstyle}[1]{{\fontsize{8pt}{1em}\headerfont\itshape\color{lighttext} #1}}
+#+LATEX_HEADER: \newcommand*{\headersocialstyle}[1]{{\fontsize{6.8pt}{1em}\headerfont\color{text} #1}}
+#+LATEX_HEADER: \newcommand*{\headerquotestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\itshape\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\footerstyle}[1]{{\fontsize{8pt}{1em}\footerfont\scshape\color{lighttext} #1}}
+#+LATEX_HEADER: \newcommand*{\sectionstyle}[1]{{\fontsize{16pt}{1em}\bodyfont\bfseries\color{text}\@sectioncolor #1}}
+#+LATEX_HEADER: \newcommand*{\subsectionstyle}[1]{{\fontsize{12pt}{1em}\bodyfont\scshape\textcolor{text}{#1}}}
+#+LATEX_HEADER: \newcommand*{\paragraphstyle}{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text}}
+
+% For elements of entry
+#+LATEX_HEADER: \newcommand*{\entrytitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\entrypositionstyle}[1]{{\fontsize{8pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\entrydatestyle}[1]{{\fontsize{8pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\entrylocationstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
+#+LATEX_HEADER: \newcommand*{\descriptionstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text} #1}}
+
+% For elements of subentry
+#+LATEX_HEADER: \newcommand*{\subentrytitlestyle}[1]{{\fontsize{8pt}{1em}\bodyfont\mdseries\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\subentrypositionstyle}[1]{{\fontsize{7pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\subentrydatestyle}[1]{{\fontsize{7pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\subentrylocationstyle}[1]{{\fontsize{7pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
+#+LATEX_HEADER: \newcommand*{\subdescriptionstyle}[1]{{\fontsize{8pt}{1em}\bodyfontlight\upshape\color{text} #1}}
+
+% For elements of honor
+#+LATEX_HEADER: \newcommand*{\honortitlestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\honorpositionstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\honordatestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\honorlocationstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
+
+% For elements of skill
+#+LATEX_HEADER: \newcommand*{\skilltypestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\skillsetstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\color{text} #1}}
+
+% For elements of the cover letter
+#+LATEX_HEADER: \newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\bfseries\color{text}\@sectioncolor #1}}
+#+LATEX_HEADER: \newcommand*{\recipientaddressstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\recipienttitlestyle}[1]{{\fontsize{11pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
+#+LATEX_HEADER: \newcommand*{\letterdatestyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+#+LATEX_HEADER: \newcommand*{\lettertextstyle}{\fontsize{10pt}{1.4em}\bodyfontlight\upshape\color{graytext}}
+#+LATEX_HEADER: \newcommand*{\letternamestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+#+LATEX_HEADER: \newcommand*{\letterenclosurestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\slshape\color{lighttext} #1}}
+
