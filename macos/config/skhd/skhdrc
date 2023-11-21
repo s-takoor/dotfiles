@@ -1,10 +1,14 @@
-# LAUNCH APPLICATIONS
-shift + cmd - return : open -n -a "Alacritty"
-shift + cmd - a : open -n -a "Amethyst"
-shift + cmd - b : open -n -a "Brave Browser"
-shift + cmd - d : open ~/Documents
+# -- LAUNCH APPLICATIONS -- #
+shift + cmd - return : alacritty
+shift + cmd - b : open -na "Brave Browser"
 shift + cmd - e : emacsclient -c -n -a ''
-shift + cmd - l : open -n -a Launchpad
-shift + cmd - o : open ~/Documents/OrgFiles
-shift + cmd - s : open -n -a "Slack"
-shift + cmd - k : open -n -a "System Settings"
+shift + cmd - l : open -na Launchpad
+shift + cmd - d : open ~/Documents
+shift + cmd - o : open ~/Documents/orgfiles
+shift + cmd - s : open -na "Slack"
+shift + cmd - k : open -na "System Settings"
+
+# -- MPD CONTROL -- #
+ctrl + alt - p : mpc toggle
+ctrl + alt - n : mpc next
+ctrl + alt - b : mpc prev
