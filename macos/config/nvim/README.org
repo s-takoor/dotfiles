@@ -1,5 +1,5 @@
 #+TITLE: NVIM CONFIG
-#+DESCRIPTION: NEOVIM CONFIGURATION
+#+DESCRIPTION: PERSONAL NEOVIM CONFIGURATION
 #+AUTHOR: s.takoor
 #+STARTUP: showeverything
 
@@ -9,27 +9,30 @@
   - [[#installation][INSTALLATION]]
 
 ** TL;DR
-config files for *Neovim* (W.I.P)
+This repository contains my work-in-progress (W.I.P) Neovim configuration files.
 
 ** MAIN FEATURES
-- Mason - portable package manager to easily install and manage LSP servers, DAP servers, linters, and formatters
-- Noice - experimental plugin that replaces the UI for `messages`, `cmdline`, and `popupmenu`
-- Notify - fancy, configurable, notification manager
-- Telescope - fuzzy finder
-- Treesitter - syntax highlighting
-- Which Key - popup with possible key bindings
+- *Mason* - portable package manager to easily install and manage LSP servers, DAP servers, linters, and formatters
+- *Noice* - experimental plugin that replaces the UI for `messages`, `cmdline`, and `popupmenu`
+- *Notify* - fancy, configurable, notification manager
+- *Telescope* - fuzzy finder
+- *Treesitter* - syntax highlighting
+- *Which Key* - popup with possible key bindings
 
 ** INSTALLATION
-- Backup your previous configuration (in any exists);
-  #+begin_src bash
+*** BACKUP PREVIOUS CONFIGURATION
+Before proceeding, backup your existing Neovim configuration (in any exists);
+src bash
 cp -r .config/nvim nvim.bak
-  #+end_src
+src
 
-- Remove existing packages from other package managers (e.g. packer)
-  #+begin_src bash
+*** REMOVE EXISTING PACKAGES
+If you have previously used other package managers such as `packer`, clean up the following directories:
+#+begin_src bash
 rip .local/share/nvim
 rip .local/state/nvim
 rip .cache/nvim
-  #+end_src
+#+end_src
 
-- Clone this repository and copy the contents of the `nvim` folder in your `.config/nvim` directory (Linux and MacOS)
+*** COPY CONFIGURATION FILES
+Clone this repository and copy the contents of the `nvim` directory into your Neovim configuration folder
