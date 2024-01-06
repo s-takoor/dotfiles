@@ -1,7 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
+    build= ":TSUpdate",
     config = function ()
       local ts = require("nvim-treesitter.configs").setup({
         auto_install = true,
@@ -11,16 +11,29 @@ return {
           "comment",
           "cpp",
           "css",
+          "diff",
           "graphql",
           "hcl",
+          "html",
           "http",
           "javascript",
+          "jsdoc",
           "json",
+          "jsonc",
           "lua",
+          "luadoc",
+          "luap",
+          "python",
+          "query",
+          "regex",
           "rust",
-          "tsx",
-          "vim",
           "terraform",
+          "toml",
+          "tsx",
+          "typescript",
+          "vim",
+          "vimdoc",
+          "yaml",
         },
         highlight = { enable = true },
         indent = { enable = true },
@@ -30,10 +43,10 @@ return {
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = "false",
+            node_decremental = "<bs>",
           },
         },
         refactor = {
@@ -49,9 +62,9 @@ return {
             keymaps = {
               goto_definition = "gnd",
               list_definitions = "gnD",
-            },
-          },
-        },
+            }
+          }
+        }
       })
     end,
   },

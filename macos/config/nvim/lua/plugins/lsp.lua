@@ -17,9 +17,19 @@ end
 
 -- List of languages for LSP setup
 local languages = { 
-  "clangd", "tsserver", "html", "cssls", "pyright", "terraformls",
-  "jsonls", "jqls", "yamlls", "dockerls", "kotlin_language_server",
-  "ansiblels", "texlab",
+  "ansiblels",
+  "clangd",
+  "cssls",
+  "dockerls",
+  "html",
+  "jqls",
+  "jsonls",
+  "kotlin_language_server",
+  "pyright",
+  "terraformls",
+  "texlab",
+  "tsserver",
+  "yamlls",
 }
 
 return {
@@ -27,7 +37,7 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
-      local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
       -- Set up the default LSP server for Lua
       require("lspconfig").lua.setup({
@@ -66,11 +76,24 @@ return {
     "williamboman/mason-lspconfig.nvim",
     opts = {
       ensure_installed = { 
-        "clangd", "cssls", "graphql", "html", "lua_ls", "pyright", 
-        "rust_analyzer", "terraformls", "tsserver", "jsonls", "jqls", 
-        "yamlls", "dockerls", "kotlin_language_server", "ansiblels", 
-        "texlab"
+        "ansiblels", 
+        "clangd",
+        "cssls",
+        "dockerls",
+        "graphql",
+        "html",
+        "jqls",
+        "jsonls",
+        "kotlin_language_server",
+        "lua_ls",
+        "pyright", 
+        "rust_analyzer",
+        "terraformls",
+        "texlab",
+        "tsserver",
+        "yamlls",
       }
     }
   }
 }
+
