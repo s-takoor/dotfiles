@@ -14,7 +14,7 @@
   - [[#️-debug-configuration][⚒️ DEBUG CONFIGURATION]]
 
 ** 🚀 TL;DR
-Literate config file for ~Amethyst~; a tiling window manager for macOS inspired by [[https://xmonad.org/][xmonad]].
+Literate config for ~Amethyst~; a tiling window manager for macOS inspired by [[https://xmonad.org/][xmonad]].
 
 ** ⚒️ GENERAL CONFIGURATION
 *** FOLLOW THROWN WINDOWS BETWEEN SPACES
@@ -55,7 +55,7 @@ restore-layouts-on-launch: true
 #+end_src
 
 ** ⚒️ SHORTCUT CONFIGURATION
-*** MODIFIER KEYS
+*** MOD KEYS
 #+begin_src yml
 mod1:
   - option
@@ -100,43 +100,43 @@ decrease-main:
 *** SPACE NAVIGATION
 #+begin_src yml
 throw-space-1:
-  mod: mod2
+  mod: mod1
   key: 1
 
 throw-space-2:
-  mod: mod2
+  mod: mod1
   key: 2
 
 throw-space-3:
-  mod: mod2
+  mod: mod1
   key: 3
 
-throw-space-34:
-  mod: mod2
+throw-space-4:
+  mod: mod1
   key: 4
 
 throw-space-5:
-  mod: mod2
+  mod: mod1
   key: 5
 
 throw-space-6:
-  mod: mod2
+  mod: mod1
   key: 6
 
 throw-space-7:
-  mod: mod2
+  mod: mod1
   key: 7
 
 throw-space-8:
-  mod: mod2
+  mod: mod1
   key: 8
 
 throw-space-9:
-  mod: mod2
+  mod: mod1
   key: 9
 
 throw-space-0:
-  mod: mod2
+  mod: mod1
   key: 0
 #+end_src
 
@@ -218,7 +218,6 @@ relaunch-amethyst:
 #+end_src
 
 ** ⚒️ DEBUG CONFIGURATION
-Show debug info about layouts
 #+begin_src yml
 debug-layout-info: false
 #+end_src
