@@ -9,49 +9,98 @@
   - [[#tldr][TL;DR]]
   - [[#about][ABOUT]]
   - [[#set-fonts][SET FONTS]]
-  - [[#icons][ICONS]]
+  - [[#nerd-icons][NERD ICONS]]
+  - [[#nerd-icons-completion][NERD ICONS COMPLETION]]
+  - [[#nerd-icons-dired][NERD ICONS DIRED]]
+  - [[#nerd-icons-treemacs][NERD ICONS TREEMACS]]
+  - [[#line-spacing][LINE SPACING]]
+  - [[#theme][THEME]]
   - [[#minimal-ui][MINIMAL UI]]
-  - [[#theme-configuration][THEME CONFIGURATION]]
   - [[#set-frame-opacity][SET FRAME OPACITY]]
-  - [[#customize-frame-borders-and-windows-dividers][CUSTOMIZE FRAME BORDERS AND WINDOWS DIVIDERS]]
-  - [[#configure-highlight-indent-guides][CONFIGURE HIGHLIGHT INDENT GUIDES]]
   - [[#enable-beacon-mode][ENABLE BEACON MODE]]
   - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
-  - [[#customize-doom-modeline][CUSTOMIZE DOOM MODELINE]]
+  - [[#doom-modeline][DOOM MODELINE]]
   - [[#configure-centaur-tabs][CONFIGURE CENTAUR-TABS]]
-  - [[#configure-shell][CONFIGURE SHELL]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#org-alert][ORG-ALERT]]
   - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
-  - [[#org-latex-export-configuration][ORG-LATEX EXPORT CONFIGURATION]]
   - [[#org-mode-configuration][ORG-MODE CONFIGURATION]]
-  - [[#org-modern-configuration][ORG-MODERN CONFIGURATION]]
+  - [[#org-modern][ORG-MODERN]]
   - [[#org-reveal-configuration][ORG-REVEAL CONFIGURATION]]
+  - [[#pdf][PDF]]
   - [[#vertico][VERTICO]]
+  - [[#marginalia][MARGINALIA]]
   - [[#savehist][SAVEHIST]]
   - [[#orderless][ORDERLESS]]
+  - [[#corfu][CORFU]]
 
 ** TL;DR
-Personal DOOM EMACS ~config~
+Personal *DOOM EMACS* ~config~
 
 ** ABOUT
 #+begin_src emacs-lisp
-(setq user-full-name "Shashiduth Takoor"
+(setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
 ** SET FONTS
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
-      doom-big-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
-      doom-serif-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
-      doom-unicode-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 12 :weight 'light))
+(setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 #+end_src
 
-** ICONS
+** NERD ICONS
 #+begin_src emacs-lisp
-(use-package all-the-icons)
+(use-package nerd-icons)
+#+end_src
+
+** NERD ICONS COMPLETION
+#+begin_src emacs-lisp
+(use-package nerd-icons-completion
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+#+end_src
+
+** NERD ICONS DIRED
+#+begin_src emacs-lisp
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+** NERD ICONS TREEMACS
+#+begin_src emacs-lisp
+(use-package treemacs-nerd-icons
+  :config
+  (treemacs-load-theme "nerd-icons"))
+#+end_src
+
+** LINE SPACING
+#+begin_src emacs-lisp
+(setq-default line-spacing 0.2)
+#+end_src
+
+** THEME
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :ensure t
+  :custom
+  (modus-themes-italic-constructs t)
+  (modus-themes-bold-constructs nil)
+  (modus-themes-mixed-fonts t)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-completions '((t . (extrabold))))
+  (modus-themes-headings
+   '((agenda-structure . (variable-pitch light 2.2))
+     (agenda-date . (variable-pitch regular 1.3))
+     (t . (regular 1.15))))
+  :init
+  (load-theme 'modus-vivendi t))
 #+end_src
 
 ** MINIMAL UI
@@ -60,100 +109,13 @@ Personal DOOM EMACS ~config~
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (show-paren-mode 1)
-(fset 'yes-or-no-p 'y-or-n-p)
 (add-to-list 'default-frame-alist '(undecorated-round . t))
-#+end_src
-
-** THEME CONFIGURATION
-#+begin_src emacs-lisp
-(setq modus-themes-custom-auto-reload nil
-      modus-themes-mixed-fonts t
-      modus-themes-variable-pitch-ui nil
-      modus-themes-italic-constructs t
-      modus-themes-bold-constructs nil
-      modus-themes-org-blocks 'gray-background
-      modus-themes-completions '((t . (extrabold)))
-      modus-themes-prompts nil
-      modus-themes-headings
-      '((agenda-structure . (variable-pitch light 2.2))
-        (agenda-date . (variable-pitch regular 1.3))
-        (t . (regular 1.15))))
-
-(setq modus-themes-common-palette-overrides
-      '((cursor magenta-cooler)
-        (fringe bg-active)
-        (fg-line-number-inactive "gray50")
-        (fg-line-number-active cyan-cooler)
-        (bg-line-number-inactive unspecified)
-        (bg-line-number-active unspecified)
-        (bg-hl-line bg-dim)
-        (bg-region bg-sage)
-        (fg-region unspecified)
-        (bg-paren-match bg-magenta-intense)
-        (mail-cite-0 fg-dim)
-        (mail-cite-1 blue-faint)
-        (mail-cite-2 fg-dim)
-        (mail-cite-3 blue-faint)
-        (mail-part cyan-warmer)
-        (mail-recipient blue-warmer)
-        (mail-subject magenta-cooler)
-        (mail-other cyan-warmer)
-        (date-deadline magenta-cooler)
-        (date-scheduled magenta)
-        (date-weekday fg-main)
-        (date-event fg-dim)
-        (date-now blue-faint)
-        (prose-done cyan-cooler)
-        (prose-tag fg-dim)
-        (prose-table fg-main)
-        (fg-heading-2 blue-faint)
-        (fg-heading-3 magenta-faint)
-        (fg-heading-4 blue-faint)
-        (fg-heading-5 magenta-faint)
-        (fg-heading-6 blue-faint)
-        (fg-heading-7 magenta-faint)
-        (fg-heading-8 blue-faint)
-        (bg-mode-line-active bg-lavender)
-        (border-mode-line-active bg-lavender)
-        (bg-mode-line-inactive bg-dim)
-        (border-mode-line-inactive bg-inactive)
-        (bg-prompt bg-magenta-nuanced)
-        (fg-prompt magenta-cooler)
-        (name blue-warmer)
-        (identifier magenta-faint)
-        (keybind magenta-cooler)
-        (accent-0 magenta-cooler)
-        (accent-1 cyan-cooler)
-        (accent-2 blue-warmer)
-        (accent-3 red-cooler)))
-(custom-set-faces
- '(mode-line ((t :box (:style released-button)))))
-
-(load-theme 'modus-vivendi t)
 #+end_src
 
 ** SET FRAME OPACITY
 #+begin_src emacs-lisp
 (set-frame-parameter (selected-frame) 'alpha '(70 . 50))
 (add-to-list 'default-frame-alist '(alpha . (70 . 50)))
-#+end_src
-
-** CUSTOMIZE FRAME BORDERS AND WINDOWS DIVIDERS
-#+begin_src emacs-lisp
-(modify-all-frames-parameters
- '((right-divider-width . 20)
-   (internal-border-width . 20)))
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel)))
-(set-face-background 'fringe (face-attribute 'default :background))
-#+end_src
-
-** CONFIGURE HIGHLIGHT INDENT GUIDES
-#+begin_src emacs-lisp
-(after! highlight-indent-guides
-  (setq highlight-indent-guides-character ?│
-        highlight-indent-guides-responsive 'top))
 #+end_src
 
 ** ENABLE BEACON MODE
@@ -168,7 +130,7 @@ Personal DOOM EMACS ~config~
 (setq display-line-numbers-type 'relative)
 #+end_src
 
-** CUSTOMIZE DOOM MODELINE
+** DOOM MODELINE
 #+begin_src emacs-lisp
 (after! doom-modeline
 (setq doom-modeline-enable-word-count t
@@ -182,7 +144,7 @@ Personal DOOM EMACS ~config~
 
 ** CONFIGURE CENTAUR-TABS
 #+begin_src emacs-lisp
-(setq centaur-tabs-default-font "Iosevka Nerd Font"
+(setq centaur-tabs-default-font "Iosevka NF"
       centaur-tabs-set-bar 'right
       centaur-tabs-set-icons t
       centaur-tabs-gray-out-icons 'buffer
@@ -191,11 +153,6 @@ Personal DOOM EMACS ~config~
       centaur-tabs-style "bar"
       centaur-tabs-close-button "⨂"
       centaur-tabs-modified-marker "⨀")
-#+end_src
-
-** CONFIGURE SHELL
-#+begin_src emacs-lisp
-(setq shell-file-name (executable-find "zsh"))
 #+end_src
 
 ** ORG-AUTO-TANGLE
@@ -227,54 +184,6 @@ Personal DOOM EMACS ~config~
 (setq org-ditaa-jar-path "/opt/homebrew/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
 #+end_src
 
-** ORG-LATEX EXPORT CONFIGURATION
-#+begin_src emacs-lisp
-(require 'ox-latex)
-
-;; Configure PDF export with XeLaTeX and shell escape
-(setq
-    org-latex-pdf-process
-    '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-      "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-      "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; Define a custom LaTeX class for the thesis
-(with-eval-after-load 'ox-latex
-   (add-to-list 'org-latex-classes
-                '("scrartcl"
-                  "\\documentclass[letterpaper]{scrartcl}"
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-
-;; Source Code Blocks
-(setq org-latex-listings 'minted
-      org-latex-packages-alist
-      '(("newfloat" "minted")
-        ("color" "xcolor")
-        ("" "booktabs"))
-      org-latex-minted-options
-      '(("breaklines" "true")
-        ("breakanywhere" "true")
-        ("mathescape")
-        ("frame" "lines")
-        ("linenos" "true")
-        ("rmlines" "true")))
-
-;; Latex Table Caption
-(setq org-latex-caption-above nil)
-
-;; Table of Contents (TOC)
-(setq org-export-with-toc t)
-(setq org-export-latex-format-toc-function 'org-export-latex-no-toc)
-(defun org-export-latex-no-toc (depth)
-    (when depth
-      (format "%% Org-mode is exporting headings to %s levels.\n"
-              depth)))
-#+end_src
-
 ** ORG-MODE CONFIGURATION
 #+begin_src emacs-lisp
 (setq org-directory "~/Documents/OrgFiles/"
@@ -287,14 +196,14 @@ Personal DOOM EMACS ~config~
       org-ellipsis " ▼ "
       org-hide-emphasis-markers t
       org-hide-leading-stars t
-      org-indent-mode t
+      org-indent-mode nil
       org-insert-heading-respect-content t
       org-log-done t
       org-pretty-entities t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-special-ctrl-a/e t
-      org-startup-indented t
+      org-startup-indented nil
       org-tags-column 0
       org-agenda-time-grid
       '((daily today require-timed)
@@ -304,9 +213,9 @@ Personal DOOM EMACS ~config~
       "⭠ now ─────────────────────────────────────────────────")
 #+end_src
 
-** ORG-MODERN CONFIGURATION
+** ORG-MODERN
 #+begin_src emacs-lisp
-(use-package! org-modern
+(use-package org-modern
   :ensure t
   :config
   (setq org-modern-table-vertical 1
@@ -318,8 +227,23 @@ Personal DOOM EMACS ~config~
 
 ** ORG-REVEAL CONFIGURATION
 #+begin_src emacs-lisp
-(use-package! ox-reveal)
+(use-package ox-reveal)
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+#+end_src
+
+** PDF
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :defer t
+  :commands (pdf-loader-install)
+  :mode "\\.pdf\\'"
+  :bind (:map pdf-view-mode-map
+              ("j" . pdf-view-next-line-or-next-page)
+              ("k" . pdf-view-previous-line-or-previous-page))
+  :init (pdf-loader-install)
+  :config (add-to-list 'revert-without-query ".pdf"))
+
+(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
 #+end_src
 
 ** VERTICO
@@ -336,6 +260,15 @@ Personal DOOM EMACS ~config~
   (define-key vertico-map (kbd "M-k") 'vertico-previous))
 #+end_src
 
+** MARGINALIA
+#+begin_src emacs-lisp
+(use-package marginalia
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+#+end_src
+
 ** SAVEHIST
 #+begin_src emacs-lisp
 (use-package savehist
@@ -346,8 +279,24 @@ Personal DOOM EMACS ~config~
 ** ORDERLESS
 #+begin_src emacs-lisp
 (use-package orderless
-  :init
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+** CORFU
+#+begin_src emacs-lisp
+(use-package corfu
+  :general
+  (:keymaps 'corfu-map
+   :states 'insert
+   "C-n" #'corfu-next
+   "C-p" #'corfu-previous
+   "<escape>" #'corfu-quit
+   "<return>" #'corfu-insert
+   "M-d" #'corfu-show-documentation
+   "M-l" #'corfu-show-location)
+  :config
+  (corfu-global-mode))
 #+end_src

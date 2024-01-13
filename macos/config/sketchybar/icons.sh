@@ -18,7 +18,7 @@ export ICON_MPV=               # Space 8 -- MPV for videos
 export ICON_CONTAINER=󰮄         # Space 9 -- Cube for containers
 export ICON_SPACE=󰯉             # Space 10 -- Place to do current work, joining multiple windows
 
-export ICON_CLOCK=󰥔
+export ICON_CLOCK=􀧞
 export ICON_CALENDAR=󰃶 # Status
 
 export ICON_WIFI=󰖩
