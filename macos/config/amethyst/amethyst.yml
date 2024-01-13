@@ -1,0 +1,160 @@
+follow-space-thrown-windows: true
+
+window-margins: true
+smart-window-margins: true
+window-margin-size: 10
+
+screen-padding-left: 10
+screen-padding-right: 10
+screen-padding-top: 40
+screen-padding-bottom: 10
+
+layouts:
+  - tall
+  - fullscreen
+  - wide
+  - column
+
+enables-layout-hud: true
+enables-layout-hud-on-space-change: false
+restore-layouts-on-launch: true
+
+mod1:
+  - option
+  - shift
+
+mod2:
+  - option
+  - shift
+  - control
+
+cycle-layout:
+  mod: mod1
+  key: space
+
+cycle-layout-backward:
+  mod: mod2
+  key: space
+
+shrink-main:
+  mod: mod1
+  key: h
+
+expand-main:
+  mod: mod1
+  key: l
+
+increase-main:
+  mod: mod1
+  key: ','
+
+decrease-main:
+  mod: mod1
+  key: '.'
+
+throw-space-1:
+  mod: mod1
+  key: 1
+
+throw-space-2:
+  mod: mod1
+  key: 2
+
+throw-space-3:
+  mod: mod1
+  key: 3
+
+throw-space-34:
+  mod: mod1
+  key: 4
+
+throw-space-5:
+  mod: mod1
+  key: 5
+
+throw-space-6:
+  mod: mod1
+  key: 6
+
+throw-space-7:
+  mod: mod1
+  key: 7
+
+throw-space-8:
+  mod: mod1
+  key: 8
+
+throw-space-9:
+  mod: mod1
+  key: 9
+
+throw-space-10:
+  mod: mod1
+  key: 10
+
+focus-ccw:
+  mod: mod1
+  key: j
+
+focus-cw:
+  mod: mod1
+  key: k
+
+focus-main:
+  mod: mod1
+  key: m
+
+focus-screen-ccw:
+  mod: mod1
+  key: p
+
+focus-screen-cw:
+  mod: mod1
+  key: n
+
+swap-screen-ccw:
+  mod: mod2
+  key: h
+
+swap-screen-cw:
+  mod: mod2
+  key: l
+
+swap-ccw:
+  mod: mod2
+  key: j
+
+swap-cw:
+  mod: mod2
+  key: k
+
+swap-main:
+  mod: mod1
+  key: enter
+
+throw-space-left:
+  mod: mod2
+  key: left
+
+throw-space-right:
+  mod: mod2
+  key: right
+
+toggle-float:
+  mod: mod1
+  key: t
+
+focus-follows-mouse: false
+
+float-small-windows: true
+
+# List of bundle identifiers for applications to automatically float
+floating: [com.apple.systempreferences]
+
+use-canary-build: true
+
+relaunch-amethyst:
+  mod: mod2
+  key: z
+
+debug-layout-info: false
