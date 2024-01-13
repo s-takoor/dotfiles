@@ -1,5 +1,4 @@
 #+TITLE: DOOM EMACS CONFIG
-#+DESCRIPTION: configuration file for doom emacs
 #+AUTHOR: s.takoor
 #+PROPERTY: header-args :tangle config.el
 #+auto_tangle: t

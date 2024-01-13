@@ -17,7 +17,10 @@ return {
   default_cursor_style = "BlinkingBar",
 
   -- Font
-  font = wezterm.font("JetBrainsMono NF", { weight = "Medium", italic = false }),
+  font = wezterm.font_with_fallback({
+    { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+    { family = "SF Pro", weight = "Medium", italic = false, },
+  }),
   font_size = 11.0,
 
   -- Blur
@@ -38,6 +41,8 @@ return {
 
   -- Opacity
   window_background_opacity = 0.70,
+
+  -- Window decorations
   window_decorations = "RESIZE",
 
   -- Tab bar
