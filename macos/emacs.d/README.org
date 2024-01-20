@@ -24,7 +24,7 @@ xcode-select --install
 #+end_src
 
 ** EMACS
-Using `emacs-plus` formula from [[https://github.com/d12frosted/homebrew-emacs-plus#emacs-29-and-emacs-30][d12frosted]]
+Using `emacs-plus` formula from [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted]]
 #+begin_src sh
 brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-native-comp --with-modern-doom3-icon
