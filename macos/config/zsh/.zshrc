@@ -30,7 +30,7 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 eval "$(starship init zsh)"
 
 # -- RTX -- #
-eval "$(rtx activate zsh)"
+eval "$(mise activate zsh)"
 
 # -- ZOXIDE -- #
 eval "$(zoxide init zsh)"
