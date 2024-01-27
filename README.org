@@ -1,7 +1,7 @@
 #+title: DOTFILES
 #+author: s.t
 
-* TABLE OF CONTENTS :toc:
+** TABLE OF CONTENTS :toc:
   - [[#-tldr][🚀 TL;DR]]
   - [[#-gnu-stow][🧰 GNU STOW]]
   - [[#️-tools-i-use][⚙️ TOOLS I USE]]
@@ -12,7 +12,7 @@
  This is a repository for my dotfiles.
 
 ** 🧰 GNU STOW
-`dotfiles` are symlinked on my machines using GNU Stow, a symlink farm manager. Below is a quick guide on how to use it.
+~dotfiles~ are symlinked on my machines using [[https://www.gnu.org/software/stow/][GNU Stow]], a symlink farm manager. Below is a quick guide on how to use it.
 *** INSTALLATION
 #+begin_src sh
 brew install stow
@@ -43,7 +43,7 @@ stow -vD tmux
 *** [[https://github.com/ranger/ranger][ranger]] - A VIM-inspired filemanager for the console
 *** [[https://github.com/davatorium/rofi][rofi]] - Window switcher, application launcher, and dmenu replacement
 *** [[https://github.com/starship/starship][starship]] - Shell prompt
-*** [[https://wezfurlong.org/wezterm/index.html][WezTerm]] - Powerful cross-platform terminal emulator and multiplexer
+*** [[https://wezfurlong.org/wezterm/index.html][wezterm]] - Powerful cross-platform terminal emulator and multiplexer
 *** [[https://github.com/jaor/xmobar][xmobar]] - Status bar
 *** [[https://github.com/xmonad/xmonad][xmonad]] - Tiling window manager for X11
 *** [[https://github.com/pwmt/zathura][zathura]] - Document viewer
@@ -54,5 +54,5 @@ stow -vD tmux
 *** [[https://www.apple.com][MacBook Pro]] - M1 MacBook Pro
 
 ** 🔩 GEARS
-*** [[https://www2.razer.com/ap-en/store/razer-deathadder-v2-mini][Razer DeathAdder V2 Mini]] - Gaming mouse
+*** [[https://www.razer.com/gaming-mice/razer-deathadder-v2-mini][Razer DeathAdder V2 Mini]] - Gaming mouse
 *** [[https://www.razer.com/gaming-keyboards/razer-huntsman-tournament-edition/RZ03-03080200-R3U1][Razer Huntsman Tournament Edition - US - Black Keycaps]] - Gaming keyboard
