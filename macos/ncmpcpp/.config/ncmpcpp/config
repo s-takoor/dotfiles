@@ -1,0 +1,102 @@
+# --------------
+# ncmpcpp config
+# --------------
+ncmpcpp_directory                = "~/.config/ncmpcpp"
+lyrics_directory                 = "~/.config/ncmpcpp/lyrics"
+message_delay_time               = "1"
+
+# ---
+# MPD
+# ---
+mpd_host                         = "127.0.0.1"
+mpd_port                         = "6600"
+mpd_connection_timeout           = "5"
+mpd_crossfade_time               = "5"
+mpd_music_dir                    = "~/Music"
+
+
+# ------
+# Colors
+# ------
+colors_enabled                   = "yes"
+main_window_color                = "default"
+enable_window_title              = "yes"
+empty_tag_color                  = "yellow"
+volume_color                     = "red"
+
+
+# ------
+# Header
+# ------
+header_visibility                = "no"
+header_window_color              = "default"
+state_line_color                 = "default"
+
+
+# ------
+# Format
+# ------
+song_columns_list_format         = "(10f)[white]{n} (25)[blue]{t} (25)[yellow]{a} (25)[green]{b} (10)[red]{y}"
+song_library_format              = "{%n > }{%t}|{%f}"
+song_window_title_format         = NCMPCPP: ♪ {%a - }{%t}{ (%b)}|{%f}
+song_list_format                 = "{$3%t $R $2 $4 $4  $4%l$4}|{$3%f $R $2 $4 $3 $R $4%l$4}"
+#song_status_format               = {{%a{ "%b"{ (%y)}} - }{%t}}|{%f}
+song_status_format               = "{$b$2 $5%a $3$4$2 $4%t}|{$b$2 $8%f}"
+#song_status_format               = "{{%a{ - %t}}|{ - %f}{ - %b{ (%y)}}}"
+now_playing_prefix               = "$b$5"
+browser_sort_format              = "{%a - }{%t}|{%f} {(%l)}"
+browser_display_mode             = "columns"
+
+
+# ------------
+# Progress bar
+# ------------
+statusbar_visibility             = "yes"
+progressbar_look                 = "▃▃▃"
+
+# --------
+# Playlist
+# --------
+playlist_display_mode            = "columns"
+playlist_disable_highlight_delay = "0"
+playlist_separate_albums         = "yes"
+playlist_show_remaining_time     = "yes" 
+
+# ----
+# Misc
+# ----
+startup_screen                   = "playlist"
+startup_slave_screen             = "visualizer" 
+use_console_editor               = "yes" 
+system_encoding                  = "utf-8"
+search_engine_display_mode       = "columns"
+autocenter_mode                  = "yes"
+centered_cursor                  = "yes"
+media_library_primary_tag        = "album_artist"
+user_interface                   = "alternative"
+titles_visibility                = "yes"
+follow_now_playing_lyrics        = "yes"
+store_lyrics_in_song_dir         = "yes"
+ignore_leading_the               = "yes"
+empty_tag_marker                 = "[empty]"
+current_item_prefix              = "$(default)$r"
+display_bitrate                  = "yes"
+clock_display_seconds            = "yes"
+mouse_support                    = "yes"
+mouse_list_scroll_whole_page     = "yes"
+cyclic_scrolling                 = "yes"
+lines_scrolled                   = "2"
+external_editor                  = "vim"
+jump_to_now_playing_song_at_start = "yes" 
+
+# ----------
+# Visualizer
+# ----------
+visualizer_data_source           = "/tmp/mpd.fifo"
+visualizer_output_name           = "my_fifo"
+visualizer_in_stereo             = "yes"
+visualizer_autoscale             = "yes"
+visualizer_fps                   = "60"
+visualizer_type                  = "spectrum"
+visualizer_look                  = "+|"
+visualizer_color                 = "white, blue, yellow, green, cyan, magenta, red, black"

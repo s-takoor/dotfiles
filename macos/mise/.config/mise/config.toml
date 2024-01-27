@@ -1,0 +1,3 @@
+[tools]
+node = "system"
+python = "latest"

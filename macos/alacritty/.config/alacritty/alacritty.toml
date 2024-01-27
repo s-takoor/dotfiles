@@ -1,0 +1,110 @@
+import = ["/Users/st/.config/alacritty/fonts.toml", "/Users/st/.config/alacritty/colors.toml"]
+live_config_reload = true
+
+# [["key bindings"]]
+# chars = "#"
+# key = "Key3"
+# mods = "Alt"
+
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+blinking = "On"
+shape = "Block"
+
+[env]
+TERM = "xterm-256color"
+
+[[keyboard.bindings]]
+chars = "\u0002c"
+key = "T"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002,"
+key = "Comma"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002w"
+key = "W"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002%"
+key = "L"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002\""
+key = "J"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00021"
+key = "Key1"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00022"
+key = "Key2"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00023"
+key = "Key3"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00024"
+key = "Key4"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00025"
+key = "Key5"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00026"
+key = "Key6"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00027"
+key = "Key7"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00028"
+key = "Key8"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00029"
+key = "Key9"
+mods = "Command"
+
+[shell]
+args = ["new-session", "-A", "-D", "-s", "main"]
+program = "/opt/homebrew/bin/tmux"
+
+[window]
+blur = true
+decorations = "buttonless"
+dynamic_title = false
+opacity = 0.7
+startup_mode = "Windowed"
+
+[window.dimensions]
+columns = 200
+lines = 50
+
+[window.padding]
+x = 40
+y = 40
+
+[scrolling]
+history = 10000
+multiplier = 3

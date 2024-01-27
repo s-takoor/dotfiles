@@ -1,0 +1,50 @@
+# Prompt
+autoload -Uz colors && colors
+PROMPT="%B%{$fg[blue]%}[%{$fg[white]%}off sec%{$fg[red]%}@%{$fg[white]%}Bl4ck rch%{$fg[blue]%}] %(?:%{$fg_bold[green]%} :%{$fg_bold[red]%} )%{$fg[cyan]%} %c %{$reset_color%}"
+
+# ZSH history file
+HISTSIZE=100
+SAVEHIST=100
+HISTFILE=~/.zsh_history
+
+# Fancy auto-complete
+autoload -Uz compinit
+zstyle ':completion:*' menu select=0
+zmodload zsh/complist
+zstyle ':completion:*' complete-options true
+compinit
+_comp_options+=(globdots) # hidden files are included
+
+export LD_PRELOAD=""
+export EDITOR="nvim"
+export PATH="$HOME/bin:/usr/lib/ccache/bin/:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin:/usr/bin/core_perl:/usr/games/bin:$PATH"
+
+# alias
+alias c="clear"
+alias curl="curl --user-agent 'noleak'"
+alias cat="bat --color=always"
+alias r="reset"
+alias shred="shred -zf"
+alias ls="ls --color=auto"
+alias dir="dir --color=auto"
+alias vdir="vdir --color=auto"
+alias grep="grep --color=auto"
+alias fgrep="fgrep --color=auto"
+alias egrep="egrep --color=auto"
+alias wget="wget -c --user-agent 'noleak'"
+alias dd="dd status=progress"
+alias cp="cp -i"                          # confirm before overwriting something
+alias rm="rm -i"
+alias mv="mv -i"
+alias df="df -h"                          # human-readable sizes
+alias free="free -h"
+alias du="du -h"
+alias ls="exa -al --icons --color=always --group-directories-first"
+alias la="exa -a --icons --color=always --group-directories-first"
+alias lt="exa -aT --icons --color=always"
+alias v='nvim'
+alias vi="nvim"
+alias vim="nvim"
+
+# Zoxide
+eval "$(zoxide init zsh)"
