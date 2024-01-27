@@ -1,0 +1,41 @@
+# SCRIPTING ADDITIONS
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# LAYOUT (BSP, STACK or FLOAT)
+yabai -m config \
+        layout bsp \
+	window_origin_display default \
+        window_placement second_child \
+	window_topmost off \
+	window_shadow off \
+	window_animation_duration 0.20 \
+	window_opacity_duration 0.20 \
+	active_window_opacity 0.90 \
+	normal_window_opacity 0.50 \
+	window_opacity on \
+        window_gap 15 \
+        split_ratio 0.50 \
+        split_type auto \
+        auto_balance off
+
+# PADDING
+yabai -m config \
+        top_padding 15 \
+        bottom_padding 15 \
+        right_padding 15 \
+        left_padding 15
+
+# GENERAL SETTINGS
+yabai -m config \
+        mouse_follows_focus off \
+	focus_follows_mouse off \
+        mouse_modifier fn \
+        mouse_action1 move \
+        mouse_action2 resize \
+        mouse_drop_action swap
+
+# APPS EXCLUSION
+yabai -m rule --add app="^(Archive Utility|Calculator|Maccy|System Preferences)$" manage=off
+
+echo "yabai configuration loaded.."

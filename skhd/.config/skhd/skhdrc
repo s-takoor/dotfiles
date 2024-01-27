@@ -1,0 +1,10 @@
+# Launch Applications
+# shift + cmd - return : open -a alacritty
+shift + cmd - return : open -a wezterm
+shift + cmd - b : open -na "Brave Browser"
+shift + cmd - e : emacsclient -c -n -a ''
+shift + cmd - o : open ~/Documents
+# MPD Control
+ctrl + alt - p : mpc toggle
+ctrl + alt - n : mpc next
+ctrl + alt - b : mpc prev
