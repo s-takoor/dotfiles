@@ -1,13 +1,13 @@
 #+title: ALACRITTY
 #+author: s.t
 #+auto_tangle: t
-#+startup: content indent
+#+startup: showeverything
 
 ** TL;DR
 This ~README~ is the literate configuration file for =alacritty=, a GPU-accelerated terminal emulator.
 
 ** GENERAL INFORMATION
-Note that if not using the [[https://elpa.nongnu.org/nongnu/org-auto-tangle.html][org-auto-tangle]] package (which automatically and asynchronously tangles files on save), you will have to use the following emacs keybindings to manually tangle the configs to the respective ~.toml~ file.
+Note that, if you're not using the [[https://elpa.nongnu.org/nongnu/org-auto-tangle.html][org-auto-tangle]] package, which facilitates automatic and asynchronous tangling of files upon saving, you will have to use the relevant ~Emacs~ keybindings ~C-c C-v C-t~ to manually tangle all the code blocks in the current file to their respective ~.toml~ files.
 
 ** TABLE OF CONTENTS :toc:
   - [[#tldr][TL;DR]]
