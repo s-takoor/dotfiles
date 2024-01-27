@@ -1,4 +1,3 @@
-# GRUVBOX
 # [colors.bright]
 # black = "0x928374"
 # blue = "0x83a598"
@@ -27,7 +26,6 @@
 # background = "0x3e4451"
 # foreground = "0xebdbb2"
 
-# CATPPUCCIN-MACCHIATO
 [colors.primary]
 background = "#24273A"
 foreground = "#CAD3F5"

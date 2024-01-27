@@ -1,0 +1,296 @@
+#+title: ALACRITTY
+#+author: s.t
+#+auto_tangle: t
+#+startup: content indent
+
+** TL;DR
+This ~README~ is the literate configuration file for =alacritty=, a GPU-accelerated terminal emulator.
+
+** GENERAL INFORMATION
+Note that if not using the [[https://elpa.nongnu.org/nongnu/org-auto-tangle.html][org-auto-tangle]] package (which automatically and asynchronously tangles files on save), you will have to use the following emacs keybindings to manually tangle the configs to the respective ~.toml~ file.
+
+** TABLE OF CONTENTS :toc:
+  - [[#tldr][TL;DR]]
+  - [[#general-information][GENERAL INFORMATION]]
+  - [[#alacritty][ALACRITTY]]
+  - [[#colors][COLORS]]
+  - [[#fonts][FONTS]]
+
+** ALACRITTY
+This section documents the configuration for =alacritty= which uses the ~TOML~ file format.
+
+**** IMPORT
+Importing the ~colors.toml~ and the ~fonts.toml~ configuration files
+#+begin_src rust :tangle "alacritty.toml"
+import = [
+"~/.config/alacritty/colors.toml",
+"~/.config/alacritty/fonts.toml",
+]
+#+end_src
+
+**** LIVE CONFIG RELOAD
+Live config reload
+#+begin_src rust :tangle "alacritty.toml"
+live_config_reload = true
+#+end_src
+
+**** SHELL
+Setting the ~shell.program~ to the path of ~tmux~. Entries in the ~shell.args~ are passed as arguments to the ~fish~ shell
+#+begin_src rust :tangle "alacritty.toml"
+[shell]
+program = "/opt/homebrew/bin/tmux"
+args = ["new-session", "-A", "-D", "-s", "main"]
+#+end_src
+
+**** ENV
+#+begin_src rust :tangle "alacritty.toml"
+[env]
+TERM = "xterm-256color"
+#+end_src
+
+**** CURSOR
+This section documents the ~cursor~ table for =alacritty=
+#+begin_src rust :tangle "alacritty.toml"
+[cursor]
+unfocused_hollow = false
+
+[cursor.style]
+blinking = "On"
+shape = "Block"
+#+end_src
+
+**** KEYBOARD
+This section documents the ~keyboard~ table for =alacritty=.
+#+begin_src rust :tangle "alacritty.toml"
+[[keyboard.bindings]]
+chars = "\u0002c"
+key = "T"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002,"
+key = "Comma"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002w"
+key = "W"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002%"
+key = "L"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0002\""
+key = "J"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00021"
+key = "Key1"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00022"
+key = "Key2"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00023"
+key = "Key3"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00024"
+key = "Key4"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00025"
+key = "Key5"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00026"
+key = "Key6"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00027"
+key = "Key7"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00028"
+key = "Key8"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00029"
+key = "Key9"
+mods = "Command"
+#+end_src
+
+**** SCROLLING
+This section documents the ~scrolloing~ table of =alacritty=
+#+begin_src rust :tangle "alacritty.toml"
+[scrolling]
+history = 10000
+multiplier = 3
+#+end_src
+
+**** WINDOW
+This section documents the ~window~ table of =alacritty=
+#+begin_src rust :tangle "alacritty.toml"
+[window]
+blur = true
+decorations = "buttonless"
+dynamic_title = false
+opacity = 0.7
+startup_mode = "Windowed"
+
+[window.dimensions]
+columns = 200
+lines = 50
+
+[window.padding]
+x = 40
+y = 40
+#+end_src
+
+** COLORS
+This section documents the ~colors~ table of =alacritty=
+*** GRUVBOX COLORS
+#+begin_src rust :tangle "colors.toml"
+# [colors.bright]
+# black = "0x928374"
+# blue = "0x83a598"
+# cyan = "0x8ec07c"
+# green = "0xb8bb26"
+# magenta = "0xd3869b"
+# red = "0xfb4934"
+# white = "0xebdbb2"
+# yellow = "0xfabd2f"
+#
+# [colors.normal]
+# black = "0x282828"
+# blue = "0x458588"
+# cyan = "0x689d6a"
+# green = "0x98971a"
+# magenta = "0xb16286"
+# red = "0xcc241d"
+# white = "0xa89984"
+# yellow = "0xd79921"
+#
+# [colors.primary]
+# background = "0x282828"
+# foreground = "0xebdbb2"
+#
+# [colors.selection]
+# background = "0x3e4451"
+# foreground = "0xebdbb2"
+#+end_src
+
+*** CATPPUCCIN MACCHIATO COLORS
+#+begin_src rust :tangle "colors.toml"
+[colors.primary]
+background = "#24273A"
+foreground = "#CAD3F5"
+dim_foreground = "#CAD3F5"
+bright_foreground = "#CAD3F5"
+
+[colors.cursor]
+text = "#24273A"
+cursor = "#F4DBD6"
+
+[colors.vi_mode_cursor]
+text = "#24273A"
+cursor = "#B7BDF8"
+
+[colors.search.matches]
+foreground = "#24273A"
+background = "#A5ADCB"
+
+[colors.search.focused_match]
+foreground = "#24273A"
+background = "#A6DA95"
+
+[colors.footer_bar]
+foreground = "#24273A"
+background = "#A5ADCB"
+
+[colors.hints.start]
+foreground = "#24273A"
+background = "#EED49F"
+
+[colors.hints.end]
+foreground = "#24273A"
+background = "#A5ADCB"
+
+[colors.selection]
+text = "#24273A"
+background = "#F4DBD6"
+
+[colors.normal]
+black = "#494D64"
+red = "#ED8796"
+green = "#A6DA95"
+yellow = "#EED49F"
+blue = "#8AADF4"
+magenta = "#F5BDE6"
+cyan = "#8BD5CA"
+white = "#B8C0E0"
+
+[colors.bright]
+black = "#5B6078"
+red = "#ED8796"
+green = "#A6DA95"
+yellow = "#EED49F"
+blue = "#8AADF4"
+magenta = "#F5BDE6"
+cyan = "#8BD5CA"
+white = "#A5ADCB"
+
+[colors.dim]
+black = "#494D64"
+red = "#ED8796"
+green = "#A6DA95"
+yellow = "#EED49F"
+blue = "#8AADF4"
+magenta = "#F5BDE6"
+cyan = "#8BD5CA"
+white = "#B8C0E0"
+
+[[colors.indexed_colors]]
+index = 16
+color = "#F5A97F"
+
+[[colors.indexed_colors]]
+index = 17
+color = "#F4DBD6"
+#+end_src
+
+** FONTS
+This section documents the ~font~ table of =alacritty=. The default font for ~macOS~ is ~Menlo~ but I prefer using a [[https://www.nerdfonts.com/][Nerd Font]] instead.
+#+begin_src rust :tangle "fonts.toml"
+[font]
+size = 10
+
+[font.bold]
+family = "JetBrainsMono NF"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrainsMono NF"
+style = "Bold Italic"
+
+[font.italic]
+family = "JetBrainsMono NF"
+style = "Italic"
+
+[font.normal]
+family = "JetBrainsMono NF"
+style = "Regular"
+#+end_src

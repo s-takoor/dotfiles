@@ -1,10 +1,16 @@
-import = ["/Users/st/.config/alacritty/fonts.toml", "/Users/st/.config/alacritty/colors.toml"]
+import = [
+"~/.config/alacritty/colors.toml",
+"~/.config/alacritty/fonts.toml",
+]
+
 live_config_reload = true
 
-# [["key bindings"]]
-# chars = "#"
-# key = "Key3"
-# mods = "Alt"
+[shell]
+program = "/opt/homebrew/bin/tmux"
+args = ["new-session", "-A", "-D", "-s", "main"]
+
+[env]
+TERM = "xterm-256color"
 
 [cursor]
 unfocused_hollow = false
@@ -12,9 +18,6 @@ unfocused_hollow = false
 [cursor.style]
 blinking = "On"
 shape = "Block"
-
-[env]
-TERM = "xterm-256color"
 
 [[keyboard.bindings]]
 chars = "\u0002c"
@@ -86,9 +89,9 @@ chars = "\u00029"
 key = "Key9"
 mods = "Command"
 
-[shell]
-args = ["new-session", "-A", "-D", "-s", "main"]
-program = "/opt/homebrew/bin/tmux"
+[scrolling]
+history = 10000
+multiplier = 3
 
 [window]
 blur = true
@@ -104,7 +107,3 @@ lines = 50
 [window.padding]
 x = 40
 y = 40
-
-[scrolling]
-history = 10000
-multiplier = 3
