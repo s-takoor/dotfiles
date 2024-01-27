@@ -4,7 +4,7 @@
 * TABLE OF CONTENTS :toc:
   - [[#-tldr][🚀 TL;DR]]
   - [[#-gnu-stow][🧰 GNU STOW]]
-  - [[#️-tools-used][⚙️ TOOLS USED]]
+  - [[#️-tools-i-use][⚙️ TOOLS I USE]]
   - [[#-operating-system][💻 OPERATING SYSTEM]]
   - [[#-gears][🔩 GEARS]]
 
@@ -28,23 +28,7 @@ stow -v tmux
 stow -vD tmux
 #+end_src
 
-**** A FEW ADDITIONAL TIPS
-- Use the `-t` option with Stow to specify the target directory.
-#+begin_src sh
-stow -v -t ~ tmux
-#+end_src
-
-- Stow multiple packages at once.
-#+begin_src sh
-stow -v -t ~ tmux vim
-#+end_src
-
-- Use the `-n` or `--no` option to see what Stow will do without making changes
-  #+begin_src sh
-stow -vn tmux
-  #+end_src
-
-** ⚙️ TOOLS USED
+** ⚙️ TOOLS I USE
 *** [[https://github.com/alacritty/alacritty][alacritty]] - Terminal
 *** [[https://github.com/brndnmtthws/conky][conky]] - Free, light-weight system monitor for X
 *** [[https://github.com/hlissner/doom-emacs][doom-emacs]] - An Emacs framework for the stubborn martian hacker

@@ -1,0 +1,22 @@
+sw_volume: 100
+audio_device_state:1:CoreAudio
+audio_device_state:1:my_fifo
+state: play
+current: 0
+time: 118.123000
+random: 0
+repeat: 0
+single: 0
+consume: 0
+crossfade: 0
+mixrampdb: 0.000000
+mixrampdelay: -1.000000
+playlist_begin
+0:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/01. Psalms To Shout At The Void.flac
+1:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/02. Lamentations By The Lochan.flac
+2:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/03. The Ptarmigan's Cry.flac
+3:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/04. Introspect.flac
+4:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/05. Silence.flac
+5:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/06. The Brocken Spectre.flac
+6:Sgàile/Sgàile - Traverse The Bealach (2024) (FLAC)/07. Entangled In The Light.flac
+playlist_end

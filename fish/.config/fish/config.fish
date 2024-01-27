@@ -72,4 +72,4 @@ alias cp 'xcp'
 alias cd 'z'
 
 #RTX
-rtx activate fish | source
+mise activate fish | source
