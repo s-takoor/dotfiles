@@ -35,7 +35,7 @@ Number of lines to store in scrollback history
   scrollback_lines = 3500,
 #+end_src
 
-*** DEFAULT PROGGRAM
+*** DEFAULT PROGRAM
 Sets up =WezTerm= to run ~tmux~ rather than the ~shell~ by default
 #+begin_src rust :tangle "wezterm.lua"
   -- Multiplexer
