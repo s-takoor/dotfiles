@@ -1,0 +1,131 @@
+#+title: WEZTERM
+#+author: s.t
+#+auto_tangle: t
+#+startup: showeverything
+
+** TABLE OF CONTENTS :toc:
+  - [[#tldr][TL;DR]]
+  - [[#wezterm-api][WEZTERM API]]
+  - [[#table-holding-the-configuration][TABLE HOLDING THE CONFIGURATION]]
+
+** TL;DR
+=WezTerm= is a powerful cross-platform terminal emulator and multiplexer implemented in ~rust~.
+
+** WEZTERM API
+#+begin_src rust :tangle "wezterm.lua"
+local wezterm = require("wezterm")
+#+end_src
+
+** TABLE HOLDING THE CONFIGURATION
+#+begin_src rust :tangle "wezterm.lua"
+return {
+#+end_src
+
+*** UPDATES
+Check for update (default is every 24 hours)
+#+begin_src rust :tangle "wezterm.lua"
+  -- Updates
+  check_for_updates = true,
+#+end_src
+
+*** SCROLLBACK
+Lines of scrollback
+#+begin_src rust :tangle "wezterm.lua"
+  -- Scrollback
+  scrollback_lines = 3500,
+#+end_src
+
+*** DEFAULT PROG
+~default_prog~ is setup for =wezterm= to run ~tmux~ rather than the ~shell~
+#+begin_src rust :tangle "wezterm.lua"
+  -- Multiplexer
+  default_prog = { "/opt/homebrew/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
+#+end_src
+
+*** COLORSCHEME
+Color scheme used for =wezterm=
+#+begin_src rust :tangle "wezterm.lua"
+  -- Colors
+  -- color_scheme = "Gruvbox Dark (Gogh)",
+  color_scheme = "Catppuccin Macchiato",
+#+end_src
+
+*** CURSOR
+Specifies the default cursor style (default is ~SteadyBlock~)
+#+begin_src rust :tangle "wezterm.lua"
+  -- Cursor blink
+  default_cursor_style = "BlinkingBar",
+#+end_src
+
+*** FONT
+~Lua~ table that configures a font with fallback processing
+#+begin_src rust :tangle "wezterm.lua"
+  -- Font
+  font = wezterm.font_with_fallback({
+    { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+    { family = "SF Pro", weight = "Medium", italic = false, },
+  }),
+  font_size = 11.0,
+#+end_src
+
+*** OPACITY
+Transparent window effects
+#+begin_src rust :tangle "wezterm.lua"
+  -- Opacity
+  window_background_opacity = 0.70,
+#+end_src
+
+*** BLUR
+Configures the blur radius amount used by macOS
+#+begin_src rust :tangle "wezterm.lua"
+  -- Blur
+  macos_window_background_blur = 20,
+#+end_src
+
+*** PADDING
+Controls the amount of padding between the window border and the terminal cells.
+#+begin_src rust :tangle "wezterm.lua"
+  -- Padding
+  window_padding = {
+    left = 40,
+    right = 40,
+    top = 40,
+    bottom = 40,
+  },
+#+end_src
+
+*** INACTIVE PANES
+To make it easier to see which pane is active, the inactive panes are dimmed and de-saturated slightly
+#+begin_src rust :tangle "wezterm.lua"
+  inactive_pane_hsb = {
+    saturation = 0.24,
+    brightness = 0.5,
+  },
+#+end_src
+
+*** WINDOW DECORATIONS
+Disable the title bar but enable the resizable border
+#+begin_src rust :tangle "wezterm.lua"
+  -- Window decorations
+  window_decorations = "RESIZE",
+#+end_src
+
+*** TAB BAR
+Disabling the ~tab bar~
+#+begin_src rust :tangle "wezterm.lua"
+  -- Tab bar
+  enable_tab_bar = false,
+#+end_src
+
+*** KEYBINDINGS
+#+begin_src rust :tangle "wezterm.lua"
+  -- Keybindings
+  keys = {
+    {
+      key = "f",
+      mods = "CTRL",
+      action = wezterm.action.ToggleFullScreen,
+    },
+  },
+  }
+#+end_src

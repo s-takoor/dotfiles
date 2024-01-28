@@ -1,13 +1,13 @@
 add_newline = false
 format = """$character"""
-right_format = """$all"""
+right_format = """$directory"""
 continuation_prompt = '▶▶ '
 
 [character]
-success_symbol = '[󰱯  >>](bold green) '
-error_symbol = '[󰱯  >>](bold red) '
-vimcmd_symbol = '[ >>](bold blue) '
-vimcmd_visual_symbol = '[ >>](bold magenta) '
+success_symbol = '[󰱯  >>](bold green)'
+error_symbol = '[󰱯  >>](bold red)'
+vimcmd_symbol = '[ >>](bold blue)'
+vimcmd_visual_symbol = '[ >>](bold magenta)'
 
 [directory]
 style = "bold cyan"

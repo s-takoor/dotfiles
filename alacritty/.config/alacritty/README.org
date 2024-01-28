@@ -29,13 +29,13 @@ import = [
 #+end_src
 
 **** LIVE CONFIG RELOAD
-Live config reload
+The ~live-config-reload~ function allows reloading the config as soon as changes are written to the =alacritty.toml= file, without the need to quit and relaunch.
 #+begin_src rust :tangle "alacritty.toml"
 live_config_reload = true
 #+end_src
 
 **** SHELL
-Setting the ~shell.program~ to the path of ~tmux~. Entries in the ~shell.args~ are passed as arguments to the ~fish~ shell
+Setting the ~shell.program~ to the path of ~tmux~. Entries in the ~shell.args~ are passed as arguments to the ~fish~ shell.
 #+begin_src rust :tangle "alacritty.toml"
 [shell]
 program = "/opt/homebrew/bin/tmux"
