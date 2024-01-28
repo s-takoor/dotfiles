@@ -6,17 +6,17 @@
 ** TABLE OF CONTENTS :toc:
   - [[#tldr][TL;DR]]
   - [[#wezterm-api][WEZTERM API]]
-  - [[#table-holding-the-configuration][TABLE HOLDING THE CONFIGURATION]]
+  - [[#configuration][CONFIGURATION]]
 
 ** TL;DR
-=WezTerm= is a powerful cross-platform terminal emulator and multiplexer implemented in ~rust~.
+=WezTerm= is a cross-platform terminal emulator and multiplexer implemented in ~Rust~. This configuration file outlines various settings for customising its behaviour, including update frequency, scrollback lines, default program, color scheme, cursor style, etc.
 
 ** WEZTERM API
 #+begin_src rust :tangle "wezterm.lua"
 local wezterm = require("wezterm")
 #+end_src
 
-** TABLE HOLDING THE CONFIGURATION
+** CONFIGURATION
 #+begin_src rust :tangle "wezterm.lua"
 return {
 #+end_src
@@ -29,21 +29,21 @@ Check for update (default is every 24 hours)
 #+end_src
 
 *** SCROLLBACK
-Lines of scrollback
+Number of lines to store in scrollback history
 #+begin_src rust :tangle "wezterm.lua"
   -- Scrollback
   scrollback_lines = 3500,
 #+end_src
 
-*** DEFAULT PROG
-~default_prog~ is setup for =wezterm= to run ~tmux~ rather than the ~shell~
+*** DEFAULT PROGGRAM
+Sets up =WezTerm= to run ~tmux~ rather than the ~shell~ by default
 #+begin_src rust :tangle "wezterm.lua"
   -- Multiplexer
   default_prog = { "/opt/homebrew/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
 #+end_src
 
-*** COLORSCHEME
-Color scheme used for =wezterm=
+*** COLOR SCHEME
+Sets the color scheme used for =WezTerm=
 #+begin_src rust :tangle "wezterm.lua"
   -- Colors
   -- color_scheme = "Gruvbox Dark (Gogh)",
@@ -58,7 +58,7 @@ Specifies the default cursor style (default is ~SteadyBlock~)
 #+end_src
 
 *** FONT
-~Lua~ table that configures a font with fallback processing
+Configures a custom font with falback processing for =WezTerm=
 #+begin_src rust :tangle "wezterm.lua"
   -- Font
   font = wezterm.font_with_fallback({
@@ -69,7 +69,7 @@ Specifies the default cursor style (default is ~SteadyBlock~)
 #+end_src
 
 *** OPACITY
-Transparent window effects
+Specifies the window background opacity for transparency effects
 #+begin_src rust :tangle "wezterm.lua"
   -- Opacity
   window_background_opacity = 0.70,
@@ -83,7 +83,7 @@ Configures the blur radius amount used by macOS
 #+end_src
 
 *** PADDING
-Controls the amount of padding between the window border and the terminal cells.
+Sets the padding between the windo border and the terminal cells
 #+begin_src rust :tangle "wezterm.lua"
   -- Padding
   window_padding = {
@@ -95,7 +95,7 @@ Controls the amount of padding between the window border and the terminal cells.
 #+end_src
 
 *** INACTIVE PANES
-To make it easier to see which pane is active, the inactive panes are dimmed and de-saturated slightly
+Makes it easier to see which pane is active by dimming and de-saturating inactive panes
 #+begin_src rust :tangle "wezterm.lua"
   inactive_pane_hsb = {
     saturation = 0.24,
@@ -104,20 +104,21 @@ To make it easier to see which pane is active, the inactive panes are dimmed and
 #+end_src
 
 *** WINDOW DECORATIONS
-Disable the title bar but enable the resizable border
+Disables the title bar but enables the resizable border
 #+begin_src rust :tangle "wezterm.lua"
   -- Window decorations
   window_decorations = "RESIZE",
 #+end_src
 
 *** TAB BAR
-Disabling the ~tab bar~
+Hides the ~tab bar~
 #+begin_src rust :tangle "wezterm.lua"
   -- Tab bar
   enable_tab_bar = false,
 #+end_src
 
 *** KEYBINDINGS
+Customise keybindings for various actions in =WezTerm=
 #+begin_src rust :tangle "wezterm.lua"
   -- Keybindings
   keys = {
