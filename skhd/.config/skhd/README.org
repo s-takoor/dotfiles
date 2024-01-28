@@ -11,31 +11,37 @@
   - [[#mpd-controls][MPD CONTROLS]]
 
 ** TL;DR
-=skhd= is a simple hotkey daemon for macOS which focuses on responsiveness and performance. This file consists of the hotkeys to launch and control the behaviour of my daily use applications.
+This file contains the configuration for =skhd=, a lightweight and efficient hotkey daemon for macOS. This setup focuses on launching and controlling daily use applications.
 
 ** TERMINAL
-The two most commonly used terminals I use are ~Alacritty~ and ~WezTerm~
+Two frequently used terminal applications are ~Alacritty~ and ~WezTerm~
 #+begin_src text :tangle "skhdrc"
-# Alacritty
+# Alacritty - hotkey to launch alacritty
 # shift + cmd - return : open -a alacritty
 
-# WezTerm
+# WezTerm - hotkey to launch wezterm
 shift + cmd - return : open -a wezterm
 #+end_src
 
 ** BROWSER
+Hotkey to launch ~Brave Browser~
 #+begin_src text :tangle "skhdrc"
 shift + cmd - b : open -na "Brave Browser"
 #+end_src
 
 ** EMACS
+Hotkey to invoke the ~emacsclient~ with a new window in the current workspace
 #+begin_src text :tangle "skhdrc"
 shift + cmd - e : emacsclient -c -n -a ''
 #+end_src
 
 ** MPD CONTROLS
+Hotkey to control ~mpd~
 #+begin_src text :tangle "skhdrc"
+# Toggle media playback (play/pause)
 ctrl + alt - p : mpc toggle
+# Next track
 ctrl + alt - n : mpc next
+# Previous track
 ctrl + alt - b : mpc prev
 #+end_src

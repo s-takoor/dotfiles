@@ -1,10 +1,16 @@
-# Launch Applications
+# Alacritty - hotkey to launch alacritty
 # shift + cmd - return : open -a alacritty
+
+# WezTerm - hotkey to launch wezterm
 shift + cmd - return : open -a wezterm
+
 shift + cmd - b : open -na "Brave Browser"
+
 shift + cmd - e : emacsclient -c -n -a ''
-shift + cmd - o : open ~/Documents
-# MPD Control
+
+# Toggle media playback (play/pause)
 ctrl + alt - p : mpc toggle
+# Next track
 ctrl + alt - n : mpc next
+# Previous track
 ctrl + alt - b : mpc prev
