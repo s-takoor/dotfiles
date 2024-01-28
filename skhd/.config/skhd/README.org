@@ -1,0 +1,41 @@
+#+title: SKHD
+#+author: s.t
+#+auto_tangle: t
+#+startup: showeverything
+
+** TABLE OF CONTENTS :toc:
+  - [[#tldr][TL;DR]]
+  - [[#terminal][TERMINAL]]
+  - [[#browser][BROWSER]]
+  - [[#emacs][EMACS]]
+  - [[#mpd-controls][MPD CONTROLS]]
+
+** TL;DR
+=skhd= is a simple hotkey daemon for macOS which focuses on responsiveness and performance. This file consists of the hotkeys to launch and control the behaviour of my daily use applications.
+
+** TERMINAL
+The two most commonly used terminals I use are ~Alacritty~ and ~WezTerm~
+#+begin_src text :tangle "skhdrc"
+# Alacritty
+# shift + cmd - return : open -a alacritty
+
+# WezTerm
+shift + cmd - return : open -a wezterm
+#+end_src
+
+** BROWSER
+#+begin_src text :tangle "skhdrc"
+shift + cmd - b : open -na "Brave Browser"
+#+end_src
+
+** EMACS
+#+begin_src text :tangle "skhdrc"
+shift + cmd - e : emacsclient -c -n -a ''
+#+end_src
+
+** MPD CONTROLS
+#+begin_src text :tangle "skhdrc"
+ctrl + alt - p : mpc toggle
+ctrl + alt - n : mpc next
+ctrl + alt - b : mpc prev
+#+end_src
