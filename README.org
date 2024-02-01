@@ -9,7 +9,11 @@
   - [[#-gears][🔩 GEARS]]
 
 ** 🚀 TL;DR
- This is a repository for my dotfiles.
+ This respository holds my ~dotfiles~ managed by ~GNU stow~ for both macOS and Linux systems.
+
+ #+begin_quote
+Currently undergoing a transition of converting my configuration files into literate-config format.
+ #+end_quote
 
 ** 🧰 GNU STOW
 ~dotfiles~ are symlinked on my machines using [[https://www.gnu.org/software/stow/][GNU Stow]], a symlink farm manager. Below is a quick guide on how to use it.
@@ -18,14 +22,24 @@
 brew install stow
 #+end_src
 
-*** LINK WITH STOW
+*** DON't MODIFY THE FILESYSTEM
+#+begin_src sh
+stow -vn tmux
+#+end_src
+
+*** STOW PACKAGE
 #+begin_src sh
 stow -v tmux
 #+end_src
 
-*** UNLINK WITH STOW
+*** UNSTOW PACKAGE
 #+begin_src sh
 stow -vD tmux
+#+end_src
+
+*** RESTOW PACKAGE
+#+begin_src sh
+stow -vR tmux
 #+end_src
 
 ** ⚙️ TOOLS I USE
