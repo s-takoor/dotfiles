@@ -9,11 +9,11 @@
   - [[#-gears][🔩 GEARS]]
 
 ** 🚀 TL;DR
- This respository holds my ~dotfiles~ managed by ~GNU stow~ for both macOS and Linux systems.
+This respository holds my ~dotfiles~ managed by ~GNU stow~ for both macOS and Linux systems.
 
- #+begin_quote
-Currently undergoing a transition of converting my configuration files into literate-config format.
- #+end_quote
+#+begin_quote
+Currently undergoing a transition, I'm working on converting my existing configuration files into literate-config format using Emacs Org Mode. As this transition unfolds, updates will be regularly pushed to this repo.
+#+end_quote
 
 ** 🧰 GNU STOW
 ~dotfiles~ are symlinked on my machines using [[https://www.gnu.org/software/stow/][GNU Stow]], a symlink farm manager. Below is a quick guide on how to use it.
