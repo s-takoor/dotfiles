@@ -6,7 +6,7 @@
 #+auto_tangle: t
 :END:
 
-* TABLE OF CONTENTS :toc:
+** TABLE OF CONTENTS :toc:
   - [[#-tldr][🚀 TL;DR]]
   - [[#️-general-configuration][⚒️ GENERAL CONFIGURATION]]
   - [[#️-layouts-configuration][⚒️ LAYOUTS CONFIGURATION]]

@@ -153,10 +153,25 @@ sketchybar --add bracket curr_app space_separator front_app          \
            --set         curr_app background.color=$COLOR_BACKGROUND \
                                   background.drawing=on
 
+#### Adding Center Item ####
+sketchybar -m --add item mpd center                                  \
+              --set mpd update_freq=2                                \
+              --set mpd script="~/.config/sketchybar/plugins/mpd.sh" \
+                        padding_left=8                               \
+                        padding_right=2                              \
+                        background.border_width=0                    \
+                        background.height=24                         \
+                        icon.color=$COLOR_GREEN                      \
+              --set mpd click_script="mpc toggle"
+
+sketchybar --add bracket two mpd                                     \
+           --set         two background.color=$COLOR_BACKGROUND      \
+                               background.drawing=on
+
 ##### Adding Right Items #####
 sketchybar --add item clock right                                    \
            --set clock   update_freq=10                              \
-                         icon=$ICON_CLOCK                         \
+                         icon=$ICON_CLOCK                            \
                          script="$PLUGIN_DIR/clock.sh"               \
                                                                      \
            --add item volume right                                   \
@@ -206,10 +221,9 @@ sketchybar --add item  network.up right                              \
                                icon.color=$COLOR_GREEN               \
                                label.color=$COLOR_GREEN              \
 
-sketchybar --add bracket two ip_add network.up network.down          \
-           --set         two background.color=$COLOR_BACKGROUND      \
+sketchybar --add bracket three ip_add network.up network.down        \
+           --set         three background.color=$COLOR_BACKGROUND    \
                              background.drawing=on
-
 
 ##### Finalizing Setup #####
 sketchybar --update
