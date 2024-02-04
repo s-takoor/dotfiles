@@ -1,91 +1,30 @@
-#+TITLE: DOOM EMACS CONFIG
-#+AUTHOR: s.takoor
-#+PROPERTY: header-args :tangle config.el
-#+auto_tangle: t
-#+STARTUP: showeverything
-
-* TABLE OF CONTENTS :toc:
-  - [[#tldr][TL;DR]]
-  - [[#about][ABOUT]]
-  - [[#set-fonts][SET FONTS]]
-  - [[#nerd-icons][NERD ICONS]]
-  - [[#nerd-icons-completion][NERD ICONS COMPLETION]]
-  - [[#nerd-icons-dired][NERD ICONS DIRED]]
-  - [[#nerd-icons-treemacs][NERD ICONS TREEMACS]]
-  - [[#line-spacing][LINE SPACING]]
-  - [[#theme][THEME]]
-  - [[#minimal-ui][MINIMAL UI]]
-  - [[#set-frame-opacity][SET FRAME OPACITY]]
-  - [[#enable-beacon-mode][ENABLE BEACON MODE]]
-  - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
-  - [[#doom-modeline][DOOM MODELINE]]
-  - [[#configure-centaur-tabs][CONFIGURE CENTAUR-TABS]]
-  - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
-  - [[#org-alert][ORG-ALERT]]
-  - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
-  - [[#org-mode-configuration][ORG-MODE CONFIGURATION]]
-  - [[#org-modern][ORG-MODERN]]
-  - [[#org-reveal-configuration][ORG-REVEAL CONFIGURATION]]
-  - [[#pdf][PDF]]
-  - [[#vertico][VERTICO]]
-  - [[#marginalia][MARGINALIA]]
-  - [[#savehist][SAVEHIST]]
-  - [[#orderless][ORDERLESS]]
-  - [[#corfu][CORFU]]
-
-** TL;DR
-Personal *DOOM EMACS* ~config~
-
-** ABOUT
-#+begin_src emacs-lisp
 (setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
-#+end_src
 
-** SET FONTS
-#+begin_src emacs-lisp
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
-#+end_src
 
-** NERD ICONS
-#+begin_src emacs-lisp
 (use-package nerd-icons)
-#+end_src
 
-** NERD ICONS COMPLETION
-#+begin_src emacs-lisp
 (use-package nerd-icons-completion
   :after marginalia
   :config
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
-#+end_src
 
-** NERD ICONS DIRED
-#+begin_src emacs-lisp
 (use-package nerd-icons-dired
   :hook
   (dired-mode . nerd-icons-dired-mode))
-#+end_src
 
-** NERD ICONS TREEMACS
-#+begin_src emacs-lisp
 (use-package treemacs-nerd-icons
   :config
   (treemacs-load-theme "nerd-icons"))
-#+end_src
 
-** LINE SPACING
-#+begin_src emacs-lisp
 (setq-default line-spacing 0.2)
-#+end_src
 
-** THEME
-#+begin_src emacs-lisp
 (use-package modus-themes
   :ensure t
   :custom
@@ -100,37 +39,22 @@ Personal *DOOM EMACS* ~config~
      (t . (regular 1.15))))
   :init
   (load-theme 'modus-vivendi t))
-#+end_src
 
-** MINIMAL UI
-#+begin_src emacs-lisp
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (show-paren-mode 1)
 (add-to-list 'default-frame-alist '(undecorated-round . t))
-#+end_src
 
-** SET FRAME OPACITY
-#+begin_src emacs-lisp
 (set-frame-parameter (selected-frame) 'alpha '(70 . 50))
 (add-to-list 'default-frame-alist '(alpha . (70 . 50)))
-#+end_src
 
-** ENABLE BEACON MODE
-#+begin_src emacs-lisp
 (use-package beacon
   :init
   (beacon-mode 1))
-#+end_src
 
-** CONFIGURE LINE NUMBERS
-#+begin_src emacs-lisp
 (setq display-line-numbers-type 'relative)
-#+end_src
 
-** DOOM MODELINE
-#+begin_src emacs-lisp
 (after! doom-modeline
 (setq doom-modeline-enable-word-count t
       doom-modeline-window-width-limit nil
@@ -139,10 +63,7 @@ Personal *DOOM EMACS* ~config~
       doom-modeline-major-mode-color-icon t
       doom-modeline-lsp t
       doom-modeline-bar-width 4))
-#+end_src
 
-** CONFIGURE CENTAUR-TABS
-#+begin_src emacs-lisp
 (setq centaur-tabs-default-font "Iosevka NF"
       centaur-tabs-set-bar 'right
       centaur-tabs-set-icons t
@@ -152,41 +73,29 @@ Personal *DOOM EMACS* ~config~
       centaur-tabs-style "bar"
       centaur-tabs-close-button "⨂"
       centaur-tabs-modified-marker "⨀")
-#+end_src
 
-** ORG-AUTO-TANGLE
-#+begin_src emacs-lisp
 (use-package! org-auto-tangle
   :defer t
   :hook (org-mode . org-auto-tangle-mode)
   :config
-  (setq org-agenuto-tangle-default t))
-#+end_src
+  (setq org-auto-tangle-default t))
 
-** ORG-ALERT
-#+begin_src emacs-lisp
 (use-package org-alert
   :ensure t
   :custom (alert-default-style 'osx-notifier)
   :config
-  (setq org-alert-interval 1500
+  (setq org-alert-interval 1200
         org-alert-notification-title "Org Alert Reminder!")
   (org-alert-enable))
-#+end_src
 
-** ORG-BABEL CONFIGURATION
-#+begin_src emacs-lisp
 ;; Set the default Python interpreter to Python3
 (setq org-babel-python-command "python3")
 
 ;; Set ditaa path
 (setq org-ditaa-jar-path "/opt/homebrew/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
-#+end_src
 
-** ORG-MODE CONFIGURATION
-#+begin_src emacs-lisp
-(setq org-directory "~/Documents/OrgFiles/"
-      org-agenda-files '("~/Documents/OrgFiles/agenda.org")
+(setq org-directory "~/Documents/orgfiles/"
+      org-agenda-files '("~/Documents/orgfiles/agenda.org")
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
       org-auto-align-tags nil
@@ -210,10 +119,7 @@ Personal *DOOM EMACS* ~config~
         " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
       org-agenda-current-time-string
       "⭠ now ─────────────────────────────────────────────────")
-#+end_src
 
-** ORG-MODERN
-#+begin_src emacs-lisp
 (use-package org-modern
   :ensure t
   :config
@@ -222,16 +128,25 @@ Personal *DOOM EMACS* ~config~
         org-modern-horizontal-rule t)
   :init
   (global-org-modern-mode))
-#+end_src
 
-** ORG-REVEAL CONFIGURATION
-#+begin_src emacs-lisp
+(require 'ox-latex)
+
+(setq org-latex-pdf-process (list "latexmk -pdflatex='xelatex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o %f"))
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("article"
+                 "\\documentclass[letterpaper]{article}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
+                 )))
+
 (use-package ox-reveal)
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-#+end_src
 
-** PDF
-#+begin_src emacs-lisp
 (use-package pdf-tools
   :defer t
   :commands (pdf-loader-install)
@@ -243,10 +158,7 @@ Personal *DOOM EMACS* ~config~
   :config (add-to-list 'revert-without-query ".pdf"))
 
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
-#+end_src
 
-** VERTICO
-#+begin_src emacs-lisp
 (use-package vertico
   :init
   (vertico-mode)
@@ -257,45 +169,19 @@ Personal *DOOM EMACS* ~config~
         vertico-resize t)
   (define-key vertico-map (kbd "M-j") 'vertico-next)
   (define-key vertico-map (kbd "M-k") 'vertico-previous))
-#+end_src
 
-** MARGINALIA
-#+begin_src emacs-lisp
 (use-package marginalia
   :bind (:map minibuffer-local-map
          ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
-#+end_src
 
-** SAVEHIST
-#+begin_src emacs-lisp
 (use-package savehist
   :init
   (savehist-mode))
-#+end_src
 
-** ORDERLESS
-#+begin_src emacs-lisp
 (use-package orderless
   :ensure t
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-#+end_src
-
-** CORFU
-#+begin_src emacs-lisp
-(use-package corfu
-  :general
-  (:keymaps 'corfu-map
-   :states 'insert
-   "C-n" #'corfu-next
-   "C-p" #'corfu-previous
-   "<escape>" #'corfu-quit
-   "<return>" #'corfu-insert
-   "M-d" #'corfu-show-documentation
-   "M-l" #'corfu-show-location)
-  :config
-  (corfu-global-mode))
-#+end_src
+  (completion-category-overrides '((file (styles partial-completion)))))

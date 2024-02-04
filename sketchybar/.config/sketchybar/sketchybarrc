@@ -195,35 +195,36 @@ sketchybar --add item seperator.r1 right                             \
                                    icon.drawing=off                  \
                                    label.drawing=off
 
-sketchybar --add item ip_add right                                   \
-           --set      ip_add script="$PLUGIN_DIR/ip_add.sh"          \
-           --subscribe ip_add wifi_change
+#sketchybar --add item ip_add right                                   \
+#           --set      ip_add script="$PLUGIN_DIR/ip_add.sh"          \
+#           --subscribe ip_add wifi_change
 
 sketchybar --add item  network.up right                              \
            --set       network.up script="$PLUGIN_DIR/network.sh"    \
-                                  update_freq=2                      \
+                                  update_freq=1                      \
                                   padding_left=2                     \
                                   padding_right=2                    \
                                   background.border_width=0          \
                                   background.height=24               \
                                   icon=⇡                             \
                                   icon.color=$COLOR_YELLOW           \
-                                  label.color=$COLOR_YELLOW          \
-                                                                     \
-           --add item  network.down right                            \
+                                  label.color=$COLOR_YELLOW          
+                                                                     
+sketchybar --add item  network.down right                            \
            --set       network.down script="$PLUGIN_DIR/network.sh"  \
-                               update_freq=5                         \
-                               padding_left=8                        \
+                               update_freq=1                         \
+                               padding_left=2                        \
                                padding_right=2                       \
                                background.border_width=0             \
                                background.height=24                  \
                                icon=⇣                                \ 
                                icon.color=$COLOR_GREEN               \
-                               label.color=$COLOR_GREEN              \
+                               label.color=$COLOR_GREEN
 
-sketchybar --add bracket three ip_add network.up network.down        \
+#### NOTE: removed ip_add from the bracket ####
+sketchybar --add bracket three network.up network.down               \
            --set         three background.color=$COLOR_BACKGROUND    \
-                             background.drawing=on
+                               background.drawing=on
 
 ##### Finalizing Setup #####
 sketchybar --update
