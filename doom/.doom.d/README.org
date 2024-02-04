@@ -7,37 +7,12 @@
 ** TABLE OF CONTENTS :toc:
   - [[#tldr][TL;DR]]
   - [[#emacs-installation][EMACS INSTALLATION]]
-  - [[#about][ABOUT]]
-  - [[#set-fonts][SET FONTS]]
-  - [[#nerd-icons][NERD ICONS]]
-  - [[#nerd-icons-completion][NERD ICONS COMPLETION]]
-  - [[#nerd-icons-dired][NERD ICONS DIRED]]
-  - [[#nerd-icons-treemacs][NERD ICONS TREEMACS]]
-  - [[#line-spacing][LINE SPACING]]
-  - [[#theme][THEME]]
-  - [[#minimal-ui][MINIMAL UI]]
-  - [[#set-frame-opacity][SET FRAME OPACITY]]
-  - [[#enable-beacon-mode][ENABLE BEACON MODE]]
-  - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
-  - [[#doom-modeline][DOOM MODELINE]]
-  - [[#configure-centaur-tabs][CONFIGURE CENTAUR-TABS]]
-  - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
-  - [[#org-alert][ORG-ALERT]]
-  - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
-  - [[#org-mode-configuration][ORG-MODE CONFIGURATION]]
-  - [[#org-modern][ORG-MODERN]]
-  - [[#org-latex][ORG-LATEX]]
-  - [[#org-reveal][ORG-REVEAL]]
-  - [[#pdf][PDF]]
-  - [[#vertico][VERTICO]]
-  - [[#marginalia][MARGINALIA]]
-  - [[#savehist][SAVEHIST]]
-  - [[#orderless][ORDERLESS]]
-  - [[#init][INIT]]
-  - [[#packages][PACKAGES]]
+  - [[#configel][CONFIG.EL]]
+  - [[#initel][INIT.EL]]
+  - [[#packagesel][PACKAGES.EL]]
 
 ** TL;DR
-The following is my literate *DOOM EMACS* config file which contains my preferences and modules.
+The following is my literate *DOOM EMACS* config file. It contains the three main files ~init.el~, ~config.el~, and ~packages.el~ required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~.
 
 -----
 
@@ -50,7 +25,7 @@ Before installing ~Doom Emacs~, ensure the following packages are installed:
 - GNU Find
 - fd (optional)
 
-*** EMACS & DEPENDENCIES
+*** DEPENDENCIES & DEPENDENCIES
 There exists various options for installing ~Emacs~ on ~macOS~. Ensure a package manager is installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
 
 **** DEPENDENCIES
@@ -83,14 +58,14 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 #+end_src
 
 -----
-
-** ABOUT
+** CONFIG.EL
+*** ABOUT
 #+begin_src emacs-lisp :tangle "config.el"
 (setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
-** SET FONTS
+*** SET FONTS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
@@ -99,13 +74,13 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 #+end_src
 
-** NERD ICONS
+*** NERD ICONS
 ~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package nerd-icons)
 #+end_src
 
-** NERD ICONS COMPLETION
+**** NERD ICONS COMPLETION
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package nerd-icons-completion
   :after marginalia
@@ -114,26 +89,26 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 #+end_src
 
-** NERD ICONS DIRED
+**** NERD ICONS DIRED
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package nerd-icons-dired
   :hook
   (dired-mode . nerd-icons-dired-mode))
 #+end_src
 
-** NERD ICONS TREEMACS
+**** NERD ICONS TREEMACS
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package treemacs-nerd-icons
   :config
   (treemacs-load-theme "nerd-icons"))
 #+end_src
 
-** LINE SPACING
+*** LINE SPACING
 #+begin_src emacs-lisp :tangle "config.el"
 (setq-default line-spacing 0.2)
 #+end_src
 
-** THEME
+*** THEME
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package modus-themes
   :ensure t
@@ -151,7 +126,7 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
   (load-theme 'modus-vivendi t))
 #+end_src
 
-** MINIMAL UI
+*** MINIMAL UI
 #+begin_src emacs-lisp :tangle "config.el"
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -160,25 +135,25 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 (add-to-list 'default-frame-alist '(undecorated-round . t))
 #+end_src
 
-** SET FRAME OPACITY
+*** SET FRAME OPACITY
 #+begin_src emacs-lisp :tangle "config.el"
 (set-frame-parameter (selected-frame) 'alpha '(70 . 50))
 (add-to-list 'default-frame-alist '(alpha . (70 . 50)))
 #+end_src
 
-** ENABLE BEACON MODE
+*** BEACON MODE
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package beacon
   :init
   (beacon-mode 1))
 #+end_src
 
-** CONFIGURE LINE NUMBERS
+*** CONFIGURE LINE NUMBERS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq display-line-numbers-type 'relative)
 #+end_src
 
-** DOOM MODELINE
+*** DOOM MODELINE
 #+begin_src emacs-lisp :tangle "config.el"
 (after! doom-modeline
 (setq doom-modeline-enable-word-count t
@@ -190,7 +165,7 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
       doom-modeline-bar-width 4))
 #+end_src
 
-** CONFIGURE CENTAUR-TABS
+*** CONFIGURE CENTAUR-TABS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq centaur-tabs-default-font "Iosevka NF"
       centaur-tabs-set-bar 'right
@@ -203,7 +178,7 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
       centaur-tabs-modified-marker "⨀")
 #+end_src
 
-** ORG-AUTO-TANGLE
+*** ORG-AUTO-TANGLE
 The ~org-auto-tangle~ package automatically tangle org files on save. This is achieved by adding the option ~#+auto_tangle: t~.
 
 The tangling process happens asynchronously, therefore it will not block the current emacs session.
@@ -215,7 +190,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
   (setq org-auto-tangle-default t))
 #+end_src
 
-** ORG-ALERT
+*** ORG-ALERT
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package org-alert
   :ensure t
@@ -226,7 +201,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
   (org-alert-enable))
 #+end_src
 
-** ORG-BABEL CONFIGURATION
+*** ORG-BABEL CONFIGURATION
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Set the default Python interpreter to Python3
 (setq org-babel-python-command "python3")
@@ -235,7 +210,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
 (setq org-ditaa-jar-path "/opt/homebrew/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
 #+end_src
 
-** ORG-MODE CONFIGURATION
+*** ORG-MODE CONFIGURATION
 #+begin_src emacs-lisp :tangle "config.el"
 (setq org-directory "~/Documents/orgfiles/"
       org-agenda-files '("~/Documents/orgfiles/agenda.org")
@@ -264,7 +239,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
       "⭠ now ─────────────────────────────────────────────────")
 #+end_src
 
-** ORG-MODERN
+*** ORG-MODERN
 The ~org modern~ package implements a modern style for Org buffers using font locking and text properties. The package styles headlines, keywords, tables and source blocks. 
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package org-modern
@@ -277,7 +252,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
   (global-org-modern-mode))
 #+end_src
 
-** ORG-LATEX
+*** ORG-LATEX
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'ox-latex)
 
@@ -295,14 +270,14 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
                  )))
 #+end_src
 
-** ORG-REVEAL
+*** ORG-REVEAL
 ~org-reveal~ exports ~org~ documents to ~reveal.js~ presentations.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package ox-reveal)
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 #+end_src
 
-** PDF
+*** PDF
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package pdf-tools
   :defer t
@@ -317,7 +292,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
 #+end_src
 
-** VERTICO
+*** VERTICO
 Ther ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package vertico
@@ -332,7 +307,7 @@ Ther ~vertico~ package provides a performant and minimalistic vertical completio
   (define-key vertico-map (kbd "M-k") 'vertico-previous))
 #+end_src
 
-** MARGINALIA
+*** MARGINALIA
 The ~marginalia~ package adds annotations to the completion candidates at the margin of the minibuffer.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package marginalia
@@ -342,7 +317,7 @@ The ~marginalia~ package adds annotations to the completion candidates at the ma
   (marginalia-mode))
 #+end_src
 
-** SAVEHIST
+*** SAVEHIST
 The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by history position.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package savehist
@@ -350,7 +325,7 @@ The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by h
   (savehist-mode))
 #+end_src
 
-** ORDERLESS
+*** ORDERLESS
 This package provides an ~orderless~ completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: ~literally~, as a ~regexp~, as an ~initialism~, in the flex style, or as ~multiple word prefixes~. ~regexp~ and ~literal~ matches are enabled by default.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package orderless
@@ -362,7 +337,7 @@ This package provides an ~orderless~ completion style that divides the pattern i
 
 -----
 
-** INIT
+** INIT.EL
 The ~init.el~ file controls what ~Doom~ modules are enabled and what order they load in. Remember to run ~doom sync~ after modifying it!
 
 #+begin_quote
@@ -557,8 +532,8 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
 
 -----
 
-** PACKAGES
-To install a package with Doom you must declare in the ~packages.el~ file and run ~doom sync~ on the command line, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
+** PACKAGES.EL
+The ~package.el~ file lists all packages to be installed with ~Doom Emacs~. Each line specifies the name of a package and any additional configuration options. After declaring the package name in the ~packages.el~ file, you will have to run ~doom sync~ on the command line or ~SPC h r r~, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
 
 To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 (package! some-package)
@@ -580,7 +555,7 @@ You can override the recipe of a built in package without having to specify all 
 (package! builtin-package :recipe (:nonrecursive t))
 (package! builtin-package-2 :recipe (:repo "myfork/package"))
 
-Specify a `:branch' to install a package from a particular branch or tag. This is required for some packages whose default branch isn't 'master' (which our package manager can't deal with; see radian-software/straight.el#279)
+Specify a `:branch' to install a package from a particular branch or tag. This is required for some packages whose default branch isn't 'master'
 (package! builtin-package :recipe (:branch "develop"))
 
 Use `:pin' to specify a particular commit to install.
