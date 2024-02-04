@@ -183,5 +183,5 @@
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(basic substring initials flex orderless))
   (completion-category-overrides '((file (styles partial-completion)))))

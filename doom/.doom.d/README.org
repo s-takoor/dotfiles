@@ -1,7 +1,8 @@
-#+TITLE: DOOM EMACS LITERATE CONFIG
-#+AUTHOR: s.takoor
+#+title: DOOM EMACS LITERATE CONFIG
+#+author: s.takoor
 #+auto_tangle: t
-#+STARTUP: showeverything
+#+startup: showeverything
+#+filetags: :doom:emacs:config:org:
 
 ** TABLE OF CONTENTS :toc:
   - [[#tldr][TL;DR]]
@@ -20,7 +21,7 @@
   - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
   - [[#doom-modeline][DOOM MODELINE]]
   - [[#configure-centaur-tabs][CONFIGURE CENTAUR-TABS]]
-  - [[#org-auto-tangle][org-auto-tangle]]
+  - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#org-alert][ORG-ALERT]]
   - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
   - [[#org-mode-configuration][ORG-MODE CONFIGURATION]]
@@ -37,6 +38,8 @@
 
 ** TL;DR
 The following is my literate *DOOM EMACS* config file which contains my preferences and modules.
+
+-----
 
 ** EMACS INSTALLATION
 *** PREREQUISITES
@@ -78,6 +81,8 @@ After installing ~Emacs~ and ~Doom~'s dependencies, ~Doom Emacs~ can be installe
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 #+end_src
+
+-----
 
 ** ABOUT
 #+begin_src emacs-lisp :tangle "config.el"
@@ -198,7 +203,7 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
       centaur-tabs-modified-marker "⨀")
 #+end_src
 
-** org-auto-tangle
+** ORG-AUTO-TANGLE
 The ~org-auto-tangle~ package automatically tangle org files on save. This is achieved by adding the option ~#+auto_tangle: t~.
 
 The tangling process happens asynchronously, therefore it will not block the current emacs session.
@@ -351,9 +356,11 @@ This package provides an ~orderless~ completion style that divides the pattern i
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(basic substring initials flex orderless))
   (completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
+
+-----
 
 ** INIT
 The ~init.el~ file controls what ~Doom~ modules are enabled and what order they load in. Remember to run ~doom sync~ after modifying it!
@@ -548,14 +555,15 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        (default +bindings +smartparens))
 #+end_src
 
+-----
+
 ** PACKAGES
-To install a package with Doom you must declare them here and run ~doom sync~ on the command line, then restart Emacs for the changes to take effect -- or use ~M-x doom/reload~.
+To install a package with Doom you must declare in the ~packages.el~ file and run ~doom sync~ on the command line, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
 
 To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 (package! some-package)
 
-To install a package directly from a remote git repo, you must specify a `:recipe'. You'll find documentation on what `:recipe' accepts here:
-https://github.com/radian-software/straight.el#the-recipe-format
+To install a package directly from a remote git repo, you must specify a `:recipe'. You'll find [[https://github.com/radian-software/straight.el#the-recipe-format][documentation]] on what `:recipe' accepts here:
 (package! another-package
   :recipe (:host github :repo "username/repo"))
 
