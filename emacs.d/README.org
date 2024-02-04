@@ -1,38 +1,51 @@
 #+TITLE: EMACS INSTALLATION GUIDE
 
-* TABLE OF CONTENTS :toc:
+#+begin_quote
+ 󰐃 Access Doom's documentation using ~SPC h d h~ (vim) or ~c-h d h~ (non-vim)
+#+end_quote
+
+** TABLE OF CONTENTS :toc:
   - [[#prerequisites][PREREQUISITES]]
-  - [[#emacs][EMACS]]
+  - [[#emacs--dependencies][EMACS & DEPENDENCIES]]
   - [[#doom-emacs][DOOM EMACS]]
 
 ** PREREQUISITES
-Before installing Doom Emacs, make sure you have the following prerequisites:
+Before installing Doom Emacs, ensure the following packages are installed:
+- Git
+- Emacs
+- ripgrep
+- GNU Find
+- fd (optional)
 
-*** REQUIRED DEPENDENCIES
+** EMACS & DEPENDENCIES
+There exists various options for installing Emacs on MacOS. Ensure a package manager installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
+
+*** DEPENDENCIES
 #+begin_src sh
+# required dedenpdencies
 brew install git ripgrep
-#+end_src
-
-*** OPTIONAL DEPENDENCIES
-#+begin_src sh
+# optional dependencies
 brew install coreutils fd
-#+end_src
-
-*** CLANG
-#+begin_src sh
+# install clang
 xcode-select --install
 #+end_src
 
-** EMACS
-Using `emacs-plus` formula from [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted]]
+*** EMACS
+There are three formulas that are considered as the best options for Doom. I prefer using ~emacs-plus~ as it offers a wide range of extra functionality over the regular Emacs package.
+- emacs-mac
+- emacs-plus formula from [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted]]
 #+begin_src sh
 brew tap d12frosted/emacs-plus
+# install emacs+ with some additional options
 brew install emacs-plus --with-native-comp --with-modern-doom3-icon
 cp -r /opt/homebrew/opt/emacs-plus/Emacs.app /Applications/
 #+end_src
+- emacs
 
 ** DOOM EMACS
+After installing Emacs and Doom's dependencies, Doom Emacs can be installed:
 #+begin_src sh
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 #+end_src
+
