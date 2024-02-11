@@ -28,15 +28,19 @@
 (use-package modus-themes
   :ensure t
   :custom
+  (modus-themes-bold-constructs t)
   (modus-themes-italic-constructs t)
-  (modus-themes-bold-constructs nil)
   (modus-themes-mixed-fonts t)
+  (modus-themes-prompts '(italic bold))
+  (modus-themes-completions '((matches . (extrabold))
+                              (selection . (semibold underline))))
   (modus-themes-org-blocks 'gray-background)
-  (modus-themes-completions '((t . (extrabold))))
   (modus-themes-headings
-   '((agenda-structure . (variable-pitch light 2.2))
-     (agenda-date . (variable-pitch regular 1.3))
-     (t . (regular 1.15))))
+   '((1 . (variable-pitch 1.5))
+     (2 . (1.3))
+     (agenda-date . (1.3))
+     (agenda-structure . (variable-pitch light 2))
+     (t . (1.1))))
   :init
   (load-theme 'modus-vivendi t))
 
@@ -104,7 +108,6 @@
       org-ellipsis " ▼ "
       org-hide-emphasis-markers t
       org-hide-leading-stars t
-      org-indent-mode nil
       org-insert-heading-respect-content t
       org-log-done t
       org-pretty-entities t
@@ -131,7 +134,11 @@
 
 (require 'ox-latex)
 
-(setq org-latex-pdf-process (list "latexmk -pdflatex='xelatex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o %f"))
+;; Set LaTeX compiler to XeLaTeX
+(add-hook! 'latex-mode-hook
+  (setq TeX-engine 'xelatex) 99)
+
+;;(setq org-latex-pdf-process (list "latexmk -pdflatex='xelatex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o %f"))
 
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
@@ -144,20 +151,8 @@
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                  )))
 
-(use-package ox-reveal)
-(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-
-(use-package pdf-tools
-  :defer t
-  :commands (pdf-loader-install)
-  :mode "\\.pdf\\'"
-  :bind (:map pdf-view-mode-map
-              ("j" . pdf-view-next-line-or-next-page)
-              ("k" . pdf-view-previous-line-or-previous-page))
-  :init (pdf-loader-install)
-  :config (add-to-list 'revert-without-query ".pdf"))
-
-(add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
+;; Automatically update buffer
+(setq auto-revert-interval 0.5)
 
 (use-package vertico
   :init
@@ -185,3 +180,48 @@
   :custom
   (completion-styles '(basic substring initials flex orderless))
   (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package consult
+  :ensure t
+  :custom
+  (completion-in-region-function #'consult-completion-in-region))
+
+(use-package corfu
+  :custom
+  (corfu-separator ?\s)          ;; Orderless field separator
+  (corfu-preview-current t)    ;; Disable current candidate preview
+  (corfu-auto nil)
+  (corfu-on-exact-match nil)
+  (corfu-quit-no-match 'separator)
+  (corfu-preselect-first nil)
+  :hook
+  (doom-first-buffer . global-corfu-mode)
+  :bind (:map corfu-map
+         ("SPC" . corfu-insert-separator)
+         ("TAB" . corfu-next)
+         ([tab] . corfu-next)
+         ("S-TAB" . corfu-previous)
+         ([backtab] . corfu-previous)))
+
+(use-package cape
+  :defer t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file-capf)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
+  (add-to-list 'completion-at-point-functions #'cape-keyword-capf))
+
+(setq completion-cycle-threshold 1)
+
+;; Enable indentation+completion using the TAB key.
+;; Completion is often bound to M-TAB.
+(setq tab-always-indent 'complete)
+
+(use-package embark
+  :ensure t
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
