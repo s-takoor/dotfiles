@@ -288,24 +288,21 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package vertico
+  :ensure t
   :init
-  (vertico-mode)
-  :config
-  (setq vertico-scroll-margin 0
-        vertico-cycle t
-        vertico-count 20
-        vertico-resize t)
-  (define-key vertico-map (kbd "M-j") 'vertico-next)
-  (define-key vertico-map (kbd "M-k") 'vertico-previous))
+  (require 'vertico-directory)
+  (vertico-mode t))
 #+end_src
 
 *** MARGINALIA
 The ~marginalia~ package adds annotations to the completion candidates at the margin of the minibuffer.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package marginalia
-  :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
-  :init
+  :ensure t
+  :custom
+  (marginalia-annotators
+   '(marginalia-annotators-heavy marginalia-annotators-light t))
+  :config
   (marginalia-mode))
 #+end_src
 
@@ -323,7 +320,7 @@ This package provides an ~orderless~ completion style that divides the pattern i
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(basic substring initials flex orderless))
+  (completion-styles '(basic flex initials orderless substring))
   (completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
@@ -331,45 +328,9 @@ This package provides an ~orderless~ completion style that divides the pattern i
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package consult
   :ensure t
+  :after vertico
   :custom
   (completion-in-region-function #'consult-completion-in-region))
-#+end_src
-
-*** CORFU
-Corfu completion module
-#+begin_src emacs-lisp :tangle "config.el"
-(use-package corfu
-  :custom
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-preview-current t)    ;; Disable current candidate preview
-  (corfu-auto nil)
-  (corfu-on-exact-match nil)
-  (corfu-quit-no-match 'separator)
-  (corfu-preselect-first nil)
-  :hook
-  (doom-first-buffer . global-corfu-mode)
-  :bind (:map corfu-map
-         ("SPC" . corfu-insert-separator)
-         ("TAB" . corfu-next)
-         ([tab] . corfu-next)
-         ("S-TAB" . corfu-previous)
-         ([backtab] . corfu-previous)))
-#+end_src
-
-*** CAPE
-#+begin_src emacs-lisp :tangle "config.el"
-(use-package cape
-  :defer t
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-file-capf)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
-  (add-to-list 'completion-at-point-functions #'cape-keyword-capf))
-
-(setq completion-cycle-threshold 1)
-
-;; Enable indentation+completion using the TAB key.
-;; Completion is often bound to M-TAB.
-(setq tab-always-indent 'complete)
 #+end_src
 
 *** EMBARK
@@ -384,6 +345,64 @@ Corfu completion module
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
+
+*** CORFU
+Corfu completion module
+#+begin_src emacs-lisp :tangle "config.el"
+(use-package corfu
+  :ensure t
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                 ; Allows cycling through candidates
+  (corfu-auto t)                  ; Enable auto completion
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.8)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
+  (corfu-preview-current 'insert) ; insert previewed candidate
+  (corfu-preselect 'prompt)
+  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  :bind (:map corfu-map
+              ("M-SPC"      . corfu-insert-separator)
+              ("TAB"        . corfu-next)
+              ([tab]        . corfu-next)
+              ("S-TAB"      . corfu-previous)
+              ([backtab]    . corfu-previous)
+              ("S-<return>" . corfu-insert)
+              ("RET"        . nil))
+
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode) ; Popup completion info
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                                   corfu-quit-no-match t
+                                   corfu-auto nil)
+              (corfu-mode))))
+#+end_src
+
+*** CAPE
+#+begin_src emacs-lisp :tangle "config.el"
+(use-package cape
+  :ensure t
+  :defer 10
+  :bind ("C-c f" . cape-file)
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  ;; (defalias 'dabbrev-after-2 (cape-capf-prefix-length #'cape-dabbrev 2))
+  ;; (add-to-list 'completion-at-point-functions 'dabbrev-after-2 t)
+  (cl-pushnew #'cape-file completion-at-point-functions)
+  :config
+  ;; Silence then pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+
+  ;; Ensure that pcomplete does not write to the buffer
+  ;; and behaves as a pure `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+#+end_src
+
 
 -----
 
