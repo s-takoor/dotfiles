@@ -90,27 +90,29 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 *** NERD ICONS
 ~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
 #+begin_src emacs-lisp :tangle "config.el"
+;; Icons
 (use-package nerd-icons)
-#+end_src
 
-**** NERD ICONS COMPLETION
-#+begin_src emacs-lisp :tangle "config.el"
+;; Icons Completion
 (use-package nerd-icons-completion
   :after marginalia
   :config
-  (nerd-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
-#+end_src
+  (nerd-icons-completion-marginalia-setup)
+  (nerd-icons-completion-mode 1))
 
-**** NERD ICONS DIRED
-#+begin_src emacs-lisp :tangle "config.el"
+(use-package nerd-icons-corfu
+  :after corfu
+  :custom
+  (nerd-icons-default-face 'corfu-default)
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+;; Icons Dired
 (use-package nerd-icons-dired
   :hook
   (dired-mode . nerd-icons-dired-mode))
-#+end_src
 
-**** NERD ICONS TREEMACS
-#+begin_src emacs-lisp :tangle "config.el"
+;; Icons Treemacs
 (use-package treemacs-nerd-icons
   :config
   (treemacs-load-theme "nerd-icons"))
@@ -230,23 +232,27 @@ The tangling process happens asynchronously, therefore it will not block the cur
 *** ORG-MODE CONFIGURATION
 #+begin_src emacs-lisp :tangle "config.el"
 (setq org-directory "~/Documents/orgfiles/"
+      org-auto-align-tags nil
+      org-tags-column 0
+      org-catch-invisible-edits 'show-and-error
+      org-special-ctrl-a/e t
+      org-insert-heading-respect-content t
+      org-log-done t
+      org-edit-src-content-indentation 0
+
+      ;; Org styling, hide markup, etc.
+      org-hide-emphasis-markers t
+      org-pretty-entities t
+      org-ellipsis " ▼ "
+      org-hide-leading-stars t
+      org-src-preserve-indentation nil
+      org-src-tab-acts-natively t
+      org-startup-indented nil
+
+      ;; Agenda styling
       org-agenda-files '("~/Documents/orgfiles/agenda.org")
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
-      org-auto-align-tags nil
-      org-catch-invisible-edits 'show-and-error
-      org-edit-src-content-indentation 0
-      org-ellipsis " ▼ "
-      org-hide-emphasis-markers t
-      org-hide-leading-stars t
-      org-insert-heading-respect-content t
-      org-log-done t
-      org-pretty-entities t
-      org-src-preserve-indentation nil
-      org-src-tab-acts-natively t
-      org-special-ctrl-a/e t
-      org-startup-indented nil
-      org-tags-column 0
       org-agenda-time-grid
       '((daily today require-timed)
         (800 1000 1200 1400 1600 1800 2000)
@@ -414,6 +420,11 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 #+end_src
 
+*** RSS
+#+begin_src emacs-lisp :tangle "config.el"
+(setq elfeed-feeds (quote
+                    (("https://feeds.feedburner.com/TheHackersNews" hackernews))))
+#+end_src
 
 -----
 
@@ -602,7 +613,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
-       ;;(rss +org)        ; emacs as an RSS reader
+       (rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config

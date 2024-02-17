@@ -16,18 +16,29 @@
 ;;            :chat-model "mistral:latest"
 ;;            :embedding-model "mistral:latest")))
 
+;; Icons
 (use-package nerd-icons)
 
+;; Icons Completion
 (use-package nerd-icons-completion
   :after marginalia
   :config
-  (nerd-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+  (nerd-icons-completion-marginalia-setup)
+  (nerd-icons-completion-mode 1))
 
+(use-package nerd-icons-corfu
+  :after corfu
+  :custom
+  (nerd-icons-default-face 'corfu-default)
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+;; Icons Dired
 (use-package nerd-icons-dired
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
+;; Icons Treemacs
 (use-package treemacs-nerd-icons
   :config
   (treemacs-load-theme "nerd-icons"))
@@ -108,23 +119,27 @@
 (setq org-ditaa-jar-path "/opt/homebrew/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
 
 (setq org-directory "~/Documents/orgfiles/"
+      org-auto-align-tags nil
+      org-tags-column 0
+      org-catch-invisible-edits 'show-and-error
+      org-special-ctrl-a/e t
+      org-insert-heading-respect-content t
+      org-log-done t
+      org-edit-src-content-indentation 0
+
+      ;; Org styling, hide markup, etc.
+      org-hide-emphasis-markers t
+      org-pretty-entities t
+      org-ellipsis " ▼ "
+      org-hide-leading-stars t
+      org-src-preserve-indentation nil
+      org-src-tab-acts-natively t
+      org-startup-indented nil
+
+      ;; Agenda styling
       org-agenda-files '("~/Documents/orgfiles/agenda.org")
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
-      org-auto-align-tags nil
-      org-catch-invisible-edits 'show-and-error
-      org-edit-src-content-indentation 0
-      org-ellipsis " ▼ "
-      org-hide-emphasis-markers t
-      org-hide-leading-stars t
-      org-insert-heading-respect-content t
-      org-log-done t
-      org-pretty-entities t
-      org-src-preserve-indentation nil
-      org-src-tab-acts-natively t
-      org-special-ctrl-a/e t
-      org-startup-indented nil
-      org-tags-column 0
       org-agenda-time-grid
       '((daily today require-timed)
         (800 1000 1200 1400 1600 1800 2000)
@@ -249,3 +264,6 @@
   ;; Ensure that pcomplete does not write to the buffer
   ;; and behaves as a pure `completion-at-point-function'.
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+
+(setq elfeed-feeds (quote
+                    (("https://feeds.feedburner.com/TheHackersNews" hackernews))))

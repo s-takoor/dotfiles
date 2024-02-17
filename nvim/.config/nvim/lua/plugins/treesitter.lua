@@ -12,6 +12,7 @@ return {
           "cpp",
           "css",
           "diff",
+          "go",
           "graphql",
           "hcl",
           "html",
