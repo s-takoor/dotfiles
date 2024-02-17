@@ -1,6 +1,7 @@
 (package! beacon)
 (package! cape)
 (package! corfu)
+;; (package! ellama)
 (package! org-alert)
 (package! org-auto-tangle)
 (package! org-modern)

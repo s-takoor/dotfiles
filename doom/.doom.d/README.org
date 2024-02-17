@@ -75,6 +75,18 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 #+end_src
 
+*** ELLAMA
+#+begin_src emacs-lisp :tangle "config.el"
+;; (use-package ellama
+;;   :init
+;;   (setopt ellama-language "French")
+;;   (require 'llm-ollama)
+;;   (setopt ellama-provider
+;;           (make-llm-ollama
+;;            :chat-model "mistral:latest"
+;;            :embedding-model "mistral:latest")))
+#+end_src
+
 *** NERD ICONS
 ~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
 #+begin_src emacs-lisp :tangle "config.el"
@@ -325,6 +337,7 @@ This package provides an ~orderless~ completion style that divides the pattern i
 #+end_src
 
 *** CONSULT
+The ~consult~ module provides search and navigation commands based on the Emacs completion function [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]].
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package consult
   :ensure t
@@ -347,7 +360,7 @@ This package provides an ~orderless~ completion style that divides the pattern i
 #+end_src
 
 *** CORFU
-Corfu completion module
+The ~corfu~ module enhances in-buffer completion with a small completion popup. The current candidates are shown in a popup below or above the point.
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package corfu
   :ensure t
@@ -384,6 +397,7 @@ Corfu completion module
 #+end_src
 
 *** CAPE
+The ~cape~ module provides Completion At Point Extensions which can be used in combination with ~corfu~, ~company~ or the default completion UI. The completion backends used by completion-at-point are so called completion-at-point-functions (~capfs~).
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package cape
   :ensure t
@@ -638,6 +652,7 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 (package! beacon)
 (package! cape)
 (package! corfu)
+;; (package! ellama)
 (package! org-alert)
 (package! org-auto-tangle)
 (package! org-modern)

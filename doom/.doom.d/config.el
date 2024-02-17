@@ -7,6 +7,15 @@
       doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 
+;; (use-package ellama
+;;   :init
+;;   (setopt ellama-language "French")
+;;   (require 'llm-ollama)
+;;   (setopt ellama-provider
+;;           (make-llm-ollama
+;;            :chat-model "mistral:latest"
+;;            :embedding-model "mistral:latest")))
+
 (use-package nerd-icons)
 
 (use-package nerd-icons-completion

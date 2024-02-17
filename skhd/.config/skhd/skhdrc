@@ -11,6 +11,6 @@ shift + cmd - e : emacsclient -c -n -a ''
 # Toggle media playback (play/pause)
 ctrl + alt - p : mpc toggle
 # Next track
-ctrl + alt - n : mpc next
+ctrl + alt - f : mpc next
 # Previous track
 ctrl + alt - b : mpc prev
