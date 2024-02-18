@@ -8,6 +8,11 @@
   - [[#tldr][TL;DR]]
   - [[#emacs-installation][EMACS INSTALLATION]]
   - [[#configel][CONFIG.EL]]
+- [[#root][ROOT]]
+  - [[#programming][PROGRAMMING]]
+  - [[#cybersecurity][CYBERSECURITY]]
+  - [[#technology][TECHNOLOGY]]
+  - [[#foss][FOSS]]
   - [[#initel][INIT.EL]]
   - [[#packagesel][PACKAGES.EL]]
 
@@ -421,6 +426,25 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 #+end_src
 
 *** RSS
+I make use of ~org-mode~ to configure feeds to follow. The following is an example of the ~elfeed.org~ file in my ~orgfiles~ directory.
+#+begin_example
+#+#+title: ELFEED
+
+* ROOT :elfeed:
+** PROGRAMMING :programming:
+*** [[https://this-week-in-rust.org/rss.xml][This Week in Rust]] :rust:
+
+** CYBERSECURITY :cybersecurity:
+*** [[https://feeds.feedburner.com/TheHackersNews][Cybersecurity News Platform]]
+*** [[https://www.wiz.io/feed/rss.xml][Wiz Blog]]
+
+** TECHNOLOGY :technology:
+*** [[https://hackernoon.com/feed][HackerNoon - Read, Write & Learn About Technology]]
+
+** FOSS :foss:
+*** [[https://itsfoss.com/rss/][It's FOSS]]
+#+end_example
+
 #+begin_src emacs-lisp :tangle "config.el"
 ;; News filtering
 (after! elfeed
