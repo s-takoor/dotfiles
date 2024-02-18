@@ -428,7 +428,7 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 *** RSS
 I make use of ~org-mode~ to configure feeds to follow. The following is an example of the ~elfeed.org~ file in my ~orgfiles~ directory.
 #+begin_example
-#+#+title: ELFEED
+#+title: ELFEED
 
 * ROOT :elfeed:
 ** PROGRAMMING :programming:
