@@ -7,6 +7,33 @@
       doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 
+;; Load all stable features in Emms
+(require 'emms-setup)
+(emms-all)
+
+;; MetaData reader about track information
+(require 'emms-info-native)
+(add-to-list 'emms-info-functions 'emms-info-native)
+
+;; Emms list of players
+(setq emms-player-list '(emms-player-mpd)) ;; or mpv
+(add-to-list 'emms-info-functions 'emms-info-mpd)
+
+;; MPD configuration
+(setq emms-player-mpd-server-name "localhost")
+(setq emms-player-mpd-server-port "6600")
+
+;; Music directory
+(setq emms-source-file-default-directory "~/Music")
+
+;; APE / FLAC commands
+(require 'emms-cue)
+(add-to-list 'emms-info-functions 'emms-info-cueinfo)
+
+;; Keybindings
+(global-set-key (kbd "C-c C-o") #'emms-smart-browse)
+(global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
+
 ;; (use-package ellama
 ;;   :init
 ;;   (setopt ellama-language "French")
