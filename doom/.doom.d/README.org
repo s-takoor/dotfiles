@@ -426,8 +426,18 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 #+end_src
 
 *** RSS
-I make use of ~org-mode~ to configure feeds to follow. The following is an example of the ~elfeed.org~ file in my ~orgfiles~ directory.
-#+begin_example
+RSS reader for ~Emacs~
+#+begin_src emacs-lisp :tangle "config.el"
+;; News filtering
+(after! elfeed
+  (setq elfeed-search-filter "@2-weeks-ago"))
+
+;; Automatically updating feed when opening elfeed
+(add-hook! 'elfeed-search-mode-hook #'elfeed-update)
+#+end_src
+
+The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to configure RSS feeds. The following is an example of ~elfeed.org~ in my ~{org-directory}/elfeed.org~ directory.
+        #+begin_example
 #+title: ELFEED
 
 * ROOT :elfeed:
@@ -445,14 +455,6 @@ I make use of ~org-mode~ to configure feeds to follow. The following is an examp
 *** [[https://itsfoss.com/rss/][It's FOSS]]
 #+end_example
 
-#+begin_src emacs-lisp :tangle "config.el"
-;; News filtering
-(after! elfeed
-  (setq elfeed-search-filter "@2-weeks-ago"))
-
-;; Automatically updating feed when opening elfeed
-(add-hook! 'elfeed-search-mode-hook #'elfeed-update)
-#+end_src
 
 
 
