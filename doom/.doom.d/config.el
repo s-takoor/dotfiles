@@ -182,25 +182,25 @@
   :ensure t
   :init
   (require 'vertico-directory)
-  (vertico-mode t))
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-resize nil)
+  (vertico-mode 1))
 
 (use-package marginalia
   :ensure t
-  :custom
-  (marginalia-annotators
-   '(marginalia-annotators-heavy marginalia-annotators-light t))
   :config
-  (marginalia-mode))
+  (marginalia-mode 1))
 
 (use-package savehist
   :init
-  (savehist-mode))
+  (savehist-mode 1))
 
 (use-package orderless
   :ensure t
-  :custom
-  (completion-styles '(basic flex initials orderless substring))
-  (completion-category-overrides '((file (styles partial-completion)))))
+  :config
+  (setq completion-styles '(orderless basic flex initials substring))
+  (setq completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
   :ensure t
@@ -265,5 +265,9 @@
   ;; and behaves as a pure `completion-at-point-function'.
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(setq elfeed-feeds (quote
-                    (("https://feeds.feedburner.com/TheHackersNews" hackernews))))
+;; News filtering
+(after! elfeed
+  (setq elfeed-search-filter "@2-weeks-ago"))
+
+;; Automatically updating feed when opening elfeed
+(add-hook! 'elfeed-search-mode-hook #'elfeed-update)

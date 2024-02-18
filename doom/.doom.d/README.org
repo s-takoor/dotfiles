@@ -309,7 +309,10 @@ The ~vertico~ package provides a performant and minimalistic vertical completion
   :ensure t
   :init
   (require 'vertico-directory)
-  (vertico-mode t))
+  :config
+  (setq vertico-cycle t)
+  (setq vertico-resize nil)
+  (vertico-mode 1))
 #+end_src
 
 *** MARGINALIA
@@ -317,11 +320,8 @@ The ~marginalia~ package adds annotations to the completion candidates at the ma
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package marginalia
   :ensure t
-  :custom
-  (marginalia-annotators
-   '(marginalia-annotators-heavy marginalia-annotators-light t))
   :config
-  (marginalia-mode))
+  (marginalia-mode 1))
 #+end_src
 
 *** SAVEHIST
@@ -329,7 +329,7 @@ The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by h
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package savehist
   :init
-  (savehist-mode))
+  (savehist-mode 1))
 #+end_src
 
 *** ORDERLESS
@@ -337,9 +337,9 @@ This package provides an ~orderless~ completion style that divides the pattern i
 #+begin_src emacs-lisp :tangle "config.el"
 (use-package orderless
   :ensure t
-  :custom
-  (completion-styles '(basic flex initials orderless substring))
-  (completion-category-overrides '((file (styles partial-completion)))))
+  :config
+  (setq completion-styles '(orderless basic flex initials substring))
+  (setq completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
 *** CONSULT
@@ -422,9 +422,15 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 
 *** RSS
 #+begin_src emacs-lisp :tangle "config.el"
-(setq elfeed-feeds (quote
-                    (("https://feeds.feedburner.com/TheHackersNews" hackernews))))
+;; News filtering
+(after! elfeed
+  (setq elfeed-search-filter "@2-weeks-ago"))
+
+;; Automatically updating feed when opening elfeed
+(add-hook! 'elfeed-search-mode-hook #'elfeed-update)
 #+end_src
+
+
 
 -----
 
