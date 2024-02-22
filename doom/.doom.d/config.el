@@ -12,8 +12,12 @@
 (emms-all)
 
 ;; MetaData reader about track information
-(require 'emms-info-native)
-(add-to-list 'emms-info-functions 'emms-info-native)
+;; (require 'emms-info-native)
+;; (add-to-list 'emms-info-functions 'emms-info-native)
+
+;; MetaData reader about track information
+(require 'emms-info-libtag)
+(add-to-list 'emms-info-functions 'emms-info-libtag)
 
 ;; Emms list of players
 (setq emms-player-list '(emms-player-mpd)) ;; or mpv
@@ -30,9 +34,17 @@
 (require 'emms-cue)
 (add-to-list 'emms-info-functions 'emms-info-cueinfo)
 
+;; Show cover art
+(setq emms-show-format "♪ %s")
+(setq emms-browser-covers 'emms-browser-cache-thumbnail)
+(setq emms-browser-covers-file-name-format "cover.jpg")
+
 ;; Keybindings
 (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
 (global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
+
+;; Automatically update MPD database on startup
+(add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 
 ;; (use-package ellama
 ;;   :init
