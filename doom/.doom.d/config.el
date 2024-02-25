@@ -37,6 +37,7 @@
 ;; Automatically update MPD database on startup
 (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 
+;; Use-Package
 ;; (use-package ellama
 ;;   :init
 ;;   (setopt ellama-language "French")
@@ -45,6 +46,12 @@
 ;;           (make-llm-ollama
 ;;            :chat-model "mistral:latest"
 ;;            :embedding-model "mistral:latest")))
+
+;; Require Package
+;; (require 'ellama)
+;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "French")))
+;; (require 'llm-ollama)
+;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
 
 ;; Icons
 (require 'nerd-icons)
@@ -114,19 +121,15 @@
       centaur-tabs-close-button "⨂"
       centaur-tabs-modified-marker "⨀")
 
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  (setq org-auto-tangle-default t))
+(require 'org-auto-tangle)
+(add-hook 'org-mode-hook #'org-auto-tangle-mode)
+(setq org-auto-tangle-default t)
 
-(use-package org-alert
-  :ensure t
-  :custom (alert-default-style 'osx-notifier)
-  :config
-  (setq org-alert-interval 1200
-        org-alert-notification-title "Org Alert Reminder!")
-  (org-alert-enable))
+(require 'org-alert)
+(setq org-alert-interval 1200)
+(setq org-alert-notification-title "Org Alert Reminder!")
+(custom-set-variables '(alert-default-style 'osx-notifier))
+(org-alert-enable)
 
 ;; Set the default Python interpreter to Python3
 (setq org-babel-python-command "python3")

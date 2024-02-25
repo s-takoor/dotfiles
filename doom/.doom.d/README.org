@@ -112,6 +112,7 @@ The ~emms~ module enables ~Emacs~ to be used as a music player. The following co
 
 *** ELLAMA
 #+begin_src emacs-lisp :tangle "config.el"
+;; Use-Package
 ;; (use-package ellama
 ;;   :init
 ;;   (setopt ellama-language "French")
@@ -120,6 +121,12 @@ The ~emms~ module enables ~Emacs~ to be used as a music player. The following co
 ;;           (make-llm-ollama
 ;;            :chat-model "mistral:latest"
 ;;            :embedding-model "mistral:latest")))
+
+;; Require Package
+;; (require 'ellama)
+;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "French")))
+;; (require 'llm-ollama)
+;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
 #+end_src
 
 *** NERD ICONS
@@ -223,22 +230,18 @@ The ~org-auto-tangle~ package automatically tangle org files on save. This is ac
 
 The tangling process happens asynchronously, therefore it will not block the current emacs session.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  (setq org-auto-tangle-default t))
+(require 'org-auto-tangle)
+(add-hook 'org-mode-hook #'org-auto-tangle-mode)
+(setq org-auto-tangle-default t)
 #+end_src
 
 *** ORG-ALERT
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package org-alert
-  :ensure t
-  :custom (alert-default-style 'osx-notifier)
-  :config
-  (setq org-alert-interval 1200
-        org-alert-notification-title "Org Alert Reminder!")
-  (org-alert-enable))
+(require 'org-alert)
+(setq org-alert-interval 1200)
+(setq org-alert-notification-title "Org Alert Reminder!")
+(custom-set-variables '(alert-default-style 'osx-notifier))
+(org-alert-enable)
 #+end_src
 
 *** ORG-BABEL CONFIGURATION
