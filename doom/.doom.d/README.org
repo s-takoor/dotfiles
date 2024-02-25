@@ -8,16 +8,11 @@
   - [[#tldr][TL;DR]]
   - [[#emacs-installation][EMACS INSTALLATION]]
   - [[#configel][CONFIG.EL]]
-- [[#root][ROOT]]
-  - [[#programming][PROGRAMMING]]
-  - [[#cybersecurity][CYBERSECURITY]]
-  - [[#technology][TECHNOLOGY]]
-  - [[#foss][FOSS]]
   - [[#initel][INIT.EL]]
   - [[#packagesel][PACKAGES.EL]]
 
 ** TL;DR
-The following is my literate *DOOM EMACS* config file. It contains the three main files ~init.el~, ~config.el~, and ~packages.el~ required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~.
+The following is my literate *DOOM EMACS* configuration file written in [[https://orgmode.org/][org]] format. This document contains the different code blocks for the three main files, namely; ~init.el~, ~config.el~, and ~packages.el~ required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ is used here to extract the source code blocks from this file into their own source-specific files.
 
 -----
 
@@ -66,12 +61,13 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 -----
 ** CONFIG.EL
 *** ABOUT
+Some general information about me.
 #+begin_src emacs-lisp :tangle "config.el"
 (setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
-*** SET FONTS
+*** FONTS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
@@ -81,14 +77,11 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 #+end_src
 
 *** EMMS
+The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update my music database.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Load all stable features in Emms
 (require 'emms-setup)
 (emms-all)
-
-;; MetaData reader about track information
-;; (require 'emms-info-native)
-;; (add-to-list 'emms-info-functions 'emms-info-native)
 
 ;; MetaData reader about track information
 (require 'emms-info-libtag)
@@ -108,11 +101,6 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ;; APE / FLAC commands
 (require 'emms-cue)
 (add-to-list 'emms-info-functions 'emms-info-cueinfo)
-
-;; Show cover art
-(setq emms-show-format "♪ %s")
-(setq emms-browser-covers 'emms-browser-cache-thumbnail)
-(setq emms-browser-covers-file-name-format "cover.jpg")
 
 ;; Keybindings
 (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
@@ -138,31 +126,20 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Icons
-(use-package nerd-icons)
+(require 'nerd-icons)
 
 ;; Icons Completion
-(use-package nerd-icons-completion
-  :after marginalia
-  :config
-  (nerd-icons-completion-marginalia-setup)
-  (nerd-icons-completion-mode 1))
-
-(use-package nerd-icons-corfu
-  :after corfu
-  :custom
-  (nerd-icons-default-face 'corfu-default)
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+(require 'nerd-icons-completion)
+(nerd-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
 ;; Icons Dired
-(use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+(require 'nerd-icons-dired)
+(add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
 
 ;; Icons Treemacs
-(use-package treemacs-nerd-icons
-  :config
-  (treemacs-load-theme "nerd-icons"))
+(require 'treemacs-nerd-icons)
+(treemacs-load-theme "nerd-icons")
 #+end_src
 
 *** LINE SPACING
@@ -172,24 +149,22 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 
 *** THEME
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package modus-themes
-  :ensure t
-  :custom
-  (modus-themes-bold-constructs t)
-  (modus-themes-italic-constructs t)
-  (modus-themes-mixed-fonts t)
-  (modus-themes-prompts '(italic bold))
-  (modus-themes-completions '((matches . (extrabold))
-                              (selection . (semibold underline))))
-  (modus-themes-org-blocks 'gray-background)
-  (modus-themes-headings
+(require 'modus-themes)
+(custom-set-variables
+ '(modus-themes-bold-constructs t)
+ '(modus-themes-italic-constructs t)
+ '(modus-themes-mixed-fonts t)
+ '(modus-themes-prompts '(italic bold))
+ '(modus-themes-completions '((matches . (extrabold underline))
+                              (selection . (semibold italic text-also underline))))
+ '(modus-themes-org-blocks 'gray-background)
+ '(modus-themes-headings
    '((1 . (variable-pitch 1.5))
      (2 . (1.3))
      (agenda-date . (1.3))
-     (agenda-structure . (variable-pitch light 2))
-     (t . (1.1))))
-  :init
-  (load-theme 'modus-vivendi t))
+     (agenda-structure . (variable-pitch light 1.8))
+     (t . (1.1))))) ;; Default size for other headings
+(load-theme 'modus-vivendi t)
 #+end_src
 
 *** MINIMAL UI
@@ -209,9 +184,8 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 
 *** BEACON MODE
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package beacon
-  :init
-  (beacon-mode 1))
+(require 'beacon)
+(beacon-mode 1)
 #+end_src
 
 *** CONFIGURE LINE NUMBERS
@@ -233,7 +207,7 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 
 *** CENTAUR-TABS
 #+begin_src emacs-lisp :tangle "config.el"
-(setq centaur-tabs-default-font "Iosevka NF"
+(setq centaur-tabs-default-font "JetBrainsMono NF" ;;Iosevka NF
       centaur-tabs-set-bar 'right
       centaur-tabs-set-icons t
       centaur-tabs-gray-out-icons 'buffer
@@ -290,7 +264,8 @@ The tangling process happens asynchronously, therefore it will not block the cur
       ;; Org styling, hide markup, etc.
       org-hide-emphasis-markers t
       org-pretty-entities t
-      org-ellipsis " ▼ "
+      ;; org-ellipsis " ▼ "
+      org-ellipsis " ..."
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
@@ -311,14 +286,15 @@ The tangling process happens asynchronously, therefore it will not block the cur
 *** ORG-MODERN
 The ~org modern~ package implements a modern style for Org buffers using font locking and text properties. The package styles headlines, keywords, tables and source blocks. 
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package org-modern
-  :ensure t
-  :config
-  (setq org-modern-table-vertical 1
-        org-modern-table-horizontal 1
-        org-modern-horizontal-rule t)
-  :init
-  (global-org-modern-mode))
+(require 'org-modern)
+
+;; Customize org-modern settings
+(setq org-modern-table-vertical 1
+      org-modern-table-horizontal 1
+      org-modern-horizontal-rule t)
+
+;; Enable global-org-modern-mode
+(global-org-modern-mode)
 #+end_src
 
 *** ORG-LATEX
@@ -346,156 +322,193 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 *** PDF-TOOLS
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Automatically update buffer
-(setq auto-revert-interval 0.5)
+(require 'pdf-tools)
+
+(add-hook 'doc-view-mode-hook 'pdf-tools-install)
+
+(setq-default pdf-view-use-scaling t
+              pdf-view-use-imagemagick nil)
+
+;; (setq auto-revert-interval 0.5)
 #+end_src
 
 *** VERTICO
 The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package vertico
-  :ensure t
-  :init
-  (require 'vertico-directory)
-  :config
-  (setq vertico-cycle t)
-  (setq vertico-resize nil)
-  (vertico-mode 1))
+(require 'vertico)
+(setq vertico-count 20
+      vertico-resize t
+      vertico-cycle t)
+(vertico-mode)
+#+end_src
+
+*** VERTICO DIRECTORY
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'vertico-directory)
+(add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
 #+end_src
 
 *** MARGINALIA
 The ~marginalia~ package adds annotations to the completion candidates at the margin of the minibuffer.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package marginalia
-  :ensure t
-  :config
-  (marginalia-mode 1))
+(require 'marginalia)
+(marginalia-mode)
 #+end_src
 
 *** SAVEHIST
 The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by history position.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package savehist
-  :init
-  (savehist-mode 1))
+(require 'savehist)
+(savehist-mode)
 #+end_src
 
 *** ORDERLESS
 This package provides an ~orderless~ completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: ~literally~, as a ~regexp~, as an ~initialism~, in the flex style, or as ~multiple word prefixes~. ~regexp~ and ~literal~ matches are enabled by default.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package orderless
-  :ensure t
-  :config
-  (setq completion-styles '(orderless basic flex initials substring))
-  (setq completion-category-overrides '((file (styles partial-completion)))))
+(require 'orderless)
+(setq completion-styles '(orderless basic flex initials substring)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion))))
 #+end_src
 
 *** CONSULT
 The ~consult~ module provides search and navigation commands based on the Emacs completion function [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]].
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package consult
-  :ensure t
-  :after vertico
-  :custom
-  (completion-in-region-function #'consult-completion-in-region))
+(require 'consult)
+
+(add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+
+(setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format
+        xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref
+        completion-in-region-function #'consult-completion-in-region)
+
+(bind-key "C-x C-r" #'consult-recent-file)
+(bind-key "C-x h" #'consult-outline)
+(bind-key "C-x b" #'consult-buffer)
+(bind-key "C-c h" #'consult-history)
 #+end_src
 
 *** EMBARK
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package embark
-  :ensure t
-  :init
-  (setq prefix-help-command #'embark-prefix-help-command))
+(require 'embark)
+(setq prefix-help-command #'embark-prefix-help-command)
+(add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none))))
 
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+;; Embark-Consult
+(require 'embark-consult)
+(add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)
 #+end_src
 
 *** CORFU
 The ~corfu~ module enhances in-buffer completion with a small completion popup. The current candidates are shown in a popup below or above the point.
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package corfu
-  :ensure t
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
-  (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert)
-  (corfu-preselect 'prompt)
-  (corfu-on-exact-match nil)
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)
-              ("S-<return>" . corfu-insert)
-              ("RET"        . nil))
+(require 'corfu)
+(require 'nerd-icons-corfu)
 
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                                   corfu-quit-no-match t
-                                   corfu-auto nil)
-              (corfu-mode))))
+;; Corfu configuration
+(custom-set-variables
+ '(corfu-cycle t)
+ '(corfu-auto t)
+ '(corfu-auto-delay 0.8)
+ '(corfu-auto-prefix 2)
+ '(corfu-separator ?\s)
+ '(corfu-popupinfo-delay '(0.5 . 0.2))
+ '(corfu-preview-current 'insert)
+ '(corfu-preselect 'prompt)
+ '(corfu-on-exact-match nil))
+
+(bind-keys
+ :map corfu-map
+ ("M-SPC" . corfu-insert-separator)
+ ("TAB" . corfu-next)
+ ([tab] . corfu-next)
+ ("S-TAB" . corfu-previous)
+ ([backtab] . corfu-previous)
+ ("S-<return>" . corfu-insert)
+ ("RET" . nil))
+
+(global-corfu-mode)
+(corfu-history-mode)
+(corfu-popupinfo-mode)
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (setq-local corfu-quit-at-boundary t
+                        corfu-quit-no-match t
+                        corfu-auto nil)
+            (corfu-mode)))
+
+;; Nerd Icons Corfu configuration
+(custom-set-variables
+ '(nerd-icons-default-face 'corfu-default))
+
+(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+#+end_src
+
+*** DABBREV
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'dabbrev)
+(add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+(add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
 #+end_src
 
 *** CAPE
 The ~cape~ module provides Completion At Point Extensions which can be used in combination with ~corfu~, ~company~ or the default completion UI. The completion backends used by completion-at-point are so called completion-at-point-functions (~capfs~).
 #+begin_src emacs-lisp :tangle "config.el"
-(use-package cape
-  :ensure t
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  :config
-  ;; Silence then pcomplete capf, no errors or messages!
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+(require 'cape)
 
-  ;; Ensure that pcomplete does not write to the buffer
-  ;; and behaves as a pure `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+(bind-keys
+ ("C-c p p" . completion-at-point)
+ ("C-c p t" . complete-tag)
+ ("C-c p d" . cape-dabbrev)
+ ("C-c p h" . cape-history)
+ ("C-c p f" . cape-file)
+ ("C-c p e" . cape-elisp-block)
+ ("C-c p s" . cape-elisp-symbol)
+ ("C-c p \\" . cape-tex)
+ ("C-c p _" . cape-tex)
+ ("C-c p ^" . cape-tex))
+
+(add-to-list 'completion-at-point-functions #'cape-dabbrev)
+(add-to-list 'completion-at-point-functions #'cape-file)
+(add-to-list 'completion-at-point-functions #'cape-elisp-block)
+(add-to-list 'completion-at-point-functions #'cape-history)
+(add-to-list 'completion-at-point-functions #'cape-tex)
+(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+#+end_src
+
+*** INFRASTRUCTURE AS CODE
+The ~terraform~ module adds support for working with [[https://www.terraform.io/][Terraform]] files in ~Doom Emacs~. It includes syntax highlighting, intelligent code completion and, the ability to run ~Terraform~ commands directly from ~Emacs~.
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'terraform-mode)
+(add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
+(add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
+(add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
+
+;; Customize indentation level
+(setq terraform-indent-level 4)
 #+end_src
 
 *** RSS
-RSS reader for ~Emacs~
+The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to manage RSS feeds. I've added an example of my ~elfeed.org~ file which can be found [[https://github.com/s-takoor/emacs-org-docs/tree/main/rss][here]]. This file is located in my ~{org-directory}/elfeed.org~.
 #+begin_src emacs-lisp :tangle "config.el"
+(require 'elfeed-goodies)
+(elfeed-goodies/setup)
+
 ;; News filtering
 (after! elfeed
   (setq elfeed-search-filter "@2-weeks-ago"))
 
 ;; Automatically updating feed when opening elfeed
 (add-hook! 'elfeed-search-mode-hook #'elfeed-update)
+
+(global-set-key (kbd "C-x w") 'elfeed)
 #+end_src
-
-The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to configure RSS feeds. The following is an example of ~elfeed.org~ in my ~{org-directory}/elfeed.org~ directory.
-#+begin_example
-#+title: ELFEED
-* ROOT :elfeed:
-** PROGRAMMING :programming:
-*** [[https://this-week-in-rust.org/rss.xml][This Week in Rust]] :rust:
-
-** CYBERSECURITY :cybersecurity:
-*** [[https://feeds.feedburner.com/TheHackersNews][Cybersecurity News Platform]] :hackernews:
-*** [[https://www.wiz.io/feed/rss.xml][Wiz Blog]] :wiz:
-
-** TECHNOLOGY :technology:
-*** [[https://hackernoon.com/feed][HackerNoon - Read, Write & Learn About Technology]] :hackernoon:
-
-** FOSS :foss:
-*** [[https://itsfoss.com/rss/][It's FOSS]]
-#+end_example
-
 
 -----
 
@@ -601,7 +614,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
-       ;;terraform         ; infrastructure as code
+       terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        tree-sitter       ; syntax and parsing, sitting in a tree...
        ;;upload            ; map local to remote projects via ssh/ftp
@@ -733,13 +746,23 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 #+begin_src emacs-lisp :tangle "packages.el"
 (package! beacon)
 (package! cape)
+(package! consult)
 (package! corfu)
+(package! dabbrev)
+(package! elfeed-goodies)
 ;; (package! ellama)
-(package! org-alert)
-(package! org-auto-tangle)
-(package! org-modern)
+(package! embark)
+(package! embark-consult)
+(package! marginalia)
+(package! modus-themes)
+(package! nerd-icons)
 (package! nerd-icons-completion)
 (package! nerd-icons-corfu)
 (package! nerd-icons-dired)
+(package! orderless)
+(package! org-alert)
+(package! org-auto-tangle)
+(package! org-modern)
+(package! terraform-mode)
 (package! treemacs-nerd-icons)
 #+end_src

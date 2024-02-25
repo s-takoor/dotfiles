@@ -12,10 +12,6 @@
 (emms-all)
 
 ;; MetaData reader about track information
-;; (require 'emms-info-native)
-;; (add-to-list 'emms-info-functions 'emms-info-native)
-
-;; MetaData reader about track information
 (require 'emms-info-libtag)
 (add-to-list 'emms-info-functions 'emms-info-libtag)
 
@@ -34,11 +30,6 @@
 (require 'emms-cue)
 (add-to-list 'emms-info-functions 'emms-info-cueinfo)
 
-;; Show cover art
-(setq emms-show-format "♪ %s")
-(setq emms-browser-covers 'emms-browser-cache-thumbnail)
-(setq emms-browser-covers-file-name-format "cover.jpg")
-
 ;; Keybindings
 (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
 (global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
@@ -56,52 +47,39 @@
 ;;            :embedding-model "mistral:latest")))
 
 ;; Icons
-(use-package nerd-icons)
+(require 'nerd-icons)
 
 ;; Icons Completion
-(use-package nerd-icons-completion
-  :after marginalia
-  :config
-  (nerd-icons-completion-marginalia-setup)
-  (nerd-icons-completion-mode 1))
-
-(use-package nerd-icons-corfu
-  :after corfu
-  :custom
-  (nerd-icons-default-face 'corfu-default)
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+(require 'nerd-icons-completion)
+(nerd-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
 ;; Icons Dired
-(use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+(require 'nerd-icons-dired)
+(add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
 
 ;; Icons Treemacs
-(use-package treemacs-nerd-icons
-  :config
-  (treemacs-load-theme "nerd-icons"))
+(require 'treemacs-nerd-icons)
+(treemacs-load-theme "nerd-icons")
 
 (setq-default line-spacing 0.2)
 
-(use-package modus-themes
-  :ensure t
-  :custom
-  (modus-themes-bold-constructs t)
-  (modus-themes-italic-constructs t)
-  (modus-themes-mixed-fonts t)
-  (modus-themes-prompts '(italic bold))
-  (modus-themes-completions '((matches . (extrabold))
-                              (selection . (semibold underline))))
-  (modus-themes-org-blocks 'gray-background)
-  (modus-themes-headings
+(require 'modus-themes)
+(custom-set-variables
+ '(modus-themes-bold-constructs t)
+ '(modus-themes-italic-constructs t)
+ '(modus-themes-mixed-fonts t)
+ '(modus-themes-prompts '(italic bold))
+ '(modus-themes-completions '((matches . (extrabold underline))
+                              (selection . (semibold italic text-also underline))))
+ '(modus-themes-org-blocks 'gray-background)
+ '(modus-themes-headings
    '((1 . (variable-pitch 1.5))
      (2 . (1.3))
      (agenda-date . (1.3))
-     (agenda-structure . (variable-pitch light 2))
-     (t . (1.1))))
-  :init
-  (load-theme 'modus-vivendi t))
+     (agenda-structure . (variable-pitch light 1.8))
+     (t . (1.1))))) ;; Default size for other headings
+(load-theme 'modus-vivendi t)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -112,9 +90,8 @@
 (set-frame-parameter (selected-frame) 'alpha '(70 . 50))
 (add-to-list 'default-frame-alist '(alpha . (70 . 50)))
 
-(use-package beacon
-  :init
-  (beacon-mode 1))
+(require 'beacon)
+(beacon-mode 1)
 
 (setq display-line-numbers-type 'relative)
 
@@ -127,7 +104,7 @@
       doom-modeline-lsp t
       doom-modeline-bar-width 4))
 
-(setq centaur-tabs-default-font "Iosevka NF"
+(setq centaur-tabs-default-font "JetBrainsMono NF" ;;Iosevka NF
       centaur-tabs-set-bar 'right
       centaur-tabs-set-icons t
       centaur-tabs-gray-out-icons 'buffer
@@ -169,7 +146,8 @@
       ;; Org styling, hide markup, etc.
       org-hide-emphasis-markers t
       org-pretty-entities t
-      org-ellipsis " ▼ "
+      ;; org-ellipsis " ▼ "
+      org-ellipsis " ..."
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
@@ -186,14 +164,15 @@
       org-agenda-current-time-string
       "⭠ now ─────────────────────────────────────────────────")
 
-(use-package org-modern
-  :ensure t
-  :config
-  (setq org-modern-table-vertical 1
-        org-modern-table-horizontal 1
-        org-modern-horizontal-rule t)
-  :init
-  (global-org-modern-mode))
+(require 'org-modern)
+
+;; Customize org-modern settings
+(setq org-modern-table-vertical 1
+      org-modern-table-horizontal 1
+      org-modern-horizontal-rule t)
+
+;; Enable global-org-modern-mode
+(global-org-modern-mode)
 
 (require 'ox-latex)
 
@@ -215,94 +194,138 @@
                  )))
 
 ;; Automatically update buffer
-(setq auto-revert-interval 0.5)
+(require 'pdf-tools)
 
-(use-package vertico
-  :ensure t
-  :init
-  (require 'vertico-directory)
-  :config
-  (setq vertico-cycle t)
-  (setq vertico-resize nil)
-  (vertico-mode 1))
+(add-hook 'doc-view-mode-hook 'pdf-tools-install)
 
-(use-package marginalia
-  :ensure t
-  :config
-  (marginalia-mode 1))
+(setq-default pdf-view-use-scaling t
+              pdf-view-use-imagemagick nil)
 
-(use-package savehist
-  :init
-  (savehist-mode 1))
+;; (setq auto-revert-interval 0.5)
 
-(use-package orderless
-  :ensure t
-  :config
-  (setq completion-styles '(orderless basic flex initials substring))
-  (setq completion-category-overrides '((file (styles partial-completion)))))
+(require 'vertico)
+(setq vertico-count 20
+      vertico-resize t
+      vertico-cycle t)
+(vertico-mode)
 
-(use-package consult
-  :ensure t
-  :after vertico
-  :custom
-  (completion-in-region-function #'consult-completion-in-region))
+(require 'vertico-directory)
+(add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
 
-(use-package embark
-  :ensure t
-  :init
-  (setq prefix-help-command #'embark-prefix-help-command))
+(require 'marginalia)
+(marginalia-mode)
 
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+(require 'savehist)
+(savehist-mode)
 
-(use-package corfu
-  :ensure t
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
-  (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert)
-  (corfu-preselect 'prompt)
-  (corfu-on-exact-match nil)
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)
-              ("S-<return>" . corfu-insert)
-              ("RET"        . nil))
+(require 'orderless)
+(setq completion-styles '(orderless basic flex initials substring)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion))))
 
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                                   corfu-quit-no-match t
-                                   corfu-auto nil)
-              (corfu-mode))))
+(require 'consult)
 
-(use-package cape
-  :ensure t
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  :config
-  ;; Silence then pcomplete capf, no errors or messages!
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+(add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
-  ;; Ensure that pcomplete does not write to the buffer
-  ;; and behaves as a pure `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+(setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format
+        xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref
+        completion-in-region-function #'consult-completion-in-region)
+
+(bind-key "C-x C-r" #'consult-recent-file)
+(bind-key "C-x h" #'consult-outline)
+(bind-key "C-x b" #'consult-buffer)
+(bind-key "C-c h" #'consult-history)
+
+(require 'embark)
+(setq prefix-help-command #'embark-prefix-help-command)
+(add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none))))
+
+;; Embark-Consult
+(require 'embark-consult)
+(add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)
+
+(require 'corfu)
+(require 'nerd-icons-corfu)
+
+;; Corfu configuration
+(custom-set-variables
+ '(corfu-cycle t)
+ '(corfu-auto t)
+ '(corfu-auto-delay 0.8)
+ '(corfu-auto-prefix 2)
+ '(corfu-separator ?\s)
+ '(corfu-popupinfo-delay '(0.5 . 0.2))
+ '(corfu-preview-current 'insert)
+ '(corfu-preselect 'prompt)
+ '(corfu-on-exact-match nil))
+
+(bind-keys
+ :map corfu-map
+ ("M-SPC" . corfu-insert-separator)
+ ("TAB" . corfu-next)
+ ([tab] . corfu-next)
+ ("S-TAB" . corfu-previous)
+ ([backtab] . corfu-previous)
+ ("S-<return>" . corfu-insert)
+ ("RET" . nil))
+
+(global-corfu-mode)
+(corfu-history-mode)
+(corfu-popupinfo-mode)
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (setq-local corfu-quit-at-boundary t
+                        corfu-quit-no-match t
+                        corfu-auto nil)
+            (corfu-mode)))
+
+;; Nerd Icons Corfu configuration
+(custom-set-variables
+ '(nerd-icons-default-face 'corfu-default))
+
+(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+
+(require 'dabbrev)
+(add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+(add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+
+(require 'cape)
+
+(bind-keys
+ ("C-c p p" . completion-at-point)
+ ("C-c p t" . complete-tag)
+ ("C-c p d" . cape-dabbrev)
+ ("C-c p h" . cape-history)
+ ("C-c p f" . cape-file)
+ ("C-c p e" . cape-elisp-block)
+ ("C-c p s" . cape-elisp-symbol)
+ ("C-c p \\" . cape-tex)
+ ("C-c p _" . cape-tex)
+ ("C-c p ^" . cape-tex))
+
+(add-to-list 'completion-at-point-functions #'cape-dabbrev)
+(add-to-list 'completion-at-point-functions #'cape-file)
+(add-to-list 'completion-at-point-functions #'cape-elisp-block)
+(add-to-list 'completion-at-point-functions #'cape-history)
+(add-to-list 'completion-at-point-functions #'cape-tex)
+(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+
+(require 'terraform-mode)
+(add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
+(add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
+(add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
+
+;; Customize indentation level
+(setq terraform-indent-level 4)
+
+(require 'elfeed-goodies)
+(elfeed-goodies/setup)
 
 ;; News filtering
 (after! elfeed
@@ -310,3 +333,5 @@
 
 ;; Automatically updating feed when opening elfeed
 (add-hook! 'elfeed-search-mode-hook #'elfeed-update)
+
+(global-set-key (kbd "C-x w") 'elfeed)
