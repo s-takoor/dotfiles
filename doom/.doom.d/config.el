@@ -4,7 +4,7 @@
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-symbol-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 
 ;; Load all stable features in Emms
@@ -106,8 +106,11 @@
 (setq doom-modeline-enable-word-count t
       doom-modeline-window-width-limit nil
       doom-modeline-battery t
+      doom-modeline-icon t
       doom-modeline-major-mode-icon t
       doom-modeline-major-mode-color-icon t
+      doom-modeline-time t
+      doom-modeline-time-icon t
       doom-modeline-lsp t
       doom-modeline-bar-width 4))
 
@@ -140,7 +143,7 @@
 (setq org-directory "~/Documents/orgfiles/"
       org-auto-align-tags nil
       org-tags-column 0
-      org-catch-invisible-edits 'show-and-error
+      org-fold-catch-invisible-edits 'show-and-error
       org-special-ctrl-a/e t
       org-insert-heading-respect-content t
       org-log-done t
@@ -196,6 +199,9 @@
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                  )))
 
+(require 'engrave-faces-latex)
+(setq org-latex-src-block-backend'engraved)
+
 ;; Automatically update buffer
 (require 'pdf-tools)
 
@@ -206,14 +212,26 @@
 
 ;; (setq auto-revert-interval 0.5)
 
+(require 'jinx)
+
+;; Enable Jinx globally
+(add-hook 'emacs-startup-hook #'global-jinx-mode)
+
 (require 'vertico)
+
 (setq vertico-count 20
       vertico-resize t
       vertico-cycle t)
+
 (vertico-mode)
 
 (require 'vertico-directory)
 (add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
+
+(vertico-multiform-mode)
+(add-to-list 'vertico-multiform-categories
+             '(jinx grid (vertico-grid-annotate . 20)))
+(vertico-multiform-mode 1)
 
 (require 'marginalia)
 (marginalia-mode)
@@ -328,7 +346,7 @@
 (setq terraform-indent-level 4)
 
 (require 'elfeed-goodies)
-(elfeed-goodies/setup)
+;; (elfeed-goodies/setup)
 
 ;; News filtering
 (after! elfeed

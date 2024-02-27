@@ -72,7 +72,7 @@ Some general information about me.
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-unicode-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-symbol-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 #+end_src
 
@@ -206,8 +206,11 @@ The ~emms~ module enables ~Emacs~ to be used as a music player. The following co
 (setq doom-modeline-enable-word-count t
       doom-modeline-window-width-limit nil
       doom-modeline-battery t
+      doom-modeline-icon t
       doom-modeline-major-mode-icon t
       doom-modeline-major-mode-color-icon t
+      doom-modeline-time t
+      doom-modeline-time-icon t
       doom-modeline-lsp t
       doom-modeline-bar-width 4))
 #+end_src
@@ -258,7 +261,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
 (setq org-directory "~/Documents/orgfiles/"
       org-auto-align-tags nil
       org-tags-column 0
-      org-catch-invisible-edits 'show-and-error
+      org-fold-catch-invisible-edits 'show-and-error
       org-special-ctrl-a/e t
       org-insert-heading-respect-content t
       org-log-done t
@@ -320,6 +323,9 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
                  )))
+
+(require 'engrave-faces-latex)
+(setq org-latex-src-block-backend'engraved)
 #+end_src
 
 *** PDF-TOOLS
@@ -335,13 +341,24 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 ;; (setq auto-revert-interval 0.5)
 #+end_src
 
+*** JINX
+~jinx~ is a fast just-in-time spell-checker for Emacs.
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'jinx)
+
+;; Enable Jinx globally
+(add-hook 'emacs-startup-hook #'global-jinx-mode)
+#+end_src
+
 *** VERTICO
 The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'vertico)
+
 (setq vertico-count 20
       vertico-resize t
       vertico-cycle t)
+
 (vertico-mode)
 #+end_src
 
@@ -349,6 +366,14 @@ The ~vertico~ package provides a performant and minimalistic vertical completion
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'vertico-directory)
 (add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
+#+end_src
+
+*** VERTICO MULTIFORM
+#+begin_src emacs-lisp :tangle "config.el"
+(vertico-multiform-mode)
+(add-to-list 'vertico-multiform-categories
+             '(jinx grid (vertico-grid-annotate . 20)))
+(vertico-multiform-mode 1)
 #+end_src
 
 *** MARGINALIA
@@ -501,7 +526,7 @@ The ~terraform~ module adds support for working with [[https://www.terraform.io/
 The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to manage RSS feeds. I've added an example of my ~elfeed.org~ file which can be found [[https://github.com/s-takoor/emacs-org-docs/tree/main/rss][here]]. This file is located in my ~{org-directory}/elfeed.org~.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'elfeed-goodies)
-(elfeed-goodies/setup)
+;; (elfeed-goodies/setup)
 
 ;; News filtering
 (after! elfeed
@@ -698,7 +723,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        :app
        ;;calendar
        emms
-       ;;everywhere        ; *leave* Emacs!? You must be joking
+       everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
@@ -756,6 +781,8 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 ;; (package! ellama)
 (package! embark)
 (package! embark-consult)
+(package! engrave-faces)
+(package! jinx)
 (package! marginalia)
 (package! modus-themes)
 (package! nerd-icons)

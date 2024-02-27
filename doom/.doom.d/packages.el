@@ -7,6 +7,8 @@
 ;; (package! ellama)
 (package! embark)
 (package! embark-consult)
+(package! engrave-faces)
+(package! jinx)
 (package! marginalia)
 (package! modus-themes)
 (package! nerd-icons)
