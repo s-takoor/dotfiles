@@ -64,8 +64,8 @@ stow -vR tmux
 
 ** 💻 OPERATING SYSTEM
 *** [[https://archlinux.org/][Arch Linux]] - A lightweight and flexible Linux® distribution that tries to Keep It Simple.
-*** [[https://www.apple.com][MacBook Air]] - M1 MacBook Air
-*** [[https://www.apple.com][MacBook Pro]] - M1 MacBook Pro
+*** [[https://www.apple.com][MacBook Air]] - macOS Sonoma
+*** [[https://www.apple.com][MacBook Pro]] - macOS Sonoma
 
 ** 🔩 GEARS
 *** [[https://www.razer.com/gaming-mice/razer-deathadder-v2-mini][Razer DeathAdder V2 Mini]] - Gaming mouse
