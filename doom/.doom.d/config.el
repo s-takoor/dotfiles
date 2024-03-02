@@ -37,19 +37,8 @@
 ;; Automatically update MPD database on startup
 (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 
-;; Use-Package
-;; (use-package ellama
-;;   :init
-;;   (setopt ellama-language "French")
-;;   (require 'llm-ollama)
-;;   (setopt ellama-provider
-;;           (make-llm-ollama
-;;            :chat-model "mistral:latest"
-;;            :embedding-model "mistral:latest")))
-
-;; Require Package
 ;; (require 'ellama)
-;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "French")))
+;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "English")))
 ;; (require 'llm-ollama)
 ;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
 
@@ -87,6 +76,11 @@
      (agenda-structure . (variable-pitch light 1.8))
      (t . (1.1))))) ;; Default size for other headings
 (load-theme 'modus-vivendi t)
+
+;; Keybinding for imenu-list-smart-toggle
+(map! :leader
+     (:prefix ("t" . "Toggle")
+      :desc "Toggle imenu shown in a sidebar" "i" #'imenu-list-smart-toggle))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -153,7 +147,7 @@
       org-hide-emphasis-markers t
       org-pretty-entities t
       ;; org-ellipsis " ▼ "
-      org-ellipsis " ..."
+      org-ellipsis " ... "
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t

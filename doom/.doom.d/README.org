@@ -4,20 +4,58 @@
 #+startup: showeverything
 #+filetags: :doom:emacs:config:org:
 
-** TABLE OF CONTENTS :toc:
-  - [[#tldr][TL;DR]]
-  - [[#emacs-installation][EMACS INSTALLATION]]
-  - [[#configel][CONFIG.EL]]
-  - [[#initel][INIT.EL]]
-  - [[#packagesel][PACKAGES.EL]]
-
-** TL;DR
-The following is my literate *DOOM EMACS* configuration file written in [[https://orgmode.org/][org]] format. This document contains the different code blocks for the three main files, namely; ~init.el~, ~config.el~, and ~packages.el~ required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ is used here to extract the source code blocks from this file into their own source-specific files.
+* TL;DR
+This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org/][org]] format. The configuration contains the code blocks for the three main files: ~init.el~, ~config.el~, and ~packages.el~, required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ is used to extract the source code blocks from this file into their own source-specific files.
 
 -----
 
-** EMACS INSTALLATION
-*** PREREQUISITES
+** TABLE OF CONTENTS :toc:
+- [[#tldr][TL;DR]]
+- [[#emacs-installation][EMACS INSTALLATION]]
+  - [[#prerequisites][PREREQUISITES]]
+  - [[#dependencies--dependencies][DEPENDENCIES & DEPENDENCIES]]
+  - [[#doom-emacs][DOOM EMACS]]
+- [[#configel][CONFIG.EL]]
+  - [[#about][ABOUT]]
+  - [[#fonts][FONTS]]
+  - [[#emms][EMMS]]
+  - [[#ellama][ELLAMA]]
+  - [[#nerd-icons][NERD ICONS]]
+  - [[#line-spacing][LINE SPACING]]
+  - [[#theme][THEME]]
+  - [[#imenu][IMENU]]
+  - [[#minimal-ui][MINIMAL UI]]
+  - [[#set-frame-opacity][SET FRAME OPACITY]]
+  - [[#beacon-mode][BEACON MODE]]
+  - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
+  - [[#doom-modeline][DOOM MODELINE]]
+  - [[#centaur-tabs][CENTAUR-TABS]]
+  - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
+  - [[#org-alert][ORG-ALERT]]
+  - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
+  - [[#org-mode-configuration][ORG-MODE CONFIGURATION]]
+  - [[#org-modern][ORG-MODERN]]
+  - [[#org-latex][ORG-LATEX]]
+  - [[#pdf-tools][PDF-TOOLS]]
+  - [[#jinx][JINX]]
+  - [[#vertico][VERTICO]]
+  - [[#vertico-directory][VERTICO DIRECTORY]]
+  - [[#vertico-multiform][VERTICO MULTIFORM]]
+  - [[#marginalia][MARGINALIA]]
+  - [[#savehist][SAVEHIST]]
+  - [[#orderless][ORDERLESS]]
+  - [[#consult][CONSULT]]
+  - [[#embark][EMBARK]]
+  - [[#corfu][CORFU]]
+  - [[#dabbrev][DABBREV]]
+  - [[#cape][CAPE]]
+  - [[#infrastructure-as-code][INFRASTRUCTURE AS CODE]]
+  - [[#rss][RSS]]
+- [[#initel][INIT.EL]]
+- [[#packagesel][PACKAGES.EL]]
+
+* EMACS INSTALLATION
+** PREREQUISITES
 Before installing ~Doom Emacs~, ensure the following packages are installed:
 - Git
 - Emacs
@@ -25,10 +63,10 @@ Before installing ~Doom Emacs~, ensure the following packages are installed:
 - GNU Find
 - fd (optional)
 
-*** DEPENDENCIES & DEPENDENCIES
+** DEPENDENCIES & DEPENDENCIES
 There exists various options for installing ~Emacs~ on ~macOS~. Ensure a package manager is installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
 
-**** DEPENDENCIES
+*** DEPENDENCIES
 #+begin_src sh
 # required dedenpdencies
 brew install git ripgrep
@@ -38,7 +76,7 @@ brew install coreutils fd
 xcode-select --install
 #+end_src
 
-**** EMACS
+*** EMACS
 There are three formulas that are considered as the best options for ~Doom~. I prefer using ~emacs-plus~ as it offers a wide range of extra functionality over the regular Emacs package.
 - ~emacs-mac~ formula offers good integration with ~macOS~, native emojis and better childframe support.
 - ~emacs-plus~ formula from [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted]].
@@ -51,7 +89,7 @@ cp -r /opt/homebrew/opt/emacs-plus/Emacs.app /Applications/
 
 - ~emacs~ formula is another acceptable option but does ~not~ provide a ~Emacs.app~.
 
-*** DOOM EMACS
+** DOOM EMACS
 After installing ~Emacs~ and ~Doom~'s dependencies, ~Doom Emacs~ can be installed:
 #+begin_src sh
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
@@ -59,15 +97,15 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 #+end_src
 
 -----
-** CONFIG.EL
-*** ABOUT
+* CONFIG.EL
+** ABOUT
 Some general information about me.
 #+begin_src emacs-lisp :tangle "config.el"
 (setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
-*** FONTS
+** FONTS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
@@ -76,7 +114,7 @@ Some general information about me.
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 #+end_src
 
-*** EMMS
+** EMMS
 The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update my music database.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Load all stable features in Emms
@@ -110,27 +148,16 @@ The ~emms~ module enables ~Emacs~ to be used as a music player. The following co
 (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 #+end_src
 
-*** ELLAMA
+** ELLAMA
 The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacting with large language models from Emacs.
 #+begin_src emacs-lisp :tangle "config.el"
-;; Use-Package
-;; (use-package ellama
-;;   :init
-;;   (setopt ellama-language "French")
-;;   (require 'llm-ollama)
-;;   (setopt ellama-provider
-;;           (make-llm-ollama
-;;            :chat-model "mistral:latest"
-;;            :embedding-model "mistral:latest")))
-
-;; Require Package
 ;; (require 'ellama)
-;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "French")))
+;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "English")))
 ;; (require 'llm-ollama)
 ;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
 #+end_src
 
-*** NERD ICONS
+** NERD ICONS
 ~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Icons
@@ -150,12 +177,12 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 (treemacs-load-theme "nerd-icons")
 #+end_src
 
-*** LINE SPACING
+** LINE SPACING
 #+begin_src emacs-lisp :tangle "config.el"
 (setq-default line-spacing 0.2)
 #+end_src
 
-*** THEME
+** THEME
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'modus-themes)
 (custom-set-variables
@@ -175,7 +202,15 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 (load-theme 'modus-vivendi t)
 #+end_src
 
-*** MINIMAL UI
+** IMENU
+#+begin_src emacs-lisp :tangle "config.el"
+;; Keybinding for imenu-list-smart-toggle
+(map! :leader
+     (:prefix ("t" . "Toggle")
+      :desc "Toggle imenu shown in a sidebar" "i" #'imenu-list-smart-toggle))
+#+end_src
+
+** MINIMAL UI
 #+begin_src emacs-lisp :tangle "config.el"
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -184,24 +219,24 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 (add-to-list 'default-frame-alist '(undecorated-round . t))
 #+end_src
 
-*** SET FRAME OPACITY
+** SET FRAME OPACITY
 #+begin_src emacs-lisp :tangle "config.el"
 (set-frame-parameter (selected-frame) 'alpha '(70 . 50))
 (add-to-list 'default-frame-alist '(alpha . (70 . 50)))
 #+end_src
 
-*** BEACON MODE
+** BEACON MODE
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'beacon)
 (beacon-mode 1)
 #+end_src
 
-*** CONFIGURE LINE NUMBERS
+** CONFIGURE LINE NUMBERS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq display-line-numbers-type 'relative)
 #+end_src
 
-*** DOOM MODELINE
+** DOOM MODELINE
 #+begin_src emacs-lisp :tangle "config.el"
 (after! doom-modeline
 (setq doom-modeline-enable-word-count t
@@ -216,7 +251,7 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
       doom-modeline-bar-width 4))
 #+end_src
 
-*** CENTAUR-TABS
+** CENTAUR-TABS
 #+begin_src emacs-lisp :tangle "config.el"
 (setq centaur-tabs-default-font "JetBrainsMono NF" ;;Iosevka NF
       centaur-tabs-set-bar 'right
@@ -229,7 +264,7 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
       centaur-tabs-modified-marker "⨀")
 #+end_src
 
-*** ORG-AUTO-TANGLE
+** ORG-AUTO-TANGLE
 The ~org-auto-tangle~ package automatically tangle org files on save. This is achieved by adding the option ~#+auto_tangle: t~. If instead you would like to manually tangle the org file on save, the following emacs keybindings can be used ~C-c C-v C-t~
 
 The tangling process happens asynchronously, therefore it will not block the current emacs session.
@@ -239,7 +274,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
 (setq org-auto-tangle-default t)
 #+end_src
 
-*** ORG-ALERT
+** ORG-ALERT
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'org-alert)
 (setq org-alert-interval 1200)
@@ -248,7 +283,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
 (org-alert-enable)
 #+end_src
 
-*** ORG-BABEL CONFIGURATION
+** ORG-BABEL CONFIGURATION
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Set the default Python interpreter to Python3
 (setq org-babel-python-command "python3")
@@ -257,7 +292,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
 (setq org-ditaa-jar-path "/opt/homebrew/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
 #+end_src
 
-*** ORG-MODE CONFIGURATION
+** ORG-MODE CONFIGURATION
 #+begin_src emacs-lisp :tangle "config.el"
 (setq org-directory "~/Documents/orgfiles/"
       org-auto-align-tags nil
@@ -272,7 +307,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
       org-hide-emphasis-markers t
       org-pretty-entities t
       ;; org-ellipsis " ▼ "
-      org-ellipsis " ..."
+      org-ellipsis " ... "
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
@@ -290,7 +325,7 @@ The tangling process happens asynchronously, therefore it will not block the cur
       "⭠ now ─────────────────────────────────────────────────")
 #+end_src
 
-*** ORG-MODERN
+** ORG-MODERN
 The ~org modern~ package implements a modern style for Org buffers using font locking and text properties. The package styles headlines, keywords, tables and source blocks. 
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'org-modern)
@@ -304,7 +339,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 (global-org-modern-mode)
 #+end_src
 
-*** ORG-LATEX
+** ORG-LATEX
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'ox-latex)
 
@@ -329,7 +364,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 (setq org-latex-src-block-backend'engraved)
 #+end_src
 
-*** PDF-TOOLS
+** PDF-TOOLS
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Automatically update buffer
 (require 'pdf-tools)
@@ -342,7 +377,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 ;; (setq auto-revert-interval 0.5)
 #+end_src
 
-*** JINX
+** JINX
 ~jinx~ is a fast just-in-time spell-checker for Emacs.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'jinx)
@@ -351,7 +386,7 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 (add-hook 'emacs-startup-hook #'global-jinx-mode)
 #+end_src
 
-*** VERTICO
+** VERTICO
 The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'vertico)
@@ -363,13 +398,13 @@ The ~vertico~ package provides a performant and minimalistic vertical completion
 (vertico-mode)
 #+end_src
 
-*** VERTICO DIRECTORY
+** VERTICO DIRECTORY
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'vertico-directory)
 (add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
 #+end_src
 
-*** VERTICO MULTIFORM
+** VERTICO MULTIFORM
 #+begin_src emacs-lisp :tangle "config.el"
 (vertico-multiform-mode)
 (add-to-list 'vertico-multiform-categories
@@ -377,21 +412,21 @@ The ~vertico~ package provides a performant and minimalistic vertical completion
 (vertico-multiform-mode 1)
 #+end_src
 
-*** MARGINALIA
+** MARGINALIA
 The ~marginalia~ package adds annotations to the completion candidates at the margin of the minibuffer.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'marginalia)
 (marginalia-mode)
 #+end_src
 
-*** SAVEHIST
+** SAVEHIST
 The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by history position.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'savehist)
 (savehist-mode)
 #+end_src
 
-*** ORDERLESS
+** ORDERLESS
 This package provides an ~orderless~ completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: ~literally~, as a ~regexp~, as an ~initialism~, in the flex style, or as ~multiple word prefixes~. ~regexp~ and ~literal~ matches are enabled by default.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'orderless)
@@ -400,7 +435,7 @@ This package provides an ~orderless~ completion style that divides the pattern i
         completion-category-overrides '((file (styles partial-completion))))
 #+end_src
 
-*** CONSULT
+** CONSULT
 The ~consult~ module provides search and navigation commands based on the Emacs completion function [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]].
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'consult)
@@ -419,7 +454,7 @@ The ~consult~ module provides search and navigation commands based on the Emacs 
 (bind-key "C-c h" #'consult-history)
 #+end_src
 
-*** EMBARK
+** EMBARK
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'embark)
 (setq prefix-help-command #'embark-prefix-help-command)
@@ -430,7 +465,7 @@ The ~consult~ module provides search and navigation commands based on the Emacs 
 (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)
 #+end_src
 
-*** CORFU
+** CORFU
 The ~corfu~ module enhances in-buffer completion with a small completion popup. The current candidates are shown in a popup below or above the point.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'corfu)
@@ -476,14 +511,14 @@ The ~corfu~ module enhances in-buffer completion with a small completion popup. 
 (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
 #+end_src
 
-*** DABBREV
+** DABBREV
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'dabbrev)
 (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
 (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
 #+end_src
 
-*** CAPE
+** CAPE
 The ~cape~ module provides Completion At Point Extensions which can be used in combination with ~corfu~, ~company~ or the default completion UI. The completion backends used by completion-at-point are so called completion-at-point-functions (~capfs~).
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'cape)
@@ -511,7 +546,7 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
 #+end_src
 
-*** INFRASTRUCTURE AS CODE
+** INFRASTRUCTURE AS CODE
 The ~terraform~ module adds support for working with [[https://www.terraform.io/][Terraform]] files in ~Doom Emacs~. It includes syntax highlighting, intelligent code completion and, the ability to run ~Terraform~ commands directly from ~Emacs~.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'terraform-mode)
@@ -523,7 +558,7 @@ The ~terraform~ module adds support for working with [[https://www.terraform.io/
 (setq terraform-indent-level 4)
 #+end_src
 
-*** RSS
+** RSS
 The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to manage RSS feeds. I've added an example of my ~elfeed.org~ file which can be found [[https://github.com/s-takoor/emacs-org-docs/tree/main/rss][here]]. This file is located in my ~{org-directory}/elfeed.org~.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'elfeed-goodies)
@@ -541,7 +576,7 @@ The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~
 
 -----
 
-** INIT.EL
+* INIT.EL
 The ~init.el~ file controls what ~Doom~ modules are enabled and what order they load in. Remember to run ~doom sync~ after modifying it!
 
 #+begin_quote
@@ -736,7 +771,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
 
 -----
 
-** PACKAGES.EL
+* PACKAGES.EL
 The ~package.el~ file lists all packages to be installed with ~Doom Emacs~. Each line specifies the name of a package and any additional configuration options. After declaring the package name in the ~packages.el~ file, you will have to run ~doom sync~ on the command line or ~SPC h r r~, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
 
 To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
@@ -783,6 +818,7 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 (package! embark)
 (package! embark-consult)
 (package! engrave-faces)
+(package! imenu-list)
 (package! jinx)
 (package! marginalia)
 (package! modus-themes)
