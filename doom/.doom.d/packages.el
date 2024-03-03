@@ -20,5 +20,6 @@
 (package! org-alert)
 (package! org-auto-tangle)
 (package! org-modern)
+(package! spacious-padding)
 (package! terraform-mode)
 (package! treemacs-nerd-icons)

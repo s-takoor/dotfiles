@@ -5,7 +5,7 @@
 #+filetags: :doom:emacs:config:org:
 
 * TL;DR
-This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org/][org]] format. The configuration contains the code blocks for the three main files: ~init.el~, ~config.el~, and ~packages.el~, required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ is used to extract the source code blocks from this file into their own source-specific files.
+This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org/][org]] format. The configuration contains the code blocks for the three main files: ~init.el~, ~config.el~, and ~packages.el~, required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ or the ~org-auto-tangle~ package can be used to extract the source code blocks from this file into their own source-specific files.
 
 -----
 
@@ -13,8 +13,10 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
 - [[#tldr][TL;DR]]
 - [[#emacs-installation][EMACS INSTALLATION]]
   - [[#prerequisites][PREREQUISITES]]
-  - [[#dependencies--dependencies][DEPENDENCIES & DEPENDENCIES]]
+  - [[#dependencies][DEPENDENCIES]]
+  - [[#emacs][EMACS]]
   - [[#doom-emacs][DOOM EMACS]]
+  - [[#pro-tip][PRO TIP]]
 - [[#configel][CONFIG.EL]]
   - [[#about][ABOUT]]
   - [[#fonts][FONTS]]
@@ -22,8 +24,9 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
   - [[#ellama][ELLAMA]]
   - [[#nerd-icons][NERD ICONS]]
   - [[#line-spacing][LINE SPACING]]
+  - [[#spacious-padding][SPACIOUS PADDING]]
   - [[#theme][THEME]]
-  - [[#imenu][IMENU]]
+  - [[#imenu-list][IMENU-LIST]]
   - [[#minimal-ui][MINIMAL UI]]
   - [[#set-frame-opacity][SET FRAME OPACITY]]
   - [[#beacon-mode][BEACON MODE]]
@@ -55,6 +58,8 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
 - [[#packagesel][PACKAGES.EL]]
 
 * EMACS INSTALLATION
+There exists various options for installing ~Emacs~ on ~macOS~. Ensure a package manager is installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
+
 ** PREREQUISITES
 Before installing ~Doom Emacs~, ensure the following packages are installed:
 - Git
@@ -63,22 +68,20 @@ Before installing ~Doom Emacs~, ensure the following packages are installed:
 - GNU Find
 - fd (optional)
 
-** DEPENDENCIES & DEPENDENCIES
-There exists various options for installing ~Emacs~ on ~macOS~. Ensure a package manager is installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
-
-*** DEPENDENCIES
+** DEPENDENCIES
 #+begin_src sh
 # required dedenpdencies
 brew install git ripgrep
 # optional dependencies
-brew install coreutils fd
+brew install coreutils fd findutils
 # install clang
 xcode-select --install
 #+end_src
 
-*** EMACS
+** EMACS
 There are three formulas that are considered as the best options for ~Doom~. I prefer using ~emacs-plus~ as it offers a wide range of extra functionality over the regular Emacs package.
 - ~emacs-mac~ formula offers good integration with ~macOS~, native emojis and better childframe support.
+- ~emacs~ formula is another option but does ~not~ provide a ~Emacs.app~.
 - ~emacs-plus~ formula from [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted]].
 #+begin_src sh
 brew tap d12frosted/emacs-plus
@@ -87,8 +90,6 @@ brew install emacs-plus --with-native-comp --with-modern-doom3-icon
 cp -r /opt/homebrew/opt/emacs-plus/Emacs.app /Applications/
 #+end_src
 
-- ~emacs~ formula is another acceptable option but does ~not~ provide a ~Emacs.app~.
-
 ** DOOM EMACS
 After installing ~Emacs~ and ~Doom~'s dependencies, ~Doom Emacs~ can be installed:
 #+begin_src sh
@@ -96,16 +97,22 @@ git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 #+end_src
 
------
+** PRO TIP
+I make use of the following keybindings to spun up ~emacsclient~ via the [[https://github.com/koekeishiya/skhd][skhd]] package: a simple hotkey daemon for ~macOS~.
+#+begin_src sh
+shift + cmd - e : emacsclient -c -n -a ''
+#+end_src
+
 * CONFIG.EL
 ** ABOUT
-Some general information about me.
+Some general info
 #+begin_src emacs-lisp :tangle "config.el"
 (setq user-full-name "s.t"
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
 ** FONTS
+A ~nerd font~ with support for glyphs (icons).
 #+begin_src emacs-lisp :tangle "config.el"
 (setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
       doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
@@ -115,7 +122,7 @@ Some general information about me.
 #+end_src
 
 ** EMMS
-The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update my music database.
+The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update the music database.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Load all stable features in Emms
 (require 'emms-setup)
@@ -179,13 +186,33 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 
 ** LINE SPACING
 #+begin_src emacs-lisp :tangle "config.el"
-(setq-default line-spacing 0.2)
+(setq-default line-spacing 0)
+#+end_src
+
+
+** SPACIOUS PADDING
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'spacious-padding)
+
+(setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 4
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 1
+         :scroll-bar-width 8
+         :left-fringe-width 20
+         :right-fringe-width 20))
+
+;; Enable spacious-padding mode
+(spacious-padding-mode 1)
 #+end_src
 
 ** THEME
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'modus-themes)
 (custom-set-variables
+ '(modus-themes-variable-pitch-ui t)
  '(modus-themes-bold-constructs t)
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
@@ -197,13 +224,16 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
    '((1 . (variable-pitch 1.5))
      (2 . (1.3))
      (agenda-date . (1.3))
-     (agenda-structure . (variable-pitch light 1.8))
-     (t . (1.1))))) ;; Default size for other headings
-(load-theme 'modus-vivendi t)
+     (agenda-structure . (variable-pitch light 2.2))
+     (t . (1.15))))) ;; Default size for other headings
+(load-theme 'modus-vivendi-tritanopia t)
 #+end_src
 
-** IMENU
+** IMENU-LIST
 #+begin_src emacs-lisp :tangle "config.el"
+(setq imenu-list-auto-resize t
+      imenu-list-focus-after-activation t)
+
 ;; Keybinding for imenu-list-smart-toggle
 (map! :leader
      (:prefix ("t" . "Toggle")
@@ -366,15 +396,12 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 
 ** PDF-TOOLS
 #+begin_src emacs-lisp :tangle "config.el"
-;; Automatically update buffer
 (require 'pdf-tools)
 
 (add-hook 'doc-view-mode-hook 'pdf-tools-install)
 
 (setq-default pdf-view-use-scaling t
               pdf-view-use-imagemagick nil)
-
-;; (setq auto-revert-interval 0.5)
 #+end_src
 
 ** JINX
@@ -830,6 +857,7 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 (package! org-alert)
 (package! org-auto-tangle)
 (package! org-modern)
+(package! spacious-padding)
 (package! terraform-mode)
 (package! treemacs-nerd-icons)
 #+end_src

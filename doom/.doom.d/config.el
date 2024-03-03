@@ -58,10 +58,26 @@
 (require 'treemacs-nerd-icons)
 (treemacs-load-theme "nerd-icons")
 
-(setq-default line-spacing 0.2)
+(setq-default line-spacing 0)
+
+(require 'spacious-padding)
+
+(setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 4
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 1
+         :scroll-bar-width 8
+         :left-fringe-width 20
+         :right-fringe-width 20))
+
+;; Enable spacious-padding mode
+(spacious-padding-mode 1)
 
 (require 'modus-themes)
 (custom-set-variables
+ '(modus-themes-variable-pitch-ui t)
  '(modus-themes-bold-constructs t)
  '(modus-themes-italic-constructs t)
  '(modus-themes-mixed-fonts t)
@@ -73,9 +89,12 @@
    '((1 . (variable-pitch 1.5))
      (2 . (1.3))
      (agenda-date . (1.3))
-     (agenda-structure . (variable-pitch light 1.8))
-     (t . (1.1))))) ;; Default size for other headings
-(load-theme 'modus-vivendi t)
+     (agenda-structure . (variable-pitch light 2.2))
+     (t . (1.15))))) ;; Default size for other headings
+(load-theme 'modus-vivendi-tritanopia t)
+
+(setq imenu-list-auto-resize t
+      imenu-list-focus-after-activation t)
 
 ;; Keybinding for imenu-list-smart-toggle
 (map! :leader
@@ -196,15 +215,12 @@
 (require 'engrave-faces-latex)
 (setq org-latex-src-block-backend'engraved)
 
-;; Automatically update buffer
 (require 'pdf-tools)
 
 (add-hook 'doc-view-mode-hook 'pdf-tools-install)
 
 (setq-default pdf-view-use-scaling t
               pdf-view-use-imagemagick nil)
-
-;; (setq auto-revert-interval 0.5)
 
 (require 'jinx)
 
