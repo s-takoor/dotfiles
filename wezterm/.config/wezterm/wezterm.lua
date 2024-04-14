@@ -12,8 +12,8 @@ scrollback_lines = 3500,
 default_prog = { "/opt/homebrew/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
 
 -- Colors
--- color_scheme = "Gruvbox Dark (Gogh)",
-color_scheme = "Catppuccin Macchiato",
+color_scheme = "Gruvbox Dark (Gogh)",
+-- color_scheme = "Catppuccin Macchiato",
 
 -- Cursor blink
 default_cursor_style = "BlinkingBar",

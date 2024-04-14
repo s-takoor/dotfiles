@@ -796,6 +796,8 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        (default +bindings +smartparens))
 #+end_src
 
+#+RESULTS:
+
 -----
 
 * PACKAGES.EL
@@ -844,6 +846,7 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 ;; (package! ellama)
 (package! embark)
 (package! embark-consult)
+;; (package! emms-player-mpv)
 (package! engrave-faces)
 (package! imenu-list)
 (package! jinx)

@@ -24,9 +24,9 @@ mod1:
   - shift
 
 mod2:
+  - control
   - option
   - shift
-  - control
 
 cycle-layout:
   mod: mod1

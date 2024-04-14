@@ -7,6 +7,7 @@
 ;; (package! ellama)
 (package! embark)
 (package! embark-consult)
+;; (package! emms-player-mpv)
 (package! engrave-faces)
 (package! imenu-list)
 (package! jinx)
