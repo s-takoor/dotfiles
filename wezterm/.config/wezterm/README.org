@@ -46,8 +46,8 @@ Sets up =WezTerm= to run ~tmux~ rather than the ~shell~ by default
 Sets the color scheme used for =WezTerm=
 #+begin_src rust :tangle "wezterm.lua"
   -- Colors
-  -- color_scheme = "Gruvbox Dark (Gogh)",
-  color_scheme = "Catppuccin Macchiato",
+  color_scheme = "Gruvbox Dark (Gogh)",
+  -- color_scheme = "Catppuccin Macchiato",
 #+end_src
 
 *** CURSOR
