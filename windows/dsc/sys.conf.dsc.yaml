@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.1.0
+  resources:
+    - resource: Microsoft.Windows.Developer/DeveloperMode
+      directives:
+        description: enable developer mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/HideFileExtensions
+      directives:
+        description: show file extensions
+        allowPrerelease: true
+      settings:
+        Ensure: Absent
+    - resource: Microsoft.Windows.Developer/ShowHiddenFiles
+      directives:
+        description: show hidden files
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/ShowSecondsInClock
+      directives:
+        description: show seconds in clock
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/Taskbar
+      directives:
+        description: modify taskbar settings
+        allowPrerelease: true
+      settings:
+        Alignment: Middle # [ KeepCurrentValue, Left ]
+        HideLabelsMode: ShowIconAndLabel # [ KeepCurrentValue, WhenFull, Always ]
+        SearchBoxMode: ShowIconAndLabel # [ KeepCurrentValue, ShowIconOnly, SearchBox, Hide ]
+        RestartExplorer: true # required for `HideLabelsMode`
+    - resource: Microsoft.Windows.Developer/EnableDarkMode
+      directives:
+        description: enable dark mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+        RestartExplorer: true # required for changes to take effect
