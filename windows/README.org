@@ -6,7 +6,6 @@
 #+FILETAGS: :config:org:powershell:starship:
 :END:
 
-
 ** TABLE OF CONTENTS :toc:
 - [[#️-caution][⚠️ CAUTION]]
 - [[#-tldr][🚀 TL;DR]]
@@ -19,7 +18,10 @@
 - [[#-text--code-editors][📋 TEXT / CODE EDITORS]]
 - [[#-window-manager][👾 WINDOW MANAGER]]
   - [[#glazewm][GLAZEWM]]
-- [[#-additional-information][⚠ ADDITIONAL INFORMATION]]
+- [[#fonts][FONTS]]
+  - [[#nerd-fonts][NERD FONTS]]
+  - [[#symbols-nerd-font][SYMBOLS NERD FONT]]
+- [[#️-additional-information][⚠️ ADDITIONAL INFORMATION]]
 
 * ⚠️ CAUTION
 #+begin_quote
@@ -48,43 +50,43 @@ The ~sys.conf.dsc.yaml~ file modifies various ~Windows~ system settings.
 properties:
   configurationVersion: 0.1.0
   resources:
-    - resource: Microsoft.Windows.Developer/DeveloperMode
-      directives:
-        description: enable developer mode
-        allowPrerelease: true
-      settings:
-        Ensure: Present
+    # - resource: Microsoft.Windows.Developer/DeveloperMode
+    #   directives:
+    #     description: enable developer mode
+    #     allowPrerelease: true
+    #   settings:
+    #     Ensure: Present
     - resource: Microsoft.Windows.Developer/HideFileExtensions
       directives:
         description: show file extensions
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Absent
     - resource: Microsoft.Windows.Developer/ShowHiddenFiles
       directives:
         description: show hidden files
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
     - resource: Microsoft.Windows.Developer/ShowSecondsInClock
       directives:
         description: show seconds in clock
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
     - resource: Microsoft.Windows.Developer/Taskbar
       directives:
         description: modify taskbar settings
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Alignment: Middle # [ KeepCurrentValue, Left ]
         HideLabelsMode: ShowIconAndLabel # [ KeepCurrentValue, WhenFull, Always ]
         SearchBoxMode: ShowIconAndLabel # [ KeepCurrentValue, ShowIconOnly, SearchBox, Hide ]
-        RestartExplorer: true # required for `HideLabelsMode`
+        RestartExplorer: true # required for `HideLabelsMode` to take effect
     - resource: Microsoft.Windows.Developer/EnableDarkMode
       directives:
         description: enable dark mode
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
         RestartExplorer: true # required for changes to take effect
@@ -102,133 +104,126 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install bat
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: sharkdp.bat
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install dog
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: ogham.dog
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install exiftool
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: OliverBetz.ExifTool
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install eza
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: eza-community.eza
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install fd
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: sharkdp.fd
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install fzf
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: junegunn.fzf
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install git
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Git.Git
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install httpie
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: HTTPie.HTTPie
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install hyperfine
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: sharkdp.hyperfine
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install llvm
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: LLVM.LLVM
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Install nmap
-        allowPrerelease: true
-      settings:
-        id: Insecure.Nmap
-        source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
         description: Install ollama
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Ollama.Ollama
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install podman
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: RedHat.Podman
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install ripgrep
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: BurntSushi.ripgrep.MSVC
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install sd
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: chmln.sd
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install starship
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Starship.Starship
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install tealdeer
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: dbrgn.tealdeer
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install tokei
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: XAMPPRocky.Tokei
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install zoxide
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: ajeetdsouza.zoxide
         source: winget
@@ -349,7 +344,7 @@ The following are two popular text editors with extensive customization options
 - *NEOVIM*
   + ~Neovim~ is a modern and fork of ~vim~ with a focus on extensibility and usability
 
-- The ~txt.conf.dsc.yaml~ file will install the ~GNU Emacs~ and ~Neovim~ text editors which I primarily use for documentation as well as an IDE's.
+- The ~txt.conf.dsc.yaml~ file will install the ~GNU Emacs~ and ~Neovim~ text editors along with some languages.
 
 #+begin_src yaml :tangle "~/dotfiles/windows/dsc/txt.conf.dsc.yaml" :mkdirp yes
 # yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
@@ -360,44 +355,79 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install emacs
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: GNU.Emacs
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install nvim
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Neovim.Neovim
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Install bun
+        allowPrerelease: false
+      settings:
+        id: Oven-sh.Bun
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Install miktex
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: MiKTeX.MiKTeX
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install python
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Python.Python.3.12
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install jq
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: jqlang.jq
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install yq
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: MikeFarah.yq
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install GNU Rust
+        allowPrerelease: false
+      settings:
+        id: Rustlang.Rust.GNU
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Lua
+        allowPrerelease: false
+      settings:
+        id: DEVCOM.Lua
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install LuaJIT
+        allowPrerelease: false
+      settings:
+        id: DEVCOM.LuaJIT
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install golang
+        allowPrerelease: false
+      settings:
+        id: GoLang.Go
         source: winget
 #+end_src
 
@@ -416,7 +446,7 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install glazewm
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: glzr-io.glazewm
         source: winget
@@ -693,7 +723,21 @@ keybindings:
     bindings: ["Alt+Shift+9"]
 #+end_src
 
-* ⚠ ADDITIONAL INFORMATION
+* FONTS
+Iconic font aggregator, collection, and patcher
+
+** NERD FONTS
+~JetBrains Mono~ – the free and open-source typeface for developers
+
+#+begin_src sh
+winget install --id=DEVCOM.JetBrainsMonoNerdFont  -e
+#+end_src
+
+** SYMBOLS NERD FONT
+#+begin_src sh
+http -d https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/NerdFontsSymbolsOnly.zip
+#+end_src
+* ⚠️ ADDITIONAL INFORMATION
 *Note*
 #+begin_quote
 - The code snippets requires the ~winget~ package to be installed on the system.

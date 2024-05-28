@@ -6,42 +6,77 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install emacs
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: GNU.Emacs
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install nvim
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Neovim.Neovim
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Install bun
+        allowPrerelease: false
+      settings:
+        id: Oven-sh.Bun
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Install miktex
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: MiKTeX.MiKTeX
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install python
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: Python.Python.3.12
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install jq
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: jqlang.jq
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install yq
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         id: MikeFarah.yq
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install GNU Rust
+        allowPrerelease: false
+      settings:
+        id: Rustlang.Rust.GNU
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Lua
+        allowPrerelease: false
+      settings:
+        id: DEVCOM.Lua
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install LuaJIT
+        allowPrerelease: false
+      settings:
+        id: DEVCOM.LuaJIT
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install golang
+        allowPrerelease: false
+      settings:
+        id: GoLang.Go
         source: winget

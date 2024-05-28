@@ -3,43 +3,43 @@
 properties:
   configurationVersion: 0.1.0
   resources:
-    - resource: Microsoft.Windows.Developer/DeveloperMode
-      directives:
-        description: enable developer mode
-        allowPrerelease: true
-      settings:
-        Ensure: Present
+    # - resource: Microsoft.Windows.Developer/DeveloperMode
+    #   directives:
+    #     description: enable developer mode
+    #     allowPrerelease: true
+    #   settings:
+    #     Ensure: Present
     - resource: Microsoft.Windows.Developer/HideFileExtensions
       directives:
         description: show file extensions
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Absent
     - resource: Microsoft.Windows.Developer/ShowHiddenFiles
       directives:
         description: show hidden files
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
     - resource: Microsoft.Windows.Developer/ShowSecondsInClock
       directives:
         description: show seconds in clock
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
     - resource: Microsoft.Windows.Developer/Taskbar
       directives:
         description: modify taskbar settings
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Alignment: Middle # [ KeepCurrentValue, Left ]
         HideLabelsMode: ShowIconAndLabel # [ KeepCurrentValue, WhenFull, Always ]
         SearchBoxMode: ShowIconAndLabel # [ KeepCurrentValue, ShowIconOnly, SearchBox, Hide ]
-        RestartExplorer: true # required for `HideLabelsMode`
+        RestartExplorer: true # required for `HideLabelsMode` to take effect
     - resource: Microsoft.Windows.Developer/EnableDarkMode
       directives:
         description: enable dark mode
-        allowPrerelease: true
+        allowPrerelease: false
       settings:
         Ensure: Present
         RestartExplorer: true # required for changes to take effect
