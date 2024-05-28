@@ -1,89 +1,311 @@
-#+TITLE: CONFIG FOR WINDOWS
+:PROPERTIES:
+#+TITLE: WINDOWS CONFIG
 #+AUTHOR: s.takoor
 #+AUTO_TANGLE: t
 #+STARTUP: showeverything
 #+FILETAGS: :config:org:powershell:starship:
+:END:
 
-** 🚀 TL;DR
-The following aims to provide a pre-configured environment for security engineers by installing various packages and utilities.
 
-** 🧰 DEFAULT PROGRAMS
-Below is a quick overview of the functionalities and the install commands for the various tools and utilities that I use on the ~Windows~ system.
+** TABLE OF CONTENTS :toc:
+- [[#️-caution][⚠️ CAUTION]]
+- [[#-tldr][🚀 TL;DR]]
+- [[#-usage][📝 USAGE]]
+- [[#-setup][🤖 SETUP]]
+  - [[#sane-defaults][SANE DEFAULTS]]
+  - [[#terminal-and-shell-configuration][TERMINAL AND SHELL CONFIGURATION]]
+  - [[#additional-terminal-and-shell-configuration--optional-][ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL )]]
+  - [[#optional-utils][OPTIONAL UTILS]]
+- [[#-text--code-editors][📋 TEXT / CODE EDITORS]]
+- [[#-window-manager][👾 WINDOW MANAGER]]
+  - [[#glazewm][GLAZEWM]]
+- [[#-additional-information][⚠ ADDITIONAL INFORMATION]]
 
-*** BAT
-- A clone with syntax highlighting and ~Git~ integration
-- Not specific to ~Windows~, but can be used on other platforms with compatible shells
+* ⚠️ CAUTION
+#+begin_quote
+This setup has yet to be tested on a ~Windows~ machine. Proceed with caution and ensure you have a backup of your data first.
+#+end_quote
+
+* 🚀 TL;DR
+The following aims to setup a pre-configured development environment for a ~Windows~ system.
+
+* 📝 USAGE
+The command below will initiate the configuration of the system according to the provided configuration file(s) located at ~C:\Users\<username>\dsc\<config-file-name>.yaml~. There are four ~winget~ configuration files defined for this setup.
+
+#+begin_src sh
+winget configure -f <C:/Users/<username>/dsc/config-file-name.dsc.yaml>
+#+end_src
+
+* 🤖 SETUP
+Below is a quick overview of how I setup my ~Windows~ machine using ~winget~ and the relevant configuration file(s).
+
+** SANE DEFAULTS
+The ~sys.conf.dsc.yaml~ file modifies various ~Windows~ system settings.
+
+#+begin_src yaml :tangle "~/dotfiles/windows/dsc/sys.conf.dsc.yaml" :mkdip yes
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.1.0
+  resources:
+    - resource: Microsoft.Windows.Developer/DeveloperMode
+      directives:
+        description: enable developer mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/HideFileExtensions
+      directives:
+        description: show file extensions
+        allowPrerelease: true
+      settings:
+        Ensure: Absent
+    - resource: Microsoft.Windows.Developer/ShowHiddenFiles
+      directives:
+        description: show hidden files
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/ShowSecondsInClock
+      directives:
+        description: show seconds in clock
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+    - resource: Microsoft.Windows.Developer/Taskbar
+      directives:
+        description: modify taskbar settings
+        allowPrerelease: true
+      settings:
+        Alignment: Middle # [ KeepCurrentValue, Left ]
+        HideLabelsMode: ShowIconAndLabel # [ KeepCurrentValue, WhenFull, Always ]
+        SearchBoxMode: ShowIconAndLabel # [ KeepCurrentValue, ShowIconOnly, SearchBox, Hide ]
+        RestartExplorer: true # required for `HideLabelsMode`
+    - resource: Microsoft.Windows.Developer/EnableDarkMode
+      directives:
+        description: enable dark mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+        RestartExplorer: true # required for changes to take effect
+#+end_src
+
+** TERMINAL AND SHELL CONFIGURATION
+The ~cli.conf.dsc.yaml~ file will install some of the most common ~cli~ tools used on a regular basis.
+
+#+begin_src yaml :tangle "~/dotfiles/windows/dsc/cli.conf.dsc.yaml" :mkdirp yes
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.1.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install bat
+        allowPrerelease: true
+      settings:
+        id: sharkdp.bat
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install dog
+        allowPrerelease: true
+      settings:
+        id: ogham.dog
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install exiftool
+        allowPrerelease: true
+      settings:
+        id: OliverBetz.ExifTool
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install eza
+        allowPrerelease: true
+      settings:
+        id: eza-community.eza
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install fd
+        allowPrerelease: true
+      settings:
+        id: sharkdp.fd
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install fzf
+        allowPrerelease: true
+      settings:
+        id: junegunn.fzf
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install git
+        allowPrerelease: true
+      settings:
+        id: Git.Git
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install httpie
+        allowPrerelease: true
+      settings:
+        id: HTTPie.HTTPie
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install hyperfine
+        allowPrerelease: true
+      settings:
+        id: sharkdp.hyperfine
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install llvm
+        allowPrerelease: true
+      settings:
+        id: LLVM.LLVM
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install nmap
+        allowPrerelease: true
+      settings:
+        id: Insecure.Nmap
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install ollama
+        allowPrerelease: true
+      settings:
+        id: Ollama.Ollama
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install podman
+        allowPrerelease: true
+      settings:
+        id: RedHat.Podman
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install ripgrep
+        allowPrerelease: true
+      settings:
+        id: BurntSushi.ripgrep.MSVC
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install sd
+        allowPrerelease: true
+      settings:
+        id: chmln.sd
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install starship
+        allowPrerelease: true
+      settings:
+        id: Starship.Starship
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install tealdeer
+        allowPrerelease: true
+      settings:
+        id: dbrgn.tealdeer
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install tokei
+        allowPrerelease: true
+      settings:
+        id: XAMPPRocky.Tokei
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install zoxide
+        allowPrerelease: true
+      settings:
+        id: ajeetdsouza.zoxide
+        source: winget
+#+end_src
+
+** ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL )
+*** WEZTERM
+- ~Wezterm~ is a GPU-accelerated cross-platform terminal emulator and multiplexer implemented in ~Rust~
+- It is designed to provide a fast and efficient way to access the command-line on multiple platforms
+- It supports both local and remote connections
 
 **** INSTALLATION
 #+begin_src sh
-winget install --id=sharkdp.bat  -e
+winget install --id=wez.wezterm  -e
 #+end_src
 
-*** DOG
-- An open-source ~DNS~ client for the command-line
-- Supports various protocols ( e.g. ~DoT~ & ~DoH~ ) and can be useful for network administrators
+*** STARSHIP
+Minimal, blazing-fast, and infinitely customizable prompt for any shell
 
-**** INSTALLATION
-#+begin_src sh
-winget install --id=ogham.dog  -e
+**** CUSTOM CONFIGURATION
+The following is a custom configuration for the ~starship~ prompt
+
+#+begin_src toml :tangle "~/dotfiles/windows/starship/starship.toml" :mkdirp yes
+add_newline = false
+format = """$character"""
+right_format = """$directory"""
+continuation_prompt = '▶▶ '
+
+[character]
+success_symbol = '[󰱯  >>](bold green)'
+error_symbol = '[󰱯  >>](bold red)'
+vimcmd_symbol = '[ >>](bold blue)'
+vimcmd_visual_symbol = '[ >>](bold magenta)'
+
+[directory]
+style = "bold cyan"
+
+[package]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[git_branch]
+disabled = true
+
+[git_commit]
+disabled = true
+
+[git_state]
+disabled = true
+
+[git_metrics]
+disabled = true
+
+[git_status]
+disabled = true
 #+end_src
 
-*** EXIFTOOL
-- A versatile tool for managing and editing digital asset metadata
+**** POWERSHELL INTEGRATION
+- The following sets up the necessary environment variables for ~PowerShell~ and allows for its execution within the shell.
 
-**** INSTALLATION
-#+begin_src sh
-winget install --id=OliverBetz.ExifTool  -e
+#+begin_src ps1 :tangle "Microsoft.PowerShell_profile.ps1"
+$ENV:STARSHIP_CONFIG = "$HOME\.starship\starship.toml"
+Invoke-Expression (&starship init powershell)
 #+end_src
 
-*** EZA
-- A modern replacement for ~ls~ that uses the ~exa~ engine
-- More efficient and feature-rich than ~ls~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=eza-community.eza  -e
-#+end_src
-
-*** FD
-- A simple and efficient alternative to ~find~ for ~Windows~
-- Uses a single command to achieve the same results as ~find~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=sharkdp.fd  -e
-#+end_src
-
+** OPTIONAL UTILS
 *** FINDUTILS
 ~find~ is a program which searches a directory tree to find a file or group of files
 
 **** INSTALLATION
 #+begin_src sh
 winget install --id=GnuWin32.FindUtils  -e
-#+end_src
-
-*** FZF
-A general-purpose command-line fuzzy finder
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=junegunn.fzf  -e
-#+end_src
-
-*** GIT
-~Git~ for Windows focuses on offering a lightweight, native set of tools that bring the full feature set of the ~Git SCM~ to ~Windows~ while providing appropriate user interfaces for experienced ~Git~ users and novices alike
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=Git.Git  -e
-#+end_src
-
-*** HTTPIE
-~HTTPie~ for Web & Desktop — cross-platform ~API~ testing client for humans. Painlessly test ~REST~, ~GraphQL~, and ~HTTP APIs~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=HTTPie.HTTPie  -e
 #+end_src
 
 *** HUNSPELL
@@ -94,60 +316,12 @@ winget install --id=HTTPie.HTTPie  -e
 winget install --id=FSFhu.Hunspell  -e
 #+end_src
 
-*** HYPERFINE
-A command-line benchmarking tool
+*** FLAMESHOT
+~Flameshot~ is a powerful yet simple to use screenshot software
 
 **** INSTALLATION
 #+begin_src sh
-winget install --id=sharkdp.hyperfine  -e
-#+end_src
-
-*** LLVM
-A collection of modular and reusable compiler and toolchain technologies
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=LLVM.LLVM  -e
-#+end_src
-
-*** MIKTEX
-~MiKTeX~ is a modern ~TeX~ distribution for ~Windows~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=MiKTeX.MiKTeX  -e
-#+end_src
-
-*** OLLAMA
-Get up and running with large language models locally
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=Ollama.Ollama  -e
-#+end_src
-
-*** PODMAN
-A ~daemonless~ container engine for developing, managing, and running OCI Containers
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=RedHat.Podman  -e
-#+end_src
-
-*** RIPGREP
-~ripgrep~ recursively searches directories for a ~regex~ pattern while respecting your ~gitignore~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=BurntSushi.ripgrep.GNU  -e
-#+end_src
-
-*** SD
-~sd~ is an intuitive find & replace ~CLI~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=chmln.sd  -e
+winget install --id=Flameshot.Flameshot  -e
 #+end_src
 
 *** SED
@@ -156,22 +330,6 @@ winget install --id=chmln.sd  -e
 **** INSTALLATION
 #+begin_src sh
 winget install --id=mbuilov.sed  -e
-#+end_src
-
-*** TEALDEER
-A very fast implementation of ~tldr~ in ~Rust~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=dbrgn.tealdeer  -e
-#+end_src
-
-*** TOKEI
-Count your code, quickly
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=XAMPPRocky.Tokei  -e
 #+end_src
 
 *** YAZI
@@ -184,172 +342,358 @@ Download from ~GitHub~
 https://github.com/sxyazi/yazi/releases
 #+end_src
 
-*** ZOXIDE
-~zoxide~ is a smarter ~cd~ command, inspired by ~z~ and ~autojump~
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=ajeetdsouza.zoxide  -e
-#+end_src
-
-** 🐚 SHELL PROMPT
-- The following provides a custom and customizable shell prompt with support for multiple operating system.
-
-*** STARSHIP
-Minimal, blazing-fast, and infinitely customizable prompt for any shell
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=Starship.Starship  -e
-#+end_src
-
-**** CONFIGURATION
-#+begin_src toml :tangle "starship.toml"
-add_newline = false
-
-command_timeout = 1000
-
-format = """$os$username$hostname$kubernetes$directory$git_branch$git_status"""
-
-[character]
-success_symbol = '[󰱯  >>](bold green)'
-error_symbol = '[󰱯  >>](bold red)'
-vimcmd_symbol = '[ >>](bold blue)'
-vimcmd_visual_symbol = '[ >>](bold magenta)'
-
-[os]
-format = '[$symbol](bold white) '
-disabled = false
-
-[os.symbols]
-Arch = '󰣇'
-Macos = '󰀵'
-Ubuntu = ''
-Windows = ''
-
-[username]
-style_user = 'white bold'
-style_root = 'black bold'
-format = '[$user]($style) '
-disabled = false
-show_always = true
-
-[hostname]
-ssh_only = false
-format = 'on [$hostname](bold yellow) '
-disabled = false
-
-[directory]
-truncation_length = 1
-truncation_symbol = '…/'
-home_symbol = '󰋜 ~'
-read_only_style = '197'
-read_only = '  '
-format = 'at [$path]($style)[$read_only]($read_only_style) '
-
-[git_branch]
-symbol = ' '
-format = 'via [$symbol$branch]($style)'
-truncation_length = 4
-truncation_symbol = '…/'
-style = 'bold green'
-
-[git_status]
-format = '[$all_status$ahead_behind]($style) '
-style = 'bold green'
-conflicted = '🏳'
-up_to_date = ''
-untracked = ' '
-ahead = '⇡${count}'
-diverged = '⇕⇡${ahead_count}⇣${behind_count}'
-behind = '⇣${count}'
-stashed = ' '
-modified = ' '
-staged = '[++\($count\)](green)'
-renamed = '襁 '
-deleted = ' '
-
-[kubernetes]
-format = 'via [󱃾 $context\($namespace\)](bold purple) '
-disabled = false
-
-[vagrant]
-disabled = true
-
-[docker_context]
-disabled = true
-
-[helm]
-disabled = true
-
-[python]
-disabled = true
-
-[nodejs]
-disabled = true
-
-[ruby]
-disabled = true
-
-[terraform]
-disabled = true
-#+end_src
-
-**** POWERSHELL INTEGRATION
-- The following sets up the necessary environment variables for ~PowerShell~ and allows for its execution within the shell.
-#+begin_src ps1 :tangle "Microsoft.PowerShell_profile.ps1"
-$ENV:STARSHIP_CONFIG = "$HOME\.starship\starship.toml"
-Invoke-Expression (&starship init powershell)
-#+end_src
-
-** ◾ TERMINAL
-A ~terminal~ is a command-line interface (CLI) that allows users to interact with the operating system directly. It provides a text-based interface where users can enter commands, view system information, and run programs.
-
-*** WEZTERM
-- ~Wezterm~ is a GPU-accelerated cross-platform terminal emulator and multiplexer implemented in ~Rust~
-- It is designed to provide a fast and efficient way to access the command-line on multiple platforms
-- It supports both local and remote connections
-
-**** INSTALLATION
-- The code snippet provides a one-time installation command using ~winget~
-#+begin_src sh
-winget install --id=wez.wezterm  -e
-#+end_src
-
-** 📋 TEXT / CODE EDITORS
+* 📋 TEXT / CODE EDITORS
 The following are two popular text editors with extensive customization options
+- *GNU EMACS*
+  + ~GNU Emacs~ is a powerful and widely used text editor with a rich set of features
+- *NEOVIM*
+  + ~Neovim~ is a modern and fork of ~vim~ with a focus on extensibility and usability
 
-*** GNU EMACS
-- ~GNU Emacs~ is a powertful and widely-used text editor with a rich set of features
+- The ~txt.conf.dsc.yaml~ file will install the ~GNU Emacs~ and ~Neovim~ text editors which I primarily use for documentation as well as an IDE's.
 
-**** INSTALLATION
-- The code snippet provides a one-time installation command using ~winget~
-#+begin_src sh
-winget install --id=GNU.Emacs  -e
+#+begin_src yaml :tangle "~/dotfiles/windows/dsc/txt.conf.dsc.yaml" :mkdirp yes
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.1.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install emacs
+        allowPrerelease: true
+      settings:
+        id: GNU.Emacs
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install nvim
+        allowPrerelease: true
+      settings:
+        id: Neovim.Neovim
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install miktex
+        allowPrerelease: true
+      settings:
+        id: MiKTeX.MiKTeX
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install python
+        allowPrerelease: true
+      settings:
+        id: Python.Python.3.12
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install jq
+        allowPrerelease: true
+      settings:
+        id: jqlang.jq
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install yq
+        allowPrerelease: true
+      settings:
+        id: MikeFarah.yq
+        source: winget
 #+end_src
 
-*** NEOVIM
-- ~Neovim~ is a modern and fork of ~vim~ with a focus on extensibility and usability
-
-**** INSTALLATION
-- The code snippet provides a one-time installation command using ~winget~
-#+begin_src sh
-winget install --id=Neovim.Neovim  -e
-#+end_src
-
-** 🪟 WINDOW MANAGER
+* 👾 WINDOW MANAGER
 A window manager is an essential component that manages and displays windows on a computer's desktop. It plays a vital role in ensuring that windows are displayed correctly and efficiently, optimizing workspace organization and user experience. By coordinating window placement and behavior, a window manager enables efficient space management and improves overall productivity.
 
-*** GLAZEWM
+** GLAZEWM
 - ~GlazeWM~ is a tiling window manager for ~Windows~ inspired ~i3~ and ~Polybar~
 
-**** INSTALLATION
-- The code snippet provides a one-time installation command using ~winget~
-#+begin_src sh
-winget install --id=glzr-io.glazewm  -e
+#+begin_src yaml :tangle "~/dotfiles/windows/dsc/winman.conf.dsc.yaml" :mkdirp yes
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.1.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install glazewm
+        allowPrerelease: true
+      settings:
+        id: glzr-io.glazewm
+        source: winget
 #+end_src
 
-** ⚠ ADDITIONAL INFORMATION
+*** SAMPLE CONFIGURATION
+#+begin_src yaml :tangle "~/dotfiles/windows/glazewm/config.yaml" :mkdirp yes
+general:
+  # Whether to automatically focus windows underneath the cursor.
+  focus_follows_cursor: false
+
+  # Whether to jump the cursor between windows focused by the WM.
+  cursor_follows_focus: false
+
+  # Whether to switch back and forth between the previously focused workspace
+  # when focusing the current workspace.
+  toggle_workspace_on_refocus: true
+
+  # Whether to show floating windows as always on top.
+  show_floating_on_top: false
+
+  # Amount to move floating windows by (eg. when using `alt+<hjkl>` on a floating window)
+  floating_window_move_amount: "5%"
+
+  # Whether to center new floating windows.
+  center_new_floating_windows: true
+
+  # *Strongly* recommended to set to 'false'. Whether to globally enable/disable
+  # window transition animations (on minimize, close, etc). Set to 'unchanged'
+  # to make no setting changes.
+  window_animations: "unchanged"
+
+gaps:
+  # Gap between adjacent windows.
+  inner_gap: "10px"
+
+  # Gap between windows and the screen edge.
+  outer_gap: "10px"
+
+# Highlight active/inactive windows with a colored border.
+# ** Exclusive to Windows 11 due to API limitations.
+focus_borders:
+  active:
+    enabled: true
+    color: "#0000ff"
+
+  inactive:
+    enabled: false
+    color: "#ff0000"
+
+bar:
+  height: "30px"
+  position: "top"
+  opacity: 1.0
+  background: "#20242cc4"
+  foreground: "#ffffff"
+  font_family: "Segoe UI"
+  font_size: "13px"
+  padding: "4px 6px"
+  offset_x: "0"
+  offset_y: "0"
+  border_radius: "0"
+  components_left:
+    - type: "workspaces"
+      focused_workspace_background: "#ffffff33"
+      displayed_workspace_background: "#00000033"
+      default_workspace_background: "transparent"
+  components_center:
+    - type: "window title"
+  components_right:
+    - type: "system tray"
+    - type: "tiling direction"
+      label_horizontal: "⮂"
+      label_vertical: "⮁"
+      background: "#ffffff33"
+      margin: "0 4px"
+      padding: "0 8px"
+    - type: "binding mode"
+      background: "#ffffff33"
+      margin: "0 4px 0 0"
+      padding: "0 8px"
+    - type: "clock"
+      # Documentation on formatting date/time string:
+      # https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+      time_formatting: "hh:mm tt  ddd MMM d"
+
+workspaces:
+  - name: "1"
+    display_name: ""
+  - name: "2"
+    display_name: ""
+  - name: "3"
+    display_name: "󰀶"
+  - name: "4"
+    display_name: ""
+  - name: "5"
+    display_name: ""
+  - name: "6"
+    display_name: "󰊻"
+  - name: "7"
+    display_name: "󱃋"
+  - name: "8"
+    display_name: "󰮄"
+  - name: "9"
+    display_name: "󱚢"
+
+window_rules:
+  # Task Manager requires admin privileges to manage and should be ignored unless running
+  # the WM as admin.
+  - command: "ignore"
+    match_process_name: "/Taskmgr|ScreenClippingHost/"
+
+  # Launches system dialogs as floating by default (eg. File Explorer save/open dialog).
+  - command: "set floating"
+    match_class_name: "#32770"
+
+  # Do not manage picture-in-picture windows for browsers. Note that the default is for
+  # English; change `match_title` to the window's title if you use another language.
+  - command: "ignore"
+    match_title: "[Pp]icture.in.[Pp]icture"
+    match_class_name: "Chrome_WidgetWin_1|MozillaDialogClass"
+
+  # Some applications (eg. Steam) have borders that extend past the normal border size.
+  - command: "resize borders 0px -7px -7px -7px"
+    match_process_name: "steam"
+
+binding_modes:
+  - name: "resize"
+    keybindings:
+      # Resize focused window by a percentage or pixel amount.
+      - command: "resize width -2%"
+        bindings: ["H", "Left"]
+      - command: "resize width +2%"
+        bindings: ["L", "Right"]
+      - command: "resize height +2%"
+        bindings: ["K", "Up"]
+      - command: "resize height -2%"
+        bindings: ["J", "Down"]
+      # Press enter/escape to return to default keybindings.
+      - command: "binding mode none"
+        bindings: ["Escape", "Enter"]
+
+keybindings:
+  # Shift focus in a given direction.
+  - command: "focus left"
+    bindings: ["Alt+H", "Alt+Left"]
+  - command: "focus right"
+    bindings: ["Alt+L", "Alt+Right"]
+  - command: "focus up"
+    bindings: ["Alt+K", "Alt+Up"]
+  - command: "focus down"
+    bindings: ["Alt+J", "Alt+Down"]
+
+  # Move focused window in a given direction.
+  - command: "move left"
+    bindings: ["Alt+Shift+H", "Alt+Shift+Left"]
+  - command: "move right"
+    bindings: ["Alt+Shift+L", "Alt+Shift+Right"]
+  - command: "move up"
+    bindings: ["Alt+Shift+K", "Alt+Shift+Up"]
+  - command: "move down"
+    bindings: ["Alt+Shift+J", "Alt+Shift+Down"]
+
+  # Resize focused window by a percentage or pixel amount.
+  - command: "resize width -2%"
+    binding: "Alt+U"
+  - command: "resize width +2%"
+    binding: "Alt+P"
+  - command: "resize height +2%"
+    binding: "Alt+O"
+  - command: "resize height -2%"
+    binding: "Alt+I"
+
+  # As an alternative to the resize keybindings above, resize mode enables resizing via
+  # HJKL or arrow keys. The binding mode is defined above with the name "resize".
+  - command: "binding mode resize"
+    binding: "Alt+R"
+
+  # Change tiling direction. This determines where new tiling windows will be inserted.
+  - command: "tiling direction toggle"
+    binding: "Alt+V"
+
+  # Change focus between floating / tiling windows.
+  - command: "focus mode toggle"
+    binding: "Alt+Space"
+
+  # Change the focused window to be floating / tiling.
+  - command: "toggle floating"
+    binding: "Alt+Shift+Space"
+
+  # Change the focused window to be maximized / unmaximized.
+  - command: "toggle maximized"
+    binding: "Alt+X"
+
+  # Minimize focused window.
+  - command: "set minimized"
+    binding: "Alt+M"
+
+  # Close focused window.
+  - command: "close"
+    binding: "Alt+Shift+Q"
+
+  # Kill GlazeWM process safely.
+  - command: "exit wm"
+    binding: "Alt+Shift+E"
+
+  # Re-evaluate configuration file.
+  - command: "reload config"
+    binding: "Alt+Shift+R"
+
+  # Launch CMD terminal (alternatively `exec cmd` or `exec %ProgramFiles%/Git/git-bash.exe`
+  # to start Windows Terminal and Git Bash respectively.
+  - command: "exec wt"
+    binding: "Alt+Enter"
+
+  # Focus the workspace that last had focus.
+  - command: "focus workspace recent"
+    binding: "Alt+Y"
+
+  # Focus the next/previous workspace defined in `workspaces` config.
+  - command: "focus workspace next"
+    binding: "Alt+T"
+  - command: "focus workspace prev"
+    binding: "Alt+Shift+T"
+
+  # Change focus to a workspace defined in `workspaces` config.
+  - command: "focus workspace 1"
+    binding: "Alt+1"
+  - command: "focus workspace 2"
+    binding: "Alt+2"
+  - command: "focus workspace 3"
+    binding: "Alt+3"
+  - command: "focus workspace 4"
+    binding: "Alt+4"
+  - command: "focus workspace 5"
+    binding: "Alt+5"
+  - command: "focus workspace 6"
+    binding: "Alt+6"
+  - command: "focus workspace 7"
+    binding: "Alt+7"
+  - command: "focus workspace 8"
+    binding: "Alt+8"
+  - command: "focus workspace 9"
+    binding: "Alt+9"
+
+  # Move focused workspace to a monitor in a given direction.
+  - command: "move workspace left"
+    binding: "Alt+A"
+  - command: "move workspace right"
+    binding: "Alt+F"
+  - command: "move workspace up"
+    binding: "Alt+D"
+  - command: "move workspace down"
+    binding: "Alt+S"
+
+  # Move focused window to a workspace defined in `workspaces` config.
+  - commands: ["move to workspace 1", "focus workspace 1"]
+    binding: "Alt+Shift+1"
+  - commands: ["move to workspace 2", "focus workspace 2"]
+    binding: "Alt+Shift+2"
+  - commands: ["move to workspace 3", "focus workspace 3"]
+    binding: "Alt+Shift+3"
+  - commands: ["move to workspace 4", "focus workspace 4"]
+    binding: "Alt+Shift+4"
+  - commands: ["move to workspace 5", "focus workspace 5"]
+    binding: "Alt+Shift+5"
+  - commands: ["move to workspace 6", "focus workspace 6"]
+    binding: "Alt+Shift+6"
+  - commands: ["move to workspace 7", "focus workspace 7"]
+    binding: "Alt+Shift+7"
+  - commands: ["move to workspace 8", "focus workspace 8"]
+    binding: "Alt+Shift+8"
+  - commands: ["move to workspace 9", "focus workspace 9"]
+    bindings: ["Alt+Shift+9"]
+#+end_src
+
+* ⚠ ADDITIONAL INFORMATION
 *Note*
 #+begin_quote
 - The code snippets requires the ~winget~ package to be installed on the system.
