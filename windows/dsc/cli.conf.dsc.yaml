@@ -6,126 +6,133 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install bat
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: sharkdp.bat
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install dog
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: ogham.dog
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install exiftool
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: OliverBetz.ExifTool
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install eza
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: eza-community.eza
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install fd
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: sharkdp.fd
         source: winget
+    # - resource: Microsoft.WinGet.DSC/WinGetPackage
+    #   directives:
+    #     description: Install ffmpeg
+    #     allowPrerelease: true
+    #   settings:
+    #     id: Gyan.FFmpeg
+    #     source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install fzf
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: junegunn.fzf
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install git
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: Git.Git
         source: winget
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
-      directives:
-        description: Install httpie
-        allowPrerelease: false
-      settings:
-        id: HTTPie.HTTPie
-        source: winget
+    # - resource: Microsoft.WinGet.DSC/WinGetPackage
+    #   directives:
+    #     description: Install httpie
+    #     allowPrerelease: true
+    #   settings:
+    #     id: HTTPie.HTTPie
+    #     source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install hyperfine
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: sharkdp.hyperfine
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install llvm
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: LLVM.LLVM
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install ollama
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: Ollama.Ollama
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install podman
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: RedHat.Podman
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install ripgrep
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
-        id: BurntSushi.ripgrep.MSVC
+        id: BurntSushi.ripgrep.GNU
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install sd
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: chmln.sd
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install starship
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: Starship.Starship
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install tealdeer
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: dbrgn.tealdeer
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install tokei
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: XAMPPRocky.Tokei
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install zoxide
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: ajeetdsouza.zoxide
         source: winget

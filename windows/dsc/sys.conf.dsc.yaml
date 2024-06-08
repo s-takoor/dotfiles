@@ -2,44 +2,48 @@
 
 properties:
   configurationVersion: 0.1.0
+  assertions:
+    - resource: Microsoft.Windows.Developer/OsVersion
+      directives:
+        description: Verify min OS version requirement
+        allowPrerelease: true
+      settings:
+        MinVersion: '10.0.22631'
   resources:
-    # - resource: Microsoft.Windows.Developer/DeveloperMode
-    #   directives:
-    #     description: enable developer mode
-    #     allowPrerelease: true
-    #   settings:
-    #     Ensure: Present
+    - resource: Microsoft.Windows.Developer/DeveloperMode
+      directives:
+        description: Enable developer mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
     - resource: Microsoft.Windows.Developer/HideFileExtensions
       directives:
-        description: show file extensions
-        allowPrerelease: false
+        description: Show file extensions
+        allowPrerelease: true
       settings:
         Ensure: Absent
     - resource: Microsoft.Windows.Developer/ShowHiddenFiles
       directives:
-        description: show hidden files
-        allowPrerelease: false
+        description: Show hidden files
+        allowPrerelease: true
       settings:
         Ensure: Present
     - resource: Microsoft.Windows.Developer/ShowSecondsInClock
       directives:
-        description: show seconds in clock
-        allowPrerelease: false
+        description: Show seconds in clock
+        allowPrerelease: true
       settings:
         Ensure: Present
-    - resource: Microsoft.Windows.Developer/Taskbar
+    - resource: Microsoft.Windows.Developer/TaskBarAlignment
       directives:
-        description: modify taskbar settings
-        allowPrerelease: false
+        description: Set taskbar alignment to left
+        allowPrerelease: true
       settings:
-        Alignment: Middle # [ KeepCurrentValue, Left ]
-        HideLabelsMode: ShowIconAndLabel # [ KeepCurrentValue, WhenFull, Always ]
-        SearchBoxMode: ShowIconAndLabel # [ KeepCurrentValue, ShowIconOnly, SearchBox, Hide ]
-        RestartExplorer: true # required for `HideLabelsMode` to take effect
+        Alignment: Left # [ KeepCurrentValue, Middle ]
     - resource: Microsoft.Windows.Developer/EnableDarkMode
       directives:
-        description: enable dark mode
-        allowPrerelease: false
+        description: Enable dark mode
+        allowPrerelease: true
       settings:
         Ensure: Present
         RestartExplorer: true # required for changes to take effect

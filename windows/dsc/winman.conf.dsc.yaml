@@ -6,7 +6,7 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install glazewm
-        allowPrerelease: false
+        allowPrerelease: true
       settings:
         id: glzr-io.glazewm
         source: winget
