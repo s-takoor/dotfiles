@@ -284,7 +284,7 @@ winget install --id=wez.wezterm  -e
 #+end_src
 
 #+begin_quote
-*NOTE* Windows Defender detected Trojan:Win32 with the latest built, ( surely that's a False Positive but it's Microsoft )
+*NOTE* Windows Defender detected Trojan:Win32 with the latest build, ( surely that's a False Positive but it's Microsoft )
 #+end_quote
 
 *** STARSHIP
