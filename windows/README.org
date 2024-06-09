@@ -14,13 +14,20 @@
   - [[#sane-defaults][SANE DEFAULTS]]
   - [[#terminal-and-shell-configuration][TERMINAL AND SHELL CONFIGURATION]]
   - [[#additional-terminal-and-shell-configuration--optional-][ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL )]]
-  - [[#optional-utils][OPTIONAL UTILS]]
+- [[#-powershell-integration][🐚 POWERSHELL INTEGRATION]]
 - [[#-text--code-editors][📋 TEXT / CODE EDITORS]]
-- [[#-window-manager][👾 WINDOW MANAGER]]
+- [[#-window-manager][👽 WINDOW MANAGER]]
   - [[#glazewm][GLAZEWM]]
-- [[#fonts][FONTS]]
+- [[#-fonts][👾 FONTS]]
   - [[#nerd-fonts][NERD FONTS]]
   - [[#symbols-nerd-font][SYMBOLS NERD FONT]]
+- [[#-optional-utils][🧰 OPTIONAL UTILS]]
+  - [[#flow-launcher][FLOW LAUNCHER]]
+  - [[#findutils][FINDUTILS]]
+  - [[#hunspell][HUNSPELL]]
+  - [[#flameshot][FLAMESHOT]]
+  - [[#sed][SED]]
+  - [[#yazi][YAZI]]
 - [[#️-additional-information][⚠️ ADDITIONAL INFORMATION]]
 
 * ⚠️ CAUTION
@@ -57,7 +64,7 @@ properties:
       settings:
         MinVersion: '10.0.22631'
   resources:
-    - resource: Microsoft.Windows.Developer/DeveloperMode
+    - resource: Microsoft.Windows.Developer/DeveloperMode # This is important to prevent path cramming which occurs when winget can't create symlinks if developer mode is disabled
       directives:
         description: Enable developer mode
         allowPrerelease: true
@@ -184,6 +191,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Install MSYS # see ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL ) below
+        allowPrerelease: true
+      settings:
+        id: MSYS2.MSYS2
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Install ollama
         allowPrerelease: true
       settings:
@@ -212,7 +226,7 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Install starship
+        description: Install starship # see ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL ) below
         allowPrerelease: true
       settings:
         id: Starship.Starship
@@ -241,6 +255,24 @@ properties:
 #+end_src
 
 ** ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL )
+*** MSYS2
+~MSYS2~ provides a native build environment, based on open source software. In short, ~GCC~ in Windows
+
+- Install the ~MinGW~ toolchain
+#+begin_src sh
+# first, check for available updates
+pacman -Syyu --noconfirm
+
+# install the mingw toolchain
+# was getting errors with the recommended mingw-w64-ucrt-x86_64-toolchain for building/compiling with cargo, found that using mingw-w64-x86_64-toolchain instead, I was able to build/compile without errors
+pacman -S --needed base-devel mingw-w64-x86_64-toolchain --noconfirm
+#+end_src
+
+- Add the path to the MinGW-w64 ~bin~ to the Windows ~PATH~ environment variable; more specifically the *user variables* ~PATH~
+#+begin_src sh
+C:\msys64\mingw64\bin
+#+end_src
+
 *** WEZTERM
 - ~Wezterm~ is a GPU-accelerated cross-platform terminal emulator and multiplexer implemented in ~Rust~
 - It is designed to provide a fast and efficient way to access the command-line on multiple platforms
@@ -250,6 +282,10 @@ properties:
 #+begin_src sh
 winget install --id=wez.wezterm  -e
 #+end_src
+
+#+begin_quote
+*NOTE* Windows Defender detected Trojan:Win32 with the latest built, ( surely that's a False Positive but it's Microsoft )
+#+end_quote
 
 *** STARSHIP
 Minimal, blazing-fast, and infinitely customizable prompt for any shell
@@ -297,7 +333,7 @@ disabled = true
 disabled = true
 #+end_src
 
-**** POWERSHELL INTEGRATION
+* 🐚 POWERSHELL INTEGRATION
 - The following sets up the necessary environment variables for ~PowerShell~ and allows for its execution within the shell.
 
 #+begin_src ps1 :tangle "Microsoft.PowerShell_profile.ps1"
@@ -351,49 +387,6 @@ Invoke-Expression (&starship init powershell)
 
 # ZOXIDE
 Invoke-Expression (& { (zoxide init powershell | Out-String) } )
-#+end_src
-
-** OPTIONAL UTILS
-*** FINDUTILS
-~find~ is a program which searches a directory tree to find a file or group of files
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=GnuWin32.FindUtils  -e
-#+end_src
-
-*** HUNSPELL
-~Hunspell~ is a free spell checker and morphological analyzer library and command-line tool, licensed under LGPL/GPL/MPL tri-license
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=FSFhu.Hunspell  -e
-#+end_src
-
-*** FLAMESHOT
-~Flameshot~ is a powerful yet simple to use screenshot software
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=Flameshot.Flameshot  -e
-#+end_src
-
-*** SED
-~sed~ (stream editor) is a non-interactive command-line text editor
-
-**** INSTALLATION
-#+begin_src sh
-winget install --id=mbuilov.sed  -e
-#+end_src
-
-*** YAZI
-Blazing fast terminal file manager written in ~Rust~, based on async I/O
-
-**** INSTALLATION
-Download from ~GitHub~
-
-#+begin_src sh
-https://github.com/sxyazi/yazi/releases
 #+end_src
 
 * 📋 TEXT / CODE EDITORS
@@ -490,7 +483,7 @@ properties:
         source: winget
 #+end_src
 
-* 👾 WINDOW MANAGER
+* 👽 WINDOW MANAGER
 A window manager is an essential component that manages and displays windows on a computer's desktop. It plays a vital role in ensuring that windows are displayed correctly and efficiently, optimizing workspace organization and user experience. By coordinating window placement and behavior, a window manager enables efficient space management and improves overall productivity.
 
 ** GLAZEWM
@@ -782,11 +775,10 @@ keybindings:
     bindings: ["Alt+Shift+9"]
 #+end_src
 
-* FONTS
-Iconic font aggregator, collection, and patcher
-
+* 👾 FONTS
 ** NERD FONTS
-~JetBrains Mono~ – the free and open-source typeface for developers
+Iconic font aggregator, collection, and patcher
+- ~JetBrains Mono~ – the free and open-source typeface for developers
 
 #+begin_src sh
 winget install --id=DEVCOM.JetBrainsMonoNerdFont  -e
@@ -796,9 +788,65 @@ winget install --id=DEVCOM.JetBrainsMonoNerdFont  -e
 #+begin_src sh
 http -d https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/NerdFontsSymbolsOnly.zip
 #+end_src
+
+* 🧰 OPTIONAL UTILS
+** FLOW LAUNCHER
+Keystroke launcher for Windows to search, manage and launch files, folders bookmarks, websites and more, similar to ~Raycast~ ( MacOS )
+
+*** INSTALLATION
+#+begin_src sh
+winget install --id=Flow-Launcher.Flow-Launcher  -e
+#+end_src
+** FINDUTILS
+~find~ is a program which searches a directory tree to find a file or group of files
+
+*** INSTALLATION
+#+begin_src sh
+winget install --id=GnuWin32.FindUtils  -e
+#+end_src
+
+** HUNSPELL
+~Hunspell~ is a free spell checker and morphological analyzer library and command-line tool, licensed under LGPL/GPL/MPL tri-license
+
+*** INSTALLATION
+#+begin_src sh
+winget install --id=FSFhu.Hunspell  -e
+#+end_src
+
+** FLAMESHOT
+~Flameshot~ is a powerful yet simple to use screenshot software
+
+*** INSTALLATION
+#+begin_src sh
+winget install --id=Flameshot.Flameshot  -e
+#+end_src
+
+** SED
+~sed~ (stream editor) is a non-interactive command-line text editor
+
+*** INSTALLATION
+#+begin_src sh
+winget install --id=mbuilov.sed  -e
+#+end_src
+
+** YAZI
+Blazing fast terminal file manager written in ~Rust~, based on async I/O
+
+*** INSTALLATION
+***** OPTION 1 ( RECOMMENDED )
+Install with ~cargo~
+#+begin_src sh
+cargo install yazi-cli yazi-fm
+#+end_src
+
+***** OPTION 2
+Download from ~GitHub~
+#+begin_src sh
+https://github.com/sxyazi/yazi/releases
+#+end_src
+
 * ⚠️ ADDITIONAL INFORMATION
-*Note*
-#+begin_quote
+#+begin_quote NOTE
 - The code snippets requires the ~winget~ package to be installed on the system.
 - Make sure that it is available before running the program.
 #+end_quote

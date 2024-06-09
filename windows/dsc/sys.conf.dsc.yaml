@@ -10,7 +10,7 @@ properties:
       settings:
         MinVersion: '10.0.22631'
   resources:
-    - resource: Microsoft.Windows.Developer/DeveloperMode
+    - resource: Microsoft.Windows.Developer/DeveloperMode # This is important to prevent path cramming which occurs when winget can't create symlinks if developer mode is disabled
       directives:
         description: Enable developer mode
         allowPrerelease: true

@@ -82,6 +82,13 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
+        description: Install MSYS # see ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL ) below
+        allowPrerelease: true
+      settings:
+        id: MSYS2.MSYS2
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
         description: Install ollama
         allowPrerelease: true
       settings:
@@ -110,7 +117,7 @@ properties:
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
-        description: Install starship
+        description: Install starship # see ADDITIONAL TERMINAL AND SHELL CONFIGURATION ( OPTIONAL ) below
         allowPrerelease: true
       settings:
         id: Starship.Starship
