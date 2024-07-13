@@ -4,12 +4,15 @@
 #+startup: showeverything
 #+filetags: :doom:emacs:config:org:
 
+#+begin_quote
+A configuration without change is meaningless. By enduring thy tweaks and overcoming thy challenges, thou shalt obtain a powerful, unmatched setup.
+#+end_quote
+
 * TL;DR
 This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org/][org]] format. The configuration contains the code blocks for the three main files: ~init.el~, ~config.el~, and ~packages.el~, required to configure ~Doom Emacs~, which is written in ~Emacs Lisp~. The function ~org-babel-tangle~ or the ~org-auto-tangle~ package can be used to extract the source code blocks from this file into their own source-specific files.
 
------
-
-** TABLE OF CONTENTS :toc:
+** TABLE OF CONTENTS :toc:quote:
+#+BEGIN_QUOTE
 - [[#tldr][TL;DR]]
 - [[#emacs-installation][EMACS INSTALLATION]]
   - [[#prerequisites][PREREQUISITES]]
@@ -42,6 +45,7 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
   - [[#pdf-tools][PDF-TOOLS]]
   - [[#jinx][JINX]]
   - [[#vertico][VERTICO]]
+  - [[#vertico-buffer][VERTICO BUFFER]]
   - [[#vertico-directory][VERTICO DIRECTORY]]
   - [[#vertico-multiform][VERTICO MULTIFORM]]
   - [[#marginalia][MARGINALIA]]
@@ -52,10 +56,14 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
   - [[#corfu][CORFU]]
   - [[#dabbrev][DABBREV]]
   - [[#cape][CAPE]]
+  - [[#eglot][EGLOT]]
   - [[#infrastructure-as-code][INFRASTRUCTURE AS CODE]]
   - [[#rss][RSS]]
+  - [[#shell][SHELL]]
+  - [[#vterm][VTERM]]
 - [[#initel][INIT.EL]]
 - [[#packagesel][PACKAGES.EL]]
+#+END_QUOTE
 
 * EMACS INSTALLATION
 There exists various options for installing ~Emacs~ on ~macOS~. Ensure a package manager is installed to facilitate this process. The following assumes the package manager is ~Homebrew~.
@@ -125,34 +133,34 @@ A ~nerd font~ with support for glyphs (icons).
 The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update the music database.
 #+begin_src emacs-lisp :tangle "config.el"
 ;; Load all stable features in Emms
-(require 'emms-setup)
-(emms-all)
+;; (require 'emms-setup)
+;; (emms-all)
 
 ;; MetaData reader about track information
-(require 'emms-info-libtag)
-(add-to-list 'emms-info-functions 'emms-info-libtag)
+;; (require 'emms-info-libtag)
+;; (add-to-list 'emms-info-functions 'emms-info-libtag)
 
 ;; Emms list of players
-(setq emms-player-list '(emms-player-mpd)) ;; or mpv
-(add-to-list 'emms-info-functions 'emms-info-mpd)
+;; (setq emms-player-list '(emms-player-mpd)) ;; or mpv
+;; (add-to-list 'emms-info-functions 'emms-info-mpd)
 
 ;; MPD configuration
-(setq emms-player-mpd-server-name "localhost")
-(setq emms-player-mpd-server-port "6600")
+;; (setq emms-player-mpd-server-name "localhost")
+;; (setq emms-player-mpd-server-port "6600")
 
 ;; Music directory
-(setq emms-source-file-default-directory "~/Music")
+;; (setq emms-source-file-default-directory "~/Music")
 
 ;; APE / FLAC commands
-(require 'emms-cue)
-(add-to-list 'emms-info-functions 'emms-info-cueinfo)
+;; (require 'emms-cue)
+;; (add-to-list 'emms-info-functions 'emms-info-cueinfo)
 
 ;; Keybindings
-(global-set-key (kbd "C-c C-o") #'emms-smart-browse)
-(global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
+;; (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
+;; (global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
 
 ;; Automatically update MPD database on startup
-(add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
+;; (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 #+end_src
 
 ** ELLAMA
@@ -161,7 +169,7 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 ;; (require 'ellama)
 ;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "English")))
 ;; (require 'llm-ollama)
-;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
+;; (setq ellama-provider (make-llm-ollama :chat-model "gemma:2b" :embedding-model "gemma:2b"))
 #+end_src
 
 ** NERD ICONS
@@ -188,7 +196,6 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 #+begin_src emacs-lisp :tangle "config.el"
 (setq-default line-spacing 0)
 #+end_src
-
 
 ** SPACIOUS PADDING
 #+begin_src emacs-lisp :tangle "config.el"
@@ -330,20 +337,22 @@ The tangling process happens asynchronously, therefore it will not block the cur
       org-fold-catch-invisible-edits 'show-and-error
       org-special-ctrl-a/e t
       org-insert-heading-respect-content t
-      org-log-done t
+      org-export-headline-levels 5
+      org-log-done 'time
+      org-log-into-drawer t
       org-edit-src-content-indentation 0
 
       ;; Org styling, hide markup, etc.
       org-hide-emphasis-markers t
       org-pretty-entities t
-      ;; org-ellipsis " ▼ "
-      org-ellipsis " ... "
+      org-ellipsis " ▼"
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-startup-indented nil
 
       ;; Agenda styling
+      org-agenda-window-setup 'current-window
       org-agenda-files '("~/Documents/orgfiles/agenda.org")
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
@@ -361,8 +370,9 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 (require 'org-modern)
 
 ;; Customize org-modern settings
-(setq org-modern-table-vertical 1
-      org-modern-table-horizontal 1
+(setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+      org-modern-table-vertical 1
+      org-modern-table-horizontal 0.2
       org-modern-horizontal-rule t)
 
 ;; Enable global-org-modern-mode
@@ -417,12 +427,17 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
 The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'vertico)
+(vertico-mode 1)
 
-(setq vertico-count 20
+(setq vertico-count 10
       vertico-resize t
       vertico-cycle t)
+#+end_src
 
-(vertico-mode)
+** VERTICO BUFFER
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'vertico-buffer)
+(vertico-buffer-mode 1)
 #+end_src
 
 ** VERTICO DIRECTORY
@@ -434,9 +449,16 @@ The ~vertico~ package provides a performant and minimalistic vertical completion
 ** VERTICO MULTIFORM
 #+begin_src emacs-lisp :tangle "config.el"
 (vertico-multiform-mode)
-(add-to-list 'vertico-multiform-categories
-             '(jinx grid (vertico-grid-annotate . 20)))
 (vertico-multiform-mode 1)
+
+;; Configure the display per command
+(setq vertico-multiform-commands
+      '((consult-imenu buffer indexed)))
+
+;; Configure the display per completion category
+(setq vertico-multiform-categories
+      '((file grid)
+        (consult-grep buffer)))
 #+end_src
 
 ** MARGINALIA
@@ -466,7 +488,6 @@ This package provides an ~orderless~ completion style that divides the pattern i
 The ~consult~ module provides search and navigation commands based on the Emacs completion function [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]].
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'consult)
-
 (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
 (setq register-preview-delay 0.5
@@ -485,7 +506,10 @@ The ~consult~ module provides search and navigation commands based on the Emacs 
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'embark)
 (setq prefix-help-command #'embark-prefix-help-command)
-(add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none))))
+(add-to-list 'display-buffer-alist
+             '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+               nil
+               (window-parameters (mode-line-format . none))))
 
 ;; Embark-Consult
 (require 'embark-consult)
@@ -573,16 +597,20 @@ The ~cape~ module provides Completion At Point Extensions which can be used in c
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
 #+end_src
 
+** EGLOT
+#+begin_src emacs-lisp :tangle "config.el"
+(add-hook 'nix-mode-hook 'eglot-ensure)
+#+end_src
 ** INFRASTRUCTURE AS CODE
 The ~terraform~ module adds support for working with [[https://www.terraform.io/][Terraform]] files in ~Doom Emacs~. It includes syntax highlighting, intelligent code completion and, the ability to run ~Terraform~ commands directly from ~Emacs~.
 #+begin_src emacs-lisp :tangle "config.el"
-(require 'terraform-mode)
-(add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
-(add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
-(add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
+;; (require 'terraform-mode)
+;; (add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
+;; (add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
 
 ;; Customize indentation level
-(setq terraform-indent-level 4)
+;; (setq terraform-indent-level 4)
 #+end_src
 
 ** RSS
@@ -601,7 +629,18 @@ The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~
 (global-set-key (kbd "C-x w") 'elfeed)
 #+end_src
 
------
+** SHELL
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'fish-mode)
+#+end_src
+
+** VTERM
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'vterm)
+(setq shell-file-name (executable-find "bash"))
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
+#+end_src
 
 * INIT.EL
 The ~init.el~ file controls what ~Doom~ modules are enabled and what order they load in. Remember to run ~doom sync~ after modifying it!
@@ -705,7 +744,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
-       terraform         ; infrastructure as code
+       ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        tree-sitter       ; syntax and parsing, sitting in a tree...
        ;;upload            ; map local to remote projects via ssh/ftp
@@ -753,7 +792,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
-       ;;nix               ; I hereby declare "nix geht mehr!"
+       (nix +lsp +tree-sitter)               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org +hugo +present)              ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
@@ -785,7 +824,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
 
        :app
        ;;calendar
-       emms
+       ;; emms
        everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)        ; emacs as an RSS reader
@@ -797,8 +836,6 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
 #+end_src
 
 #+RESULTS:
-
------
 
 * PACKAGES.EL
 The ~package.el~ file lists all packages to be installed with ~Doom Emacs~. Each line specifies the name of a package and any additional configuration options. After declaring the package name in the ~packages.el~ file, you will have to run ~doom sync~ on the command line or ~SPC h r r~, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
@@ -848,6 +885,7 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 (package! embark-consult)
 ;; (package! emms-player-mpv)
 (package! engrave-faces)
+(package! fish-mode)
 (package! imenu-list)
 (package! jinx)
 (package! marginalia)
@@ -861,6 +899,6 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 (package! org-auto-tangle)
 (package! org-modern)
 (package! spacious-padding)
-(package! terraform-mode)
+;; (package! terraform-mode)
 (package! treemacs-nerd-icons)
 #+end_src

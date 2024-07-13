@@ -8,39 +8,39 @@
       doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
 
 ;; Load all stable features in Emms
-(require 'emms-setup)
-(emms-all)
+;; (require 'emms-setup)
+;; (emms-all)
 
 ;; MetaData reader about track information
-(require 'emms-info-libtag)
-(add-to-list 'emms-info-functions 'emms-info-libtag)
+;; (require 'emms-info-libtag)
+;; (add-to-list 'emms-info-functions 'emms-info-libtag)
 
 ;; Emms list of players
-(setq emms-player-list '(emms-player-mpd)) ;; or mpv
-(add-to-list 'emms-info-functions 'emms-info-mpd)
+;; (setq emms-player-list '(emms-player-mpd)) ;; or mpv
+;; (add-to-list 'emms-info-functions 'emms-info-mpd)
 
 ;; MPD configuration
-(setq emms-player-mpd-server-name "localhost")
-(setq emms-player-mpd-server-port "6600")
+;; (setq emms-player-mpd-server-name "localhost")
+;; (setq emms-player-mpd-server-port "6600")
 
 ;; Music directory
-(setq emms-source-file-default-directory "~/Music")
+;; (setq emms-source-file-default-directory "~/Music")
 
 ;; APE / FLAC commands
-(require 'emms-cue)
-(add-to-list 'emms-info-functions 'emms-info-cueinfo)
+;; (require 'emms-cue)
+;; (add-to-list 'emms-info-functions 'emms-info-cueinfo)
 
 ;; Keybindings
-(global-set-key (kbd "C-c C-o") #'emms-smart-browse)
-(global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
+;; (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
+;; (global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
 
 ;; Automatically update MPD database on startup
-(add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
+;; (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
 
 ;; (require 'ellama)
 ;; (add-hook 'ellama-mode-hook (lambda () (setopt ellama-language "English")))
 ;; (require 'llm-ollama)
-;; (setq ellama-provider (make-llm-ollama :chat-model "mistral:latest" :embedding-model "mistral:latest"))
+;; (setq ellama-provider (make-llm-ollama :chat-model "gemma:2b" :embedding-model "gemma:2b"))
 
 ;; Icons
 (require 'nerd-icons)
@@ -159,20 +159,22 @@
       org-fold-catch-invisible-edits 'show-and-error
       org-special-ctrl-a/e t
       org-insert-heading-respect-content t
-      org-log-done t
+      org-export-headline-levels 5
+      org-log-done 'time
+      org-log-into-drawer t
       org-edit-src-content-indentation 0
 
       ;; Org styling, hide markup, etc.
       org-hide-emphasis-markers t
       org-pretty-entities t
-      ;; org-ellipsis " ▼ "
-      org-ellipsis " ... "
+      org-ellipsis " ▼"
       org-hide-leading-stars t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-startup-indented nil
 
       ;; Agenda styling
+      org-agenda-window-setup 'current-window
       org-agenda-files '("~/Documents/orgfiles/agenda.org")
       org-agenda-tags-column 0
       org-agenda-block-separator ?─
@@ -186,8 +188,9 @@
 (require 'org-modern)
 
 ;; Customize org-modern settings
-(setq org-modern-table-vertical 1
-      org-modern-table-horizontal 1
+(setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+      org-modern-table-vertical 1
+      org-modern-table-horizontal 0.2
       org-modern-horizontal-rule t)
 
 ;; Enable global-org-modern-mode
@@ -228,20 +231,29 @@
 (add-hook 'emacs-startup-hook #'global-jinx-mode)
 
 (require 'vertico)
+(vertico-mode 1)
 
-(setq vertico-count 20
+(setq vertico-count 10
       vertico-resize t
       vertico-cycle t)
 
-(vertico-mode)
+(require 'vertico-buffer)
+(vertico-buffer-mode 1)
 
 (require 'vertico-directory)
 (add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
 
 (vertico-multiform-mode)
-(add-to-list 'vertico-multiform-categories
-             '(jinx grid (vertico-grid-annotate . 20)))
 (vertico-multiform-mode 1)
+
+;; Configure the display per command
+(setq vertico-multiform-commands
+      '((consult-imenu buffer indexed)))
+
+;; Configure the display per completion category
+(setq vertico-multiform-categories
+      '((file grid)
+        (consult-grep buffer)))
 
 (require 'marginalia)
 (marginalia-mode)
@@ -255,7 +267,6 @@
         completion-category-overrides '((file (styles partial-completion))))
 
 (require 'consult)
-
 (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
 (setq register-preview-delay 0.5
@@ -271,7 +282,10 @@
 
 (require 'embark)
 (setq prefix-help-command #'embark-prefix-help-command)
-(add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none))))
+(add-to-list 'display-buffer-alist
+             '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+               nil
+               (window-parameters (mode-line-format . none))))
 
 ;; Embark-Consult
 (require 'embark-consult)
@@ -347,13 +361,15 @@
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
 
-(require 'terraform-mode)
-(add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
-(add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
-(add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
+(add-hook 'nix-mode-hook 'eglot-ensure)
+
+;; (require 'terraform-mode)
+;; (add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
+;; (add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
 
 ;; Customize indentation level
-(setq terraform-indent-level 4)
+;; (setq terraform-indent-level 4)
 
 (require 'elfeed-goodies)
 ;; (elfeed-goodies/setup)
@@ -366,3 +382,10 @@
 (add-hook! 'elfeed-search-mode-hook #'elfeed-update)
 
 (global-set-key (kbd "C-x w") 'elfeed)
+
+(require 'fish-mode)
+
+(require 'vterm)
+(setq shell-file-name (executable-find "bash"))
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
