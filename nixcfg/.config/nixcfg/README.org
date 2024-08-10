@@ -3,12 +3,34 @@
 #+auto_tangle: t
 #+filetags: :nix:darwin:literate:config:
 
+#+begin_quote
+In the beginning, there was ~nix~. All things were made by ~nix~; and without it was not any thing made that was made. In ~nix~ was life; and life was the light of the ~systems~. And the light shineth in ~systems~; and the ~systems~ comprehendeth it not. For ~nix~ is ~declarative~, ~immutable~, and ~reproducible~, bringing order and harmony to the ~systems~.
+#+end_quote
+
 * 🚀 TL;DR
 This repository contains the configurations for setting up ~macos~ along with the tools &/or programs used. It leverages on ~nix~ to ensure a consistent and reliable setup.
 
-#+begin_quote
-Trust in the ~code~ with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge it, and it shall direct thy paths, ensuring ~reproducible~, ~declarative~, and ~reliable~ software management.
-#+end_quote
+** TABLE OF CONTENTS :toc:quote:
+#+BEGIN_QUOTE
+- [[#-tldr][🚀 TL;DR]]
+- [[#-disclaimer][💀 DISCLAIMER]]
+- [[#-overview][🎯 OVERVIEW]]
+- [[#️-features][🗒️ FEATURES]]
+- [[#️-installation][🛠️ INSTALLATION]]
+- [[#-declarative-system-for-macos][📝 DECLARATIVE SYSTEM FOR MACOS]]
+- [[#️-flake][❄️ FLAKE]]
+- [[#-modules][📚 MODULES]]
+  - [[#darwin][DARWIN]]
+  - [[#home-manager][HOME-MANAGER]]
+  - [[#devshell][DEVSHELL]]
+- [[#️-applying-the-configuration][⚠️ APPLYING THE CONFIGURATION]]
+  - [[#build][BUILD]]
+  - [[#switch][SWITCH]]
+- [[#️-uninstallation][☣️ UNINSTALLATION]]
+  - [[#uninstalling-nix-darwin][UNINSTALLING NIX DARWIN]]
+  - [[#uninstalling-nix][UNINSTALLING NIX]]
+  - [[#additional-cleanup][ADDITIONAL CLEANUP]]
+#+END_QUOTE
 
 * 💀 DISCLAIMER
 #+begin_quote
@@ -16,6 +38,8 @@ The configurations in this repository are tailored to my specific needs and pref
 #+end_quote
 
 * 🎯 OVERVIEW
+~Nix~ is a powerful package manager for ~Linux~ and ~Unix~ systems that ensures ~reproducible~, ~declarative~, and ~reliable~ software management.
+
 This ~README~ file serves as the blueprint for the system configuration. It uses a process known as ~tangling~ to automatically generate and organize all necessary ~.nix~ files for this setup.
 
 Here's how it helps manage everything:
@@ -40,8 +64,6 @@ tokei ~/.config/nixcfg/*
 | =============================================================================== |       |       |      |          |        |
 | Total                                                                         |    53 |  3498 | 2644 |      454 |    400 |
 | =============================================================================== |       |       |      |          |        |
-
-~Nix~ is a powerful package manager for ~Linux~ and ~Unix~ systems that ensures ~reproducible~, ~declarative~, and ~reliable~ software management.
 
 * 🗒️ FEATURES
 - [[https://nixos.wiki/wiki/Flakes][Flakes]]: enhances ~reproducibility~ and ~modularity~ in ~nix~
@@ -71,7 +93,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 #+end_src
 
 #+begin_quote
-#+NOTE: when using ~nix-darwin~ to change system-level configurations, you might end up having two different versions of ~nix~ if installed via the ~determinate systems~ installer; [[https://github.com/LnL7/nix-darwin/issues/931][issue #931]]
+When using ~nix-darwin~ to change system-level configurations, you might end up having two different versions of ~nix~ if installed via the ~determinate systems~ installer; [[https://github.com/LnL7/nix-darwin/issues/931][issue #931]]
 #+end_quote
 
 Here's an example of the ~std.out~ from the ~nix doctor~ or ~nix config check~ ( for newer versions of ~nix~ ) commands:
@@ -94,7 +116,7 @@ The standard format for the ~flake.nix~ consists of:
 - ~outputs~ which are function that returns the build results of the flake based on the inputs, shaping the final setup
 
 #+begin_quote
-In the beginning, there was ~nix~. All things were made by ~nix~; and without it was not any thing made that was made. In ~nix~ was life; and life was the light of the ~systems~. And the light shineth in ~systems~; and the ~systems~ comprehendeth it not. For ~nix~ is ~declarative~, ~immutable~, and ~reproducible~, bringing order and harmony to the ~systems~.
+Trust in the ~code~ with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge it, and it shall direct thy paths, ensuring ~reproducible~, ~declarative~, and ~reliable~ software management.
 #+end_quote
 
 #+begin_src nix :tangle "~/.config/nixcfg/flake.nix"
@@ -440,24 +462,24 @@ This configuration defines various system-level settings and user preferences fo
       };
 
       # -- dock and mission control settings -- #
-      dock = {
-        autohide = true; # automatically hide the dock
-        autohide-delay = 0.0; # speed of autohide delay
-        expose-group-by-app = false; # do not group windows by application in mission control's
-        launchanim = true; # animate opening applications from the dock
-        mineffect = "genie"; # maximize/minimuze window effect
-        minimize-to-application = true; # minimize windows into their application icon
-        mru-spaces = false; # do not rearrange spaces based on most recent use
-        orientation = "bottom"; # position dock on screen
-        show-process-indicators = true; # show indicator lights for open applications
-        show-recents = false; # do not show recent applications in the dock
-        tilesize = 36; # size of icons in the dock
-        # -- disable all hot corners -- #
-        wvous-bl-corner = 1;
-        wvous-br-corner = 1;
-        wvous-tl-corner = 1;
-        wvous-tr-corner = 1;
-      };
+      # dock = {
+      #   autohide = true; # automatically hide the dock
+      #   autohide-delay = 0.0; # speed of autohide delay
+      #   expose-group-by-app = false; # do not group windows by application in mission control's
+      #   launchanim = true; # animate opening applications from the dock
+      #   mineffect = "genie"; # maximize/minimuze window effect
+      #   minimize-to-application = true; # minimize windows into their application icon
+      #   mru-spaces = false; # do not rearrange spaces based on most recent use
+      #   orientation = "bottom"; # position dock on screen
+      #   show-process-indicators = true; # show indicator lights for open applications
+      #   show-recents = false; # do not show recent applications in the dock
+      #   tilesize = 36; # size of icons in the dock
+      #   # -- disable all hot corners -- #
+      #   wvous-bl-corner = 1;
+      #   wvous-br-corner = 1;
+      #   wvous-tl-corner = 1;
+      #   wvous-tr-corner = 1;
+      # };
 
       # -- finder settings -- #
       finder = {
@@ -576,6 +598,7 @@ _:
     restart_service = "changed"; # the version from home-manager is not supported for aarch64-darwin and there no mpd services in nix-darwin
   }
   "ncmpcpp" # visualizer_type spectrum error with home-manager
+  "nmap"
   "pandoc"
   "pam-reattach" # module for re-attaching to the authenticating user's per-session bootstrap namespace on macos
   "texlive"
@@ -651,31 +674,31 @@ Embrace the ~home-manager~, for it is the shepherd of thy ~home~ configuration. 
 #+end_quote
 
 *** HOME
-This configuration file defines user-specific settings and package installations. It imports various program configurations, including terminal emulators, development tools, and utilities, for a customized user environment.
+This ~home.nix~ file defines user-specific settings and package installations. It imports various program configurations, including terminal emulators, development tools, and utilities, for a customized user environment.
 #+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/home.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
   imports = [
     # TODO :: to further modularize with `mkEnableOption` for toggling programs )
-    ./programs/alacritty.nix
-    ./programs/bat.nix
-    ./programs/bun.nix
-    ./programs/direnv.nix
-    ./programs/eza.nix
-    ./programs/fd.nix
-    ./programs/fish.nix
-    ./programs/fzf.nix
-    ./programs/mise.nix
-    ./programs/nix-index.nix
-    # ./programs/neovim/nixvim.nix # keeping disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix )
-    ./programs/starship.nix
-    ./programs/thefuck.nix
-    ./programs/tmux.nix
-    ./programs/wezterm.nix
-    ./programs/yazi.nix
-    ./programs/zoxide.nix
-    ./programs/zsh.nix
+    ./programs/alacritty
+    ./programs/bat
+    ./programs/bun
+    ./programs/direnv
+    ./programs/eza
+    ./programs/fd
+    ./programs/fish
+    ./programs/fzf
+    ./programs/mise
+    ./programs/nix-index
+    # ./programs/nixvim/default.nix # keeping disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix )
+    ./programs/starship
+    ./programs/thefuck
+    ./programs/tmux
+    ./programs/wezterm
+    ./programs/yazi
+    ./programs/zoxide
+    ./programs/zsh
     ../shared/fonts.nix
   ];
 
@@ -698,7 +721,8 @@ This configuration file defines user-specific settings and package installations
 #+end_src
 
 *** ALACRITTY
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/alacritty.nix" :mkdirp yes
+[[https://alacritty.org/index.html][alacritty]] is a modern terminal emulator that comes with sensible defaults, but allows for extensive configuration
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/alacritty/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -765,7 +789,8 @@ This configuration file defines user-specific settings and package installations
 #+end_src
 
 *** BAT
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bat.nix" :mkdirp yes
+[[https://github.com/sharkdp/bat][bat]] is a ~cat~ clone with syntax highlighting and ~git~ integration.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bat/default.nix" :mkdirp yes
 { config, lib, pkgs, ... }:
 
 {
@@ -784,7 +809,8 @@ This configuration file defines user-specific settings and package installations
 #+end_src
 
 *** BUN
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bun.nix" :mkdirp yes
+[[https://bun.sh/docs][bun]] is an all-in-one toolkit for ~javascript~ and ~typescript~ apps. It ships as a single executable called ~bun~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bun/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -799,8 +825,8 @@ This configuration file defines user-specific settings and package installations
 #+end_src
 
 *** DIRENV
-Configuration for environment switcher. Enabling ~direnv~ module will always activate its functionality for ~fish~ shell since ~direnv~ package automatically gets loaded in ~fish~
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/direnv.nix" :mkdirp yes
+[[https://direnv.net/][direnv]] is an extension for the shell. It augments existing shells with a new feature that can load and unload environment variables depending on the current directory
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/direnv/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -814,7 +840,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** EZA
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/eza.nix" :mkdirp yes
+[[https://eza.rocks/][eza]] is a modern, maintained replacement for the venerable file-listing command-line program ~ls~ that ships with ~Unix~ and ~Linux~ operating systems, giving it more features and better defaults
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/eza/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -834,7 +861,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** FD
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fd.nix" :mkdirp yes
+[[https://github.com/sharkdp/fd][fd]] s a program to find entries in the ~filesystem~. It is a simple, fast and user-friendly alternative to ~find~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fd/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -850,7 +878,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** FISH
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fish.nix" :mkdirp yes
+[[https://fishshell.com/][fish]] is a smart and user-friendly command line shell for ~Linux~, ~macos~, and the rest of the family.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fish/default.nix" :mkdirp yes
 { config, pkgs, ... }:
 
 {
@@ -892,7 +921,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
     shellAbbrs = {
       list = "brew list";
       purge = "brew cleanup --prune=all";
-      cat = "bat --color=always";
+      cat = "bat";
       cd = "z";
       cp = "xcp";
       df = "df -h";
@@ -900,6 +929,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
       ll = "eza -l";
       ls = "eza -al";
       lt = "eza -aT";
+      nm = "nmap -sC -sV -vvv -oN nmap-results";
       vi = "nvim";
     };
 
@@ -917,7 +947,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** FZF
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fzf.nix" :mkdirp yes
+[[https://github.com/junegunn/fzf][fzf]] is a general-purpose command-line fuzzy finder
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fzf/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -938,7 +969,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
      "--color '16,bg+:-1,gutter:-1,prompt:4,pointer:4,marker:6,border:4,label:4,header:italic'"
     ];
 
-    # opt-c  for changing director
+    # opt-c for changing directory
     changeDirWidgetCommand = "fd --type d --hidden --exclude .git";
     changeDirWidgetOptions = [
       "--border-label ' directory '"
@@ -971,7 +1002,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** MISE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/mise.nix" :mkdirp yes
+[[https://mise.jdx.dev/about.html][mise]] or "mise-en-place" is a development environment setup tool
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/mise/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -991,7 +1023,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** NIX INDEX
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nix-index.nix" :mkdirp yes
+[[https://github.com/nix-community/nix-index][nix-index]] is a tool to quickly locate the package providing a certain file in ~nixpkgs~. It indexes built derivations found in binary caches
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nix-index/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -1005,9 +1038,13 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** NIXVIM
-[[https://github.com/nix-community/nixvim?tab=readme-ov-file][NixVim]] is a ~Neovim~ configuration managed with ~nix~, offering a streamlined and customizable setup. This configuration integrates ~nixvim~ into my ~nix-darwin~ environment, enabling various plugins and settings for an enhanced ~neovim~ experience.
+[[https://github.com/nix-community/nixvim?tab=readme-ov-file][nixvim]] is a ~neovim~ configuration managed with ~nix~, offering a streamlined and customizable setup. This configuration integrates ~nixvim~ into the ~nix-darwin~ environment, enabling various plugins and settings for an enhanced ~neovim~ experience.
 
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/nixvim.nix" :mkdirp yes
+#+begin_quote
+~Nixvim~ is not my primary editor; my main editor is [[https://github.com/doomemacs/doomemacs][Doom Emacs]] a configuration framework for ~GNU Emacs~
+#+end_quote
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/default.nix" :mkdirp yes
 { inputs, lib, pkgs, ... }:
 
 {
@@ -1018,8 +1055,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
     ./keymaps.nix
     ./options.nix
     ./todo.nix
-    ./plugins/autopairs.nix
     ./plugins/auto-save.nix
+    ./plugins/autopairs.nix
     ./plugins/barbar.nix
     ./plugins/colorizer.nix
     ./plugins/comment.nix
@@ -1050,7 +1087,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** COLORSCHEME
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/colorscheme.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/colorscheme.nix" :mkdirp yes
 {
   programs.nixvim = {
     colorschemes = {
@@ -1099,7 +1136,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** COMPLETION
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/completion.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/completion.nix" :mkdirp yes
 {
   programs.nixvim = {
     opts.completeopt = [ "menu" "menuone" "noselect" ];
@@ -1151,7 +1188,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** HIGHLIGHT TODO
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/todo.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/todo.nix" :mkdirp yes
 {
   programs.nixvim = {
     highlight.Todo = {
@@ -1181,7 +1218,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** KEYMAPS
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/keymaps.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/keymaps.nix" :mkdirp yes
 { config, lib, ... }:
 
 {
@@ -1195,7 +1232,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** OPTIONS
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/options.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/options.nix" :mkdirp yes
 {
   programs.nixvim = {
     opts = {
@@ -1235,17 +1272,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 **** PLUGINS
-***** AUTOPAIRS
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/autopairs.nix" :mkdirp yes
-{
-  programs.nixvim.plugins.nvim-autopairs = {
-    enable = true;
-  };
-}
-#+end_src
-
 ***** AUTO-SAVE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/auto-save.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/auto-save.nix" :mkdirp yes
 {
   programs.nixvim.plugins.auto-save = {
     enable = true;
@@ -1253,8 +1281,17 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 }
 #+end_src
 
+***** AUTOPAIRS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/autopairs.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.nvim-autopairs = {
+    enable = true;
+  };
+}
+#+end_src
+
 ***** BARBAR
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/barbar.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/barbar.nix" :mkdirp yes
 {
   programs.nixvim.plugins.barbar = {
     enable = true;
@@ -1268,7 +1305,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** COLORIZER
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/colorizer.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/colorizer.nix" :mkdirp yes
 {
   programs.nixvim.plugins.nvim-colorizer = {
     enable = true;
@@ -1277,7 +1314,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** LSP
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/lsp.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/lsp.nix" :mkdirp yes
 {
   programs.nixvim.plugins.lsp = {
     enable = true;
@@ -1311,7 +1348,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** LUALINE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/lualine.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/lualine.nix" :mkdirp yes
 {
   programs.nixvim.plugins.lualine = {
     enable = true;
@@ -1321,7 +1358,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** NOICE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/noice.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/noice.nix" :mkdirp yes
 {
   programs.nixvim.plugins.noice = {
     enable = true;
@@ -1330,7 +1367,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** NOTIFY
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/notify.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/notify.nix" :mkdirp yes
 {
   programs.nixvim.plugins.notify = {
     enable = true;
@@ -1342,7 +1379,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** NVIM COMMENT
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/comment.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/comment.nix" :mkdirp yes
 {
   programs.nixvim.plugins.comment = {
     enable = true;
@@ -1356,7 +1393,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** TELESCOPE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/telescope.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/telescope.nix" :mkdirp yes
 {
   programs.nixvim.plugins.telescope = {
       enable = true;
@@ -1373,7 +1410,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** TREESITTER
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/treesitter.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/treesitter.nix" :mkdirp yes
 {
   programs.nixvim.plugins = {
     treesitter = {
@@ -1402,7 +1439,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** TROUBLE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/trouble.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/trouble.nix" :mkdirp yes
 {
   programs.nixvim.plugins.trouble = {
     enable = true;
@@ -1411,7 +1448,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** VIM-NIX
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/vim-nix.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/vim-nix.nix" :mkdirp yes
 {
   programs.nixvim.plugins.nix = {
     enable = true;
@@ -1420,7 +1457,7 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 ***** WHICH-KEY
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/which-key.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/which-key.nix" :mkdirp yes
 {
   programs.nixvim.plugins.which-key = {
     enable = true;
@@ -1434,7 +1471,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** STARSHIP
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/starship.nix" :mkdirp yes
+[[https://starship.rs/][starship]] is a minimal, blazing-fast, and infinitely customizable prompt for any shell
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/starship/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -1488,7 +1526,8 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** THEFUCK
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/thefuck.nix" :mkdirp yes
+[[https://github.com/nvbn/thefuck][the fuck]] corrects errors in previous console commands
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/thefuck/default.nix" :mkdirp yes
 { pkgs, ...}:
 
 {
@@ -1503,9 +1542,9 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
 #+end_src
 
 *** TMUX
-~tmux.nix~ reads the configuration for ~tmux.conf~ defined in the ~/modules/shared/multiplexer/~ directory.
+[[https://github.com/tmux/tmux/wiki][tmux]] is a terminal multiplexer which allows easily switching between several programs in one terminal, detaching them (they keep running in the background) and reattaching them to a different terminal. ~tmux.nix~ reads the configuration for ~tmux.conf~ defined in the same directory.
 
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/tmux.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/tmux/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -1516,14 +1555,13 @@ Configuration for environment switcher. Enabling ~direnv~ module will always act
     extraConfig = ''
     set -g default-command "\${pkgs.fish}/bin/fish"
     ''
-    + builtins.readFile ../../shared/multiplexer/tmux.conf;
+    + builtins.readFile ./tmux.conf;
   };
 }
 #+end_src
 
 The ~tmux.conf~ configuration file which is read by ~tmux.nix~
-
-#+begin_src sh :tangle "~/.config/nixcfg/modules/shared/multiplexer/tmux.conf" :mkdirp yes
+#+begin_src sh :tangle "~/.config/nixcfg/modules/home-manager/programs/tmux/tmux.conf" :mkdirp yes
 set -g mouse on
 set -s escape-time 0
 set -g base-index 1
@@ -1569,9 +1607,10 @@ bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
 #+end_src
 
 *** WEZTERM
-~wezterm.nix~ reads the configuration from ~wezterm.lua~ defined in the ~/modules/shared/terminals/~ directory.
+[[https://wezfurlong.org/wezterm/index.html][wezterm]] is a powerful cross-platform terminal emulator and multiplexer written in ~rust~. It offers advanced features and performance optimizations suitable for modern terminal use cases.
 
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/wezterm.nix" :mkdirp yes
+~wezterm.nix~ reads settings from ~wezterm.lua~, which is defined in the same directory
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/wezterm/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -1579,14 +1618,13 @@ bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    extraConfig = builtins.readFile ../../shared/terminals/wezterm.lua;
+    extraConfig = builtins.readFile ./wezterm.lua;
   };
 }
 #+end_src
 
-The ~wezterm.lua~ configuration file which is read by ~wezterm.nix~
-
-#+begin_src lua :tangle "~/.config/nixcfg/modules/shared/terminals/wezterm.lua" :mkdirp yes
+~wezterm.lua~, read by ~wezterm.nix~, contains settings for customizing ~wezterm~'s appearance and behavior
+#+begin_src lua :tangle "~/.config/nixcfg/modules/home-manager/programs/wezterm/wezterm.lua" :mkdirp yes
 local wezterm = require("wezterm")
 
 return {
@@ -1600,7 +1638,7 @@ return {
   -- scrollback
   scrollback_lines = 3500,
 
-  -- multiplexer
+  -- multiplexer REVIEW :: hardcoded path for `tmux`
   default_prog = { "/etc/profiles/per-user/st/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
 
   -- colors
@@ -1654,13 +1692,12 @@ return {
 #+end_src
 
 *** YAZI
-A terminal file manager written in ~rust~. The plugin ~prepend_previewers~ allows previewing audio metadata and cover art within ~yazi~ via ~exifaudio~
+[[https://yazi-rs.github.io/][yazi]] is a terminal file manager written in ~rust~, based on ~async I/O~. The plugin ~prepend_previewers~ allows previewing audio metadata and cover art within ~yazi~ via ~exifaudio~
 - dependencies
   + ~exiftool~ installed and in ~PATH~
   + ( optional ) ~mediainfo~ can be used for more accurate metadata
 - install [[https://github.com/Sonico98/exifaudio.yazi][exifaudio]]
-
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/yazi.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/yazi/default.nix" :mkdirp yes
 { pkgs, ...}:
 
 {
@@ -1692,7 +1729,8 @@ A terminal file manager written in ~rust~. The plugin ~prepend_previewers~ allow
 #+end_src
 
 *** ZOXIDE
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zoxide.nix" :mkdirp yes
+[[https://github.com/ajeetdsouza/zoxide][zoxide]] is a smarter ~cd~ command, inspired by ~z~ and ~autojump~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zoxide/default.nix" :mkdirp yes
 { pkgs, ... }:
 
 {
@@ -1706,7 +1744,8 @@ A terminal file manager written in ~rust~. The plugin ~prepend_previewers~ allow
 #+end_src
 
 *** ZSH
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zsh.nix" :mkdirp yes
+[[https://www.zsh.org/][zsh]] is a ~unix~ command interpreter (shell) usable as an interactive login shell and as a shell script command processor
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zsh/default.nix" :mkdirp yes
 { config, pkgs, ... }:
 
 {
@@ -1821,7 +1860,6 @@ jq
 mediainfo
 nil
 nixfmt-rfc-style
-nmap
 ripgrep
 rm-improved
 sd
