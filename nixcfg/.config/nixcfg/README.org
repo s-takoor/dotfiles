@@ -26,19 +26,20 @@ Here's how it helps manage everything:
 
 Here's a breakdown of what the ~README.org~ is generating:
 #+NAME: tokei
-#+begin_src sh :results replace
-tokei ~/.config/nixcfg
+#+begin_src sh :results output
+tokei ~/.config/nixcfg/*
 #+end_src
 
 #+RESULTS: tokei
-| =============================================================================== |       |       |      |          |        |
-| Language                                                                      | Files | Lines | Code | Comments | Blanks |
-| =============================================================================== |       |       |      |          |        |
-| Lua                                                                           |     1 |    64 |   35 |       14 |     15 |
-| Nix                                                                           |    51 |  1444 | 1096 |      216 |    132 |
-| =============================================================================== |       |       |      |          |        |
-| Total                                                                         |    52 |  1508 | 1131 |      230 |    147 |
-| =============================================================================== |       |       |      |          |        |
+: ===============================================================================
+:  Language            Files        Lines         Code     Comments       Blanks
+: ===============================================================================
+:  Lua                     1           64           35           14           15
+:  Nix                    51         1444         1096          216          132
+:  Org                     1         1981         1504          224          253
+: ===============================================================================
+:  Total                  53         3489         2635          454          400
+: ===============================================================================
 
 ~Nix~ is a powerful package manager for ~Linux~ and ~Unix~ systems that ensures ~reproducible~, ~declarative~, and ~reliable~ software management.
 
