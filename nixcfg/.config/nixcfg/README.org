@@ -1,0 +1,1989 @@
+#+title: NIX DARWIN CONFIGURATION
+#+author: s.takoor
+#+auto_tangle: t
+#+filetags: :nix:darwin:literate:config:
+
+* 🚀 TL;DR
+This repository contains the configurations for setting up ~macos~ along with the tools &/or programs used. It leverages on ~nix~ to ensure a consistent and reliable setup.
+
+#+begin_quote
+Trust in the ~code~ with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge it, and it shall direct thy paths, ensuring ~reproducible~, ~declarative~, and ~reliable~ software management.
+#+end_quote
+
+* 💀 DISCLAIMER
+#+begin_quote
+The configurations in this repository are tailored to my specific needs and preferences. They are customized for my environment and may not be applicable or optimal for other use cases.
+#+end_quote
+
+* 🎯 OVERVIEW
+This ~README~ file serves as the blueprint for the system configuration. It uses a process known as ~tangling~ to automatically generate and organize all necessary ~.nix~ files for this setup.
+
+Here's how it helps manage everything:
+- ~tangling configurations~: the ~README.org~ file automatically generates the required ~.nix~ files from the ~org-mode~ content
+- ~organize files~: after ~tangling~, it creates and organizes all the ~.nix~ files into the appropriate directories (creating directories if they don't exist with the ~:mkdirp yes~ option)
+- ~imports~ and ~dependencies~: the generated ~flake.nix~ file pulls in other ~.nix~ files to manage dependencies and configurations
+- ~takeaway~: modifications are made only in this ~README.org~ file and the ~org-auto-tangle~ feature from ~emacs~ handles the creation and updating all necessary ~config~ files
+
+Here's a breakdown of what the ~README.org~ is generating:
+#+NAME: tokei
+#+begin_src sh :results replace
+tokei ~/.config/nixcfg
+#+end_src
+
+#+RESULTS: tokei
+| =============================================================================== |       |       |      |          |        |
+| Language                                                                      | Files | Lines | Code | Comments | Blanks |
+| =============================================================================== |       |       |      |          |        |
+| Lua                                                                           |     1 |    64 |   35 |       14 |     15 |
+| Nix                                                                           |    51 |  1444 | 1096 |      216 |    132 |
+| =============================================================================== |       |       |      |          |        |
+| Total                                                                         |    52 |  1508 | 1131 |      230 |    147 |
+| =============================================================================== |       |       |      |          |        |
+
+~Nix~ is a powerful package manager for ~Linux~ and ~Unix~ systems that ensures ~reproducible~, ~declarative~, and ~reliable~ software management.
+
+* 🗒️ FEATURES
+- [[https://nixos.wiki/wiki/Flakes][Flakes]]: enhances ~reproducibility~ and ~modularity~ in ~nix~
+- [[https://nix-community.github.io/home-manager/][Home-Manager]]: manages user configurations and environment settings
+- [[https://nixos.org/][Nix]]: core package manager for declarative system configuration
+- [[https://github.com/nixos/nixpkgs?tab=readme-ov-file][Nixpkgs]]: package repository providing the software available through ~nix~
+
+* 🛠️ INSTALLATION
+Ways to install ~nix~ on ~macos~:
+- the official ~nix~ installer from [[https://nixos.org/download/][nixos.org]]
+- the [[https://github.com/DeterminateSystems/nix-installer][shell installer]] from ~determinate systems~
+- the [[https://determinate.systems/posts/graphical-nix-installer/][graphical installer]] from ~determinate systems~ for ~macos~
+
+The ~determinate systems~ installers have several advantages over the original ~nix~ installer:
+- provides a nicer overview of the installation steps
+- designed to survive ~macos~ upgrades
+- ~Flakes~ are enabled by default
+- installation and configuration can be customized
+
+The graphical install also includes:
+- compatibility with ~Mobile Device Management (MDM)~ solutions
+- [[https://developer.apple.com/developer-id/][signed]] with ~Determinate System~'s Apple developer ID
+
+To install ~nix~ using the ~determinate systems~ shell installer, run:
+#+begin_src sh
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+#+end_src
+
+#+begin_quote
+#+NOTE: when using ~nix-darwin~ to change system-level configurations, you might end up having two different versions of ~nix~ if installed via the ~determinate systems~ installer; [[https://github.com/LnL7/nix-darwin/issues/931][issue #931]]
+#+end_quote
+
+Here's an example of the ~std.out~ from the ~nix doctor~ or ~nix config check~ ( for newer versions of ~nix~ ) commands:
+#+begin_src sh
+[FAIL] Multiple versions of nix found in PATH:
+  /nix/store/{nxi-related-path}-nix-2.23.3/bin
+  /nix/store/{nxi-related-path}-nix-2.18.5/bin
+
+[PASS] All profiles are gcroots.
+[PASS] Client protocol matches store protocol.
+[INFO] You are trusted by store uri: daemon
+#+end_src
+
+* 📝 DECLARATIVE SYSTEM FOR MACOS
+~Nix~ provides a ~declarative~, ~immutable~ and ~reproducible~ approach to system management. Although still considered as experimental, ~flakes~ are a core component of this approach, ensuring ~consistency~ and ~reliability~ in system configurations.
+
+* ❄️ FLAKE
+The standard format for the ~flake.nix~ consists of:
+- ~inputs~ which are dependencies of the flake required for the configuration and,
+- ~outputs~ which are function that returns the build results of the flake based on the inputs, shaping the final setup
+
+#+begin_quote
+In the beginning, there was ~nix~. All things were made by ~nix~; and without it was not any thing made that was made. In ~nix~ was life; and life was the light of the ~systems~. And the light shineth in ~systems~; and the ~systems~ comprehendeth it not. For ~nix~ is ~declarative~, ~immutable~, and ~reproducible~, bringing order and harmony to the ~systems~.
+#+end_quote
+
+#+begin_src nix :tangle "~/.config/nixcfg/flake.nix"
+{
+  description = " s-takoor's darwin system flake ";
+
+  inputs = {
+    # import nixpkgs unstable branch
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    # import home-manager and follow nixpkgs
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # import nix-darwin and follow nixpkgs
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # import nixvim and follow nixpkgs
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+  };
+
+  # flake outputs
+  outputs = { self, nix-darwin, home-manager, nixvim, nixpkgs }@inputs:
+    let
+      # -- system settings -- #
+      hostname = "MacBook-Air";
+      system = "aarch64-darwin";
+      # -- packages settings -- #
+      pkgs = import nixpkgs {
+        inherit system;
+        # TODO :: overlays allows customizing the `nixpkgs` attribute set
+        overlays = [ ];
+      };
+      # -- user settings -- #
+      home = "/Users/st/";
+      username = "st";
+    in {
+      # -- custom settings -- #
+      # define `macos` configuration for `MacBook-Air`
+        darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
+          inherit system pkgs;
+          specialArgs = { inherit home hostname inputs username; };
+          modules = [
+            ./modules/darwin/configuration.nix
+            home-manager.darwinModules.home-manager
+          ];
+        };
+
+        # expose the package set, including overlays, for convenience.
+        darwinPackages = self.darwinConfigurations."${hostname}".pkgs;
+
+        # development environment
+        devShells.${system} = {
+          default = import ./modules/devshell/shell.nix {
+            inherit pkgs;
+          };
+        };
+      };
+}
+#+end_src
+
+* 📚 MODULES
+** DARWIN
+The [[https://github.com/LnL7/nix-darwin][nix-darwin]] project offers a declarative approach to system configuration on ~macos~ streamlining system management through a ~nix-darwin~ configuration file. This approach integrates with ~home-manager~ to offer a unified way to manage both system and user environments.
+
+*** DARWIN SYSTEM CONFIGURATION
+In this setup ~nix-darwin~ is utilized to handle system-level configurations, including the setup of system services and user environments. ~Home-manager~ is integrated as a module within the ~nix-darwin~ configuration, enabling the management of user environments from the system configuration file.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/configuration.nix" :mkdirp yes
+{ home, inputs, pkgs, username, ... }:
+
+{
+  imports = [
+    ./environment
+    ./homebrew/homebrew.nix
+    ./services/skhd.nix
+    ./services/sketchybar.nix
+    ./system/system.nix
+  ];
+
+  # user-specific information, paths and shell settings
+  users = {
+    users.${username} = {
+      home = "${home}";
+      # non-posix.2-like shells requires utilities such as `foreign-env` or `babelfish`
+      # refer to HACK in `tmux` section
+      # shell = pkgs.fish;
+    };
+  };
+
+  # home-manager configuration
+  home-manager = {
+    # use global pkgs configured via system level nixpkgs options
+    useGlobalPkgs = true; # saves an extra nixpkgs evaluation, adds consistency, and removes the dependency on `NIX_PATH` which is otherwise used for importing `nixpkgs`
+    useUserPackages = true; # user packages will be installed to `/etc/profiles/per-user/$USERNAME`
+    extraSpecialArgs = { inherit inputs; }; # passing extra arguments "inputs" to home manager from the flake
+    users.${username} = import ../../modules/home-manager/home.nix; # import user-specific home manager configuration
+  };
+
+  # -- nix-related configuration -- #
+  nix = {
+    # configureBuildUsers = true; # REVIEW :: enable configuration for nixbld group and users; ( https://github.com/LnL7/nix-darwin/issues/970 )
+
+    # -- garbage collection -- #
+    gc = {
+      user = "root"; # user that runs the garbage collector; ( sudo nix-collect-garbage -d )
+      automatic = true; # automatically run the garbage collector at a specific time
+      interval = { Weekday = 0; Hour = 2; Minute = 0; }; # time interval at which the garbage collector will run
+      options = "--delete-older-than 7d"; # options given to nix-collect-garbage when the garbage collector is run automatically
+    };
+
+    optimise = {
+      automatic = true; # automatically run the `nix` store optimiser
+      interval = { Hour = 2; Minute = 0; }; # time interval at which the optimiser will run
+    };
+
+    settings = {
+      # auto-optimise-store = true; # get rid of duplicate files; REVIEW :: ( keeping disabled because of ongoing issue https://github.com/NixOS/nix/issues/7273 )
+      # required for using `flakes` ( enable flakes globally )
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+
+      extra-sandbox-paths = [ "/tmp" ]; # directories to be included in the sandbox
+
+      # recommended when using `direnv`
+      keep-derivations = true; # nice to have
+      keep-outputs = true; # idem
+
+      max-jobs = 10; # maximum number of jobs `nix` will try to build in parallel
+      trusted-users = [ "root" "${username}" ]; # users that have additional rights when connecting to `nix` daemon
+    };
+  };
+
+  # enable touch id for `sudo` authentication
+  security = {
+    pam.enableSudoTouchIdAuth = true; # not relevant to the mac-mini
+  };
+
+  # manage the `nix` daemon service through `nix-darwin` ( recommended )
+  services = {
+    # enable the `nix` daemon service
+    nix-daemon = {
+      enable = true;
+    };
+  };
+}
+#+end_src
+
+*** ENVIRONMENT
+The following manages environment and system-related options for ~nix-darwin.~ It defines permissible login shells, system-wide paths, and global environment variables.
+- ~environment.shells~: list of permissible login shells available to all users and appended to ~/etc/shells~ file
+- ~environment.systemPath~: system-wide ~PATH~ entries available to all users
+- ~environment.variables~: global environment variables set for all users
+
+#+begin_quote
+If ~nix~ or ~nix-darwin~ is uninstalled, remember to restore ~/etc/shells.before-nix-darwin~ to ~/etc/shells~
+#+end_quote
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/environment/default.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  environment = {
+    # list of permissible login shells ( available for all users )
+    # these shells are added to `/etc/shells`
+    shells = with pkgs; [
+      bashInteractive
+      fish
+      zsh
+    ];
+
+    # system-wide paths or strings added to `PATH` environment variable ( available for all users )
+    systemPath = [
+      "/opt/homebrew/bin"
+      "/opt/homebrew/sbin"
+      "$HOME/.emacs.d/bin"
+    ];
+
+    # global environment variables ( available to all users )
+    variables = {
+      # uncomment and set the desired shell as required
+      # SHELL = "${pkgs.bash}/bin/bash";
+      # SHELL = "${pkgs.fish}/bin/fish";
+      SHELL = "${pkgs.zsh}/bin/zsh";
+    };
+  };
+
+  programs = with pkgs; {
+    # enable various interactive shells to work with `nix-darwin`
+    # NOTE :: the main configuration for these shells is managed by `home-manager`
+    bash.enable = true;
+    fish.enable = true;
+    zsh.enable = true;
+  };
+}
+#+end_src
+
+*** SERVICES
+This section configures various services on ~macos~ using ~nix-darwin~. It includes setup for applications that enhances productivity and system functionality.
+
+**** SKHD
+Configures the ~skhd~ simple hotkey daemon, which allows defining and managing custom keyboard shortcuts. These shortcuts can launch applications, control media playback, and perform other actions directly from the keyboard.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/skhd.nix" :mkdirp yes
+{ ... }:
+
+{
+  # configures the skhd service to enable custom hotkeys on macos
+  services.skhd = {
+      enable = true;
+      skhdConfig = ''
+      shift + cmd - return : open -a wezterm # opens wezterm
+      shift + cmd - a : open -na "arc" # opens arc browser
+      shift + cmd - r : open -na "Brave Browser" # opens brave browser
+      shift + cmd - e : emacsclient -c -n -a "" # opens emacs client in a new frame
+      ctrl + alt - p : mpc toggle # toggles playback in mpd (mpc)
+      ctrl + alt - f : mpc next # skips to the next tracj in mpd
+      ctrl + alt - b : mpc prev # skips to previous track in mpd
+    '';
+    };
+}
+#+end_src
+
+**** SKETCHYBAR
+Handles the configuration for ~sketchybar~, a highly customizable replacement for the ~macos~ status bar.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/sketchybar.nix" :mkdirp yes
+{ ... }:
+
+{
+  # configures the sketchybar service
+  services.sketchybar = {
+    enable = true;
+    # TODO :: move sketchybar configuration here
+    # currently managed by gnu stow
+    # config = ''
+      # ... WIP ( refactoring sketchybarrc )
+    # '';
+  };
+}
+#+end_src
+
+*** SYSTEM
+This configuration defines various system-level settings and user preferences for ~nix-darwin~.
+- ~activationScript~: script to handle post-user activation tasks
+- ~checks~: validation checks for ~nix~ paths and channels
+- ~defaults~: various system and application defaults
+  + ~alf~: configurations for ~macos~ firewall
+  + ~CustomUserPreferences~: custom settings for user experience, including ~safari~, ~software update~, ~desktop services~, etc.
+  + ~dock~: settings for ~dock~ appearance and behavior
+  + ~finder~: settings for ~finder~ behavior and appearance
+  + ~loginwindow~: customization options for login window and security
+  + ~NSGlobalDomain~: defaults applied across all applications
+  + ~spaces~: configuration for display and space management
+  + ~trackpad~: ~trackpad~ settings for user input customization
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/system/system.nix" :mkdirp yes
+{ ... }:
+
+{
+  system = {
+    # -- activation scripts -- #
+    # activationScripts = {
+    # -- post-user activation tasks -- #
+    #   postUserActivation = {
+    #     text = ''
+    #     # avoid a logout/login cycle when activating system
+    #     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    #     '';
+    #   };
+    # };
+
+    # -- `nix` components validation checks -- #
+    checks = {
+      # verifyBuildUsers = false; # nix build users validation checks
+      # verifyNixChannels = false; # nix-channels validation checks
+      verifyNixPath = false; # nix_path validation checks
+    };
+
+    defaults = {
+      # -- firewall settings -- #
+      alf = {
+        globalstate = 1; # enable firewall to prevent unauthorized applications, programs and services from accepting incoming connections
+        allowsignedenabled = 1; # allow any signed application to accept incoming requests
+        allowdownloadsignedenabled = 1; # allow any downloaded application that has been signed to accept incoming requests
+        stealthenabled = 1; # drop incoming ICMP requests ( e.g. ping requests )
+      };
+
+      # -- custom user preferences -- #
+      # include settings not supported by `nix-darwin`
+      # run the `defaults read` command to find all custom entries for user preferences in std.out
+      CustomUserPreferences = {
+        ".GlobalPreferences" = {
+          AppleSpacesSwitchOnActivate = true; # switch spaces on application activation
+        };
+
+        NSGlobalDomain = {
+          NSAutomaticTextCompletionEnabled = true;
+          WebKitDeveloperExtras = true; # enable web inspector in webkit
+        };
+
+        # -- desktop services -- #
+        "com.apple.desktopservices" = {
+          # avoid `.DS_Store` files on network or USB volumes
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+
+        # -- safari browser -- #
+        "com.apple.Safari" = {
+          AutoFillFromAddressBook = false;
+          AutoFillCreditCardData = false;
+          AutoFillMiscellaneousForms = false;
+          AutoOpenSafeDownloads = false;
+          IncludeDevelopMenu = true;
+          IncludeInternalDebugMenu = true;
+          ShowFavoritesBar = false;
+          ShowFullURLInSmartSearchField = true;
+          SuppressSearchSuggestions = true;
+          UniversalSearchEnabled = false;
+          WarnAboutFraudulentWebsites = true;
+        };
+
+        # -- software update -- #
+        "com.apple.SoftwareUpdate" = {
+          AutomaticCheckEnabled = true;
+          ScheduleFrequency = 1; # check for software updates daily
+          AutomaticDownload = 1; # download newly available updates in the background
+          CriticalUpdateInstall = 1; # install system data files & security updats
+        };
+
+        # -- window manager settings -- #
+        # TODO :: using amethyst in favour of yabai due to security compromises ( sip )
+        # "com.amethyst.Amethyst" = {
+        # };
+      };
+
+      # -- dock and mission control settings -- #
+      dock = {
+        autohide = true; # automatically hide the dock
+        autohide-delay = 0.0; # speed of autohide delay
+        expose-group-by-app = false; # do not group windows by application in mission control's
+        launchanim = true; # animate opening applications from the dock
+        mineffect = "genie"; # maximize/minimuze window effect
+        minimize-to-application = true; # minimize windows into their application icon
+        mru-spaces = false; # do not rearrange spaces based on most recent use
+        orientation = "bottom"; # position dock on screen
+        show-process-indicators = true; # show indicator lights for open applications
+        show-recents = false; # do not show recent applications in the dock
+        tilesize = 36; # size of icons in the dock
+        # -- disable all hot corners -- #
+        wvous-bl-corner = 1;
+        wvous-br-corner = 1;
+        wvous-tl-corner = 1;
+        wvous-tr-corner = 1;
+      };
+
+      # -- finder settings -- #
+      finder = {
+        AppleShowAllExtensions = true; # always show file extensions
+        CreateDesktop = false; # do not show icons on desktop
+        _FXShowPosixPathInTitle = true;
+        FXDefaultSearchScope = "SCcf"; # search scope to current folder
+        FXEnableExtensionChangeWarning = false; # disable warnings when changing file extensions
+        FXPreferredViewStyle = "Nlsv"; # change the default finder view to list view
+        QuitMenuItem = true; # allow quitting of finder
+        ShowPathbar = true; # show path breadcrumbs in finder
+        ShowStatusBar = true; # show status bar ( bottom of finder ) with item/disk space stats
+      };
+
+      # -- login and lock screen settings -- #
+      loginwindow = {
+        DisableConsoleAccess = true; # disables console access at login by typing `>console`
+        GuestEnabled = false; # disable guest account
+        SHOWFULLNAME = false; # display full name instead of username
+        LoginwindowText = "nix-darwin"; # custom login window text
+      };
+
+      # -- global application defaults -- #
+      NSGlobalDomain = {
+        AppleShowScrollBars = "Automatic";
+        AppleInterfaceStyle = "Dark"; # dark mode
+        AppleKeyboardUIMode = 3;  # enables full keyboard control
+        ApplePressAndHoldEnabled = false;
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = false;
+        _HIHideMenuBar = true;
+        InitialKeyRepeat = 10;
+        KeyRepeat = 1;
+        NSScrollAnimationEnabled = true;
+      };
+
+      # -- spaces configuration -- #
+      spaces = {
+        spans-displays = false; # displays have separate spaces
+      };
+
+      # -- software update settings -- #
+      # REVIEW :: refer to software update section above
+      # SoftwareUpdate = {
+      #   AutomaticallyInstallMacOSUpdates = true;
+      # };
+
+      # -- trackpad settings -- #
+      trackpad = {
+        Clicking = true; # enable tap to click
+        ActuationStrength = 0; # enable silent clicking
+        FirstClickThreshold = 0; # set to light
+        SecondClickThreshold = 0; # set to light
+        TrackpadRightClick = true; # enable two finger right click
+        TrackpadThreeFingerDrag = true; # enable three finger drag
+      };
+    };
+
+    stateVersion = 4; # for backwards compatibility
+  };
+
+}
+#+end_src
+
+*** HOMEBREW
+Configures the management of ~homebrew~ packages through ~nix-darwin~. It facilitates ~installing~ / ~updating~ / ~updating~ / ~upgrading~ ~homebrew~ ~taps~, ~formulae~, and ~casks~ as well as optionally managing ~mac app store~ apps
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/homebrew.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  homebrew = {
+    enable = true;
+    global = {
+      brewfile = true; # use the brewfile for managing homebrew packages
+    };
+    onActivation = {
+      autoUpdate = true; # homebrew auto-update
+      # cleanup = "zap"; NOTE :: uninstalls all formulae ( and associated files ) not listed in the brewfile ( &/or declared in the brews/casks.nix )
+      upgrade = true; # upgrade all installed homebrew packages
+      # flags to use for debugging
+      # extraFlags = [
+      #   "--verbose"
+      #   "--debug"
+      # ];
+    };
+    brews = pkgs.callPackage ./brews.nix {}; # homebrew formulae
+    casks = pkgs.callPackage ./casks.nix {}; # homebrew casks
+    taps = pkgs.callPackage ./taps.nix {}; # homebrew taps
+    # masApps = pkgs.callPackage ./masApps.nix {}; # homebrew mac app store apps
+  };
+}
+#+end_src
+
+**** BREWS
+Defines a list of ~homebrew~ ~formulae~ to be installed, with additional options such as service restarts or linking.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/brews.nix" :mkdirp yes
+_:
+
+[
+  "cidr" # perform various actions on `cidr` ranges
+  {
+    name = "emacs-plus"; # gnu-emacs for macos with additional functionalities over the regular emacs package
+    args = [
+      "with-native-comp"
+      "with-modern-doom3-icon"
+    ];
+    link = true; # link the formulae to the homebrew prefix
+  }
+  "enchant"
+  "ffmpeg"
+  "imagemagick"
+  "llvm"
+  "mpc" # command-line client for music player daemon (mpd)
+  {
+    name = "mpd";
+    restart_service = "changed"; # the version from home-manager is not supported for aarch64-darwin and there no mpd services in nix-darwin
+  }
+  "ncmpcpp" # visualizer_type spectrum error with home-manager
+  "pandoc"
+  "pam-reattach" # module for re-attaching to the authenticating user's per-session bootstrap namespace on macos
+  "texlive"
+  "unar"
+]
+#+end_src
+
+**** CASKS
+List of ~homebrew~ ~casks~ to be installed.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/casks.nix" :mkdirp yes
+_:
+
+[
+  # browsers
+  {
+    name = "arc";
+    greedy = true;
+  }
+  {
+    name = "brave-browser";
+    greedy = true;
+  }
+
+  # entertainment
+  {
+    name = "mpv"; # REVIEW :: ( media player for the command line - will move to home-manager when build failure for swift has been addressed )
+    greedy = true;
+  }
+
+  # fonts ( used for sketchybar )
+  "font-sf-mono"
+  "font-sf-pro"
+  "sf-symbols"
+
+  # productivity
+  "raycast" # better launcher for mac vs spotlight or alfred
+  "maccy" # clipboard tool for history
+  "iglance" # FOSS macos system monitor
+
+  # tweaks
+  "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
+
+  # tiling window manager for macos ( without any security compromise "SIP" )
+  {
+    name = "amethyst";
+    greedy = true;
+  }
+]
+#+end_src
+
+**** TAPS
+List of additional ~homebrew~ repositories to ~tap~. ~taps~ provide access to extra formulae and casks
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/taps.nix" :mkdirp yes
+_:
+
+[
+  "d12frosted/emacs-plus" # tap for emacs+
+  # "FelixKratz/formulae" # tap for sketchybar ( using sketchybar services `nix-darwin` )
+  "homebrew/bundle"
+  "homebrew/services"
+  # "koekeishiya/formulae" # tap for skhd ( using skhd services from `nix-darwin` )
+]
+#+end_src
+
+** HOME-MANAGER
+~Home-Manager~ integrates with ~nix~ to manage user environments ~declaratively~. In other words, ~home-manager~ allows:
+- installing software ~declaratively~ in the ~user profile~, rather than using ~nix-env~
+- managing ~dotfiles~ in the home directory of the user
+- maintaining ~dotfiles~ and personal configurations effortlessly
+
+#+begin_quote
+Embrace the ~home-manager~, for it is the shepherd of thy ~home~ configuration. With it, thy ~dotfiles~ shall be ~declarative~, ~reproducible~, and ~version-controlled~, bringing consistency and harmony to thy environment. Trust in the ~home-manager~ with all thine ~home~ setup, and lean not on manual tweaks; acknowledge it in all thy ~dotfiles~, and it shall make thy setup paths straight.
+#+end_quote
+
+*** HOME
+This configuration file defines user-specific settings and package installations. It imports various program configurations, including terminal emulators, development tools, and utilities, for a customized user environment.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/home.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  imports = [
+    # TODO :: to further modularize with `mkEnableOption` for toggling programs )
+    ./programs/alacritty.nix
+    ./programs/bat.nix
+    ./programs/bun.nix
+    ./programs/direnv.nix
+    ./programs/eza.nix
+    ./programs/fd.nix
+    ./programs/fish.nix
+    ./programs/fzf.nix
+    ./programs/mise.nix
+    ./programs/nix-index.nix
+    # ./programs/neovim/nixvim.nix # keeping disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix )
+    ./programs/starship.nix
+    ./programs/thefuck.nix
+    ./programs/tmux.nix
+    ./programs/wezterm.nix
+    ./programs/yazi.nix
+    ./programs/zoxide.nix
+    ./programs/zsh.nix
+    ../shared/fonts.nix
+  ];
+
+  home = {
+    # state version to ensure compatibility with home manager updates
+    # home manager can be updated without changing this value
+    stateVersion = "24.05";
+    file = {
+      # TODO :: to include attribute set of files to link into the user home directory
+      # keeping empty for now; to source `editor` and `window manager` at a later stage ( wip )
+    };
+    packages = pkgs.callPackage ../shared/packages.nix {}; # set of packages to appear in the user environment
+  };
+
+  # let home manager install and manage itself
+  programs = {
+    home-manager.enable = true;
+  };
+}
+#+end_src
+
+*** ALACRITTY
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/alacritty.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      live_config_reload = true;
+      # shell = {
+      #   program = "${pkgs.zsh}/bin/zsh";
+      #   program = "${pkgs.tmux}/bin/tmux";
+      #   args = [ "new-session" "-A" "-D" "-s" "dev" ];
+      # };
+      cursor = {
+        unfocused_hollow = false;
+      };
+      cursor.style = {
+        blinking = "On";
+        shape = "Block";
+      };
+      font = {
+        size = 10;
+      };
+      font.bold = {
+        family = "JetBrainsMono NF";
+        style = "Bold";
+      };
+      font.bold_italic = {
+        family = "JetBrainsMono NF";
+        style = "Bold Italic";
+      };
+      font.italic = {
+        family = "JetBrainsMono NF";
+        style = "Italic";
+      };
+      font.normal = {
+        family = "JetBrainsMono NF";
+        style = "Regular";
+      };
+      env = {
+        TERM = "xterm-256color";
+      };
+      scrolling = {
+        history = 10000;
+        multiplier = 3;
+      };
+      window = {
+        blur = true;
+        decorations = "buttonless";
+        dynamic_title = false;
+        opacity = 0.7;
+        startup_mode = "Windowed";
+      };
+      window.dimensions = {
+        columns = 200;
+        lines = 50;
+      };
+      window.padding = {
+        x = 40;
+        y = 40;
+      };
+    };
+  };
+}
+#+end_src
+
+*** BAT
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bat.nix" :mkdirp yes
+{ config, lib, pkgs, ... }:
+
+{
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "gruvbox-dark";
+      color = "always";
+    };
+    extraPackages = with pkgs.bat-extras; [
+      batdiff
+      batgrep
+    ];
+  };
+}
+#+end_src
+
+*** BUN
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/bun.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.bun = {
+    enable = true;
+    settings = {
+      smol = true;
+      telemetry = false;
+    };
+  };
+}
+#+end_src
+
+*** DIRENV
+Configuration for environment switcher. Enabling ~direnv~ module will always activate its functionality for ~fish~ shell since ~direnv~ package automatically gets loaded in ~fish~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/direnv.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+}
+#+end_src
+
+*** EZA
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/eza.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.eza = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    icons = true;
+    extraOptions = [
+      "--group-directories-first"
+      "--header"
+      "--color=always"
+    ];
+  };
+}
+#+end_src
+
+*** FD
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fd.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.fd = {
+    enable = true;
+    hidden = true;
+    extraOptions = [
+      "--no-ignore"
+      "--absolute-path"
+    ];
+  };
+}
+#+end_src
+
+*** FISH
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fish.nix" :mkdirp yes
+{ config, pkgs, ... }:
+
+{
+  programs.fish = {
+    enable = true;
+    # shell script code called during interactive `fish` shell initialisation
+    interactiveShellInit = ''
+    # -- shell settings -- #
+    set fish_greeting
+    fish_vi_key_bindings
+    set fish_cursor_default     block      blink
+    set fish_cursor_insert      line       blink
+    set fish_cursor_replace_one underscore blink
+    set fish_cursor_visual      block      blink
+    '';
+
+    # shell script code called during `fish` login shell initialisation
+    # shellInit = ''
+    # # -- HOMEBREW PATHS -- #
+    # set -ga PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
+    # set -gx HOMEBREW_PREFIX /opt/homebrew
+    # set -gx HOMEBREW_CELLAR /opt/homebrew/Cellar/
+    # set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
+    # set -gx MANPATH /opt/homebrew/share/man $MANPATH
+
+    # # -- EMACS PATH -- #
+    # set -gx PATH "$HOME/.emacs.d/bin" $PATH
+
+    # # -- NIX PATH -- #
+    # # HACK :: required to address bug where $PATH is not properly set for fish; ( https://github.com/LnL7/nix-darwin/issues/122 )
+    # for p in /run/current-system/sw/bin ~/bin
+    # if not contains $p $fish_user_paths
+    #     set -g fish_user_paths $p $fish_user_paths
+    # end
+    # end
+    # '';
+
+    # attribute set that map `aliases` to `abbreviations`
+    shellAbbrs = {
+      list = "brew list";
+      purge = "brew cleanup --prune=all";
+      cat = "bat --color=always";
+      cd = "z";
+      cp = "xcp";
+      df = "df -h";
+      la = "eza -a";
+      ll = "eza -l";
+      ls = "eza -al";
+      lt = "eza -aT";
+      vi = "nvim";
+    };
+
+    # basic functions added to `fish`
+    functions = {
+      update = ''
+      brew update
+      brew upgrade --greedy-auto-updates
+      brew cleanup --prune=all
+      brew doctor
+      '';
+    };
+  };
+}
+#+end_src
+
+*** FZF
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/fzf.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    defaultCommand = "fd --type f";
+    defaultOptions = [
+     "--height 50%"
+     "--exact"
+     "--reverse"
+     "--border rounded"
+     "--no-info"
+     "--pointer '> '"
+     "--ansi"
+     "--color '16,bg+:-1,gutter:-1,prompt:4,pointer:4,marker:6,border:4,label:4,header:italic'"
+    ];
+
+    # opt-c  for changing director
+    changeDirWidgetCommand = "fd --type d --hidden --exclude .git";
+    changeDirWidgetOptions = [
+      "--border-label ' directory '"
+      "--preview 'eza -aT --icons --color=always {} | head -200'"
+    ];
+
+    # ctrl-t keybinding
+    fileWidgetCommand = "fd --type f --hidden --exclude .git";
+    fileWidgetOptions = [
+      "--border-label ' file '"
+      # "--prompt ' '"
+      "--preview 'bat --style=numbers --color=always {}'"
+    ];
+
+    # ctrl-r
+    historyWidgetOptions = [
+      "--border-label ' history '"
+      # "--prompt ' '"
+      "--sort"
+      "--exact"
+    ];
+    tmux = {
+      enableShellIntegration = true;
+      shellIntegrationOptions = [
+        "-p 70%,50%"
+      ];
+    };
+  };
+}
+#+end_src
+
+*** MISE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/mise.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.mise = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      experimental = true;
+    };
+    globalConfig = {
+      tools = {
+        python = ["3.11" "3.12"];
+      };
+    };
+  };
+}
+#+end_src
+
+*** NIX INDEX
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nix-index.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+  };
+}
+#+end_src
+
+*** NIXVIM
+[[https://github.com/nix-community/nixvim?tab=readme-ov-file][NixVim]] is a ~Neovim~ configuration managed with ~nix~, offering a streamlined and customizable setup. This configuration integrates ~nixvim~ into my ~nix-darwin~ environment, enabling various plugins and settings for an enhanced ~neovim~ experience.
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/nixvim.nix" :mkdirp yes
+{ inputs, lib, pkgs, ... }:
+
+{
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+    ./colorscheme.nix
+    ./completion.nix
+    ./keymaps.nix
+    ./options.nix
+    ./todo.nix
+    ./plugins/autopairs.nix
+    ./plugins/auto-save.nix
+    ./plugins/barbar.nix
+    ./plugins/colorizer.nix
+    ./plugins/comment.nix
+    ./plugins/lsp.nix
+    ./plugins/lualine.nix
+    ./plugins/noice.nix
+    ./plugins/notify.nix
+    ./plugins/telescope.nix
+    ./plugins/treesitter.nix
+    ./plugins/trouble.nix
+    ./plugins/vim-nix.nix
+    ./plugins/which-key.nix
+  ];
+
+  programs.nixvim = {
+    enable = true;
+
+    performance = {
+      byteCompileLua.enable = true;
+    };
+
+    viAlias = true;
+    vimAlias = true;
+
+    luaLoader.enable = true;
+  };
+}
+#+end_src
+
+**** COLORSCHEME
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/colorscheme.nix" :mkdirp yes
+{
+  programs.nixvim = {
+    colorschemes = {
+
+      # -- gruvbox -- #
+      gruvbox = {
+        enable = true;
+        settings = {
+          transparent_mode = true;
+        };
+      };
+
+      # additional themes ( default set to false )
+      # -- everforest -- #
+      everforest = {
+        enable = false;
+        settings = {
+          background = "hard";
+          transparent_background = 2;
+        };
+      };
+
+      # -- tokyonight -- #
+      tokyonight = {
+        enable = false;
+        settings = {
+          style = "storm";
+          styles = {
+            floats = "transparent";
+            sidebars = "transparent";
+            comments = {
+              italic = true;
+            };
+            keywords = {
+              italic = true;
+            };
+          };
+          terminal_colors = true;
+          transparent = true;
+        };
+      };
+
+    };
+  };
+}
+#+end_src
+
+**** COMPLETION
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/completion.nix" :mkdirp yes
+{
+  programs.nixvim = {
+    opts.completeopt = [ "menu" "menuone" "noselect" ];
+
+    plugins = {
+      luasnip.enable = true;
+
+      lspkind = {
+        enable = true;
+
+        cmp = {
+          enable = true;
+          menu = {
+            nvim_lsp = "[LSP]";
+            nvim_lua = "[api]";
+            path = "[path]";
+            luasnip = "[snip]";
+            buffer = "[buffer]";
+          };
+        };
+      };
+
+      cmp = {
+        enable = true;
+
+        settings = {
+          snippet.extend = "function(args) require('luasnip').lsp_extend(args.body) end";
+          mapping = {
+            "<C-d>" = "cmp.mapping.scroll_docs(4)";
+            "<C-f>" = "cmp.mapping.scroll_docs(4)";
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<C-e>" = "cmp.mapping.close()";
+            "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+            "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+            "<CR>" = "cmp.mapping.confirm({ select = true })";
+          };
+
+          sources = [
+            {name = "path";}
+            {name = "nvim_lsp";}
+            {name = "luasnip";}
+            {name = "buffer";}
+          ];
+        };
+      };
+    };
+  };
+}
+#+end_src
+
+**** HIGHLIGHT TODO
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/todo.nix" :mkdirp yes
+{
+  programs.nixvim = {
+    highlight.Todo = {
+      fg = "Blue";
+      bg = "Yellow";
+    };
+
+    match.TODO = "TODO";
+
+    keymaps = [
+      {
+        mode = "n";
+        key = "<C-t>";
+        action.__raw = ''
+        function()
+        require('telescope.builtin').live_grep({
+        default_text="TODO",
+        initial_mode="normal"
+        })
+        end
+        '';
+        options.silent = true;
+      }
+    ];
+  };
+}
+#+end_src
+
+**** KEYMAPS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/keymaps.nix" :mkdirp yes
+{ config, lib, ... }:
+
+{
+  programs.nixvim = {
+    globals = {
+      mapleader = " ";
+      maplocalleader = " ";
+    };
+  };
+}
+#+end_src
+
+**** OPTIONS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/options.nix" :mkdirp yes
+{
+  programs.nixvim = {
+    opts = {
+      autoindent = true;
+      autowrite = true;
+      backup = false;
+      breakindent = true;
+      clipboard = "unnamedplus";
+      cursorcolumn = true;
+      cursorline = true;
+      expandtab = true;
+      hlsearch = true;
+      ignorecase = true;
+      linebreak = true;
+      mouse = "a";
+      mousemodel = "extend";
+      number = true;
+      relativenumber = true;
+      ruler = true;
+      scrolloff = 10;
+      shiftwidth = 4;
+      signcolumn = "yes";
+      smartcase = true;
+      smartindent = true;
+      softtabstop = 2;
+      splitbelow = true;
+      splitright = true;
+      swapfile = false;
+      tabstop = 4;
+      termguicolors = true;
+      undofile = true;
+      updatetime = 100;
+      wrap = true;
+    };
+  };
+}
+#+end_src
+
+**** PLUGINS
+***** AUTOPAIRS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/autopairs.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.nvim-autopairs = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** AUTO-SAVE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/auto-save.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.auto-save = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** BARBAR
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/barbar.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.barbar = {
+    enable = true;
+    keymaps = {
+      next.key = "<TAB>";
+      previous.key = "<S-TAB>";
+      close.key = "<C-w";
+    };
+  };
+}
+#+end_src
+
+***** COLORIZER
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/colorizer.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.nvim-colorizer = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** LSP
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/lsp.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.lsp = {
+    enable = true;
+
+    keymaps = {
+      silent = true;
+      diagnostic = {
+        "<leader>k" = "goto_prev";
+        "<leader>j" = "goto_next";
+      };
+
+      lspBuf = {
+        gd = "definition";
+        gr = "references";
+        gt = "type_definition";
+        gi = "implementation";
+        K = "hover";
+        "<F2>" = "rename";
+      };
+    };
+
+    servers = {
+      clangd.enable = true;
+      lua-ls.enable = true;
+      nil-ls.enable = true;
+      texlab.enable = true;
+      yamlls.enable = true;
+    };
+  };
+}
+#+end_src
+
+***** LUALINE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/lualine.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.lualine = {
+    enable = true;
+    globalstatus = true;
+  };
+}
+#+end_src
+
+***** NOICE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/noice.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.noice = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** NOTIFY
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/notify.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.notify = {
+    enable = true;
+    backgroundColour = "#000000";
+    fps = 60;
+    render = "default";
+  };
+}
+#+end_src
+
+***** NVIM COMMENT
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/comment.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.comment = {
+    enable = true;
+
+    settings = {
+      opleader.line = "<C-b>";
+      toggler.line = "<C-b>";
+    };
+  };
+}
+#+end_src
+
+***** TELESCOPE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/telescope.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.telescope = {
+      enable = true;
+
+      keymaps = {
+        "<leader>ff" = "find_files";
+        "<leader>fg" = "live_grep";
+        "<leader>b" = "buffers";
+        "<leader>fh" = "help_tags";
+        "<leader>fd" = "diagnostics";
+      };
+    };
+}
+#+end_src
+
+***** TREESITTER
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/treesitter.nix" :mkdirp yes
+{
+  programs.nixvim.plugins = {
+    treesitter = {
+      enable = true;
+
+      nixvimInjections = true;
+
+      settings = {
+        highlight.enable = true;
+        indent.enable = true;
+      };
+      # folding = true;
+    };
+
+    treesitter-refactor = {
+      enable = true;
+      highlightDefinitions = {
+        enable = true;
+        clearOnCursorMove = false; # set to false if `updatetime` of ~100
+      };
+    };
+
+    hmts.enable = true;
+  };
+}
+#+end_src
+
+***** TROUBLE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/trouble.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.trouble = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** VIM-NIX
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/vim-nix.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.nix = {
+    enable = true;
+  };
+}
+#+end_src
+
+***** WHICH-KEY
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/neovim/plugins/which-key.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.which-key = {
+    enable = true;
+    settings.icons = {
+      breadcrumb = "»";
+      group = "+";
+      separator = "➜";
+    };
+  };
+}
+#+end_src
+
+*** STARSHIP
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/starship.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.starship = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    settings = {
+      add_newline = false;
+      format = "$character";
+      right_format = "$directory";
+      continuation_prompt = "▶▶ ";
+      scan_timeout = 10;
+      character = {
+        success_symbol = "[ >>](bold green)";
+        error_symbol = "[ >>](bold red)";
+        vimcmd_symbol = "[ >>](bold blue)";
+        vimcmd_visual_symbol = "[ >>](bold magenta)";
+      };
+      directory = {
+        style = "bold cyan";
+      };
+      package = {
+        disabled = false;
+      };
+      username = {
+        disabled = true;
+      };
+      hostname = {
+        disabled = true;
+      };
+      git_branch = {
+        disabled = true;
+      };
+      git_commit = {
+        disabled = true;
+      };
+      git_state = {
+        disabled = true;
+      };
+      git_metrics = {
+        disabled = true;
+      };
+      git_status = {
+        disabled = true;
+      };
+    };
+  };
+}
+#+end_src
+
+*** THEFUCK
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/thefuck.nix" :mkdirp yes
+{ pkgs, ...}:
+
+{
+  programs.thefuck = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    # enableInstantMode = true; # REVIEW :: experimental
+  };
+}
+#+end_src
+
+*** TMUX
+~tmux.nix~ reads the configuration for ~tmux.conf~ defined in the ~/modules/shared/multiplexer/~ directory.
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/tmux.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.tmux = {
+    enable = true;
+    # extraConfig = builtins.readFile ../../shared/multiplexer/tmux.conf;
+    shell = "${pkgs.fish}/bin/fish"; # NOTE :: not recommended to start tmux with fish shell ( bug where $PATH is not properly set for fish; https://github.com/LnL7/nix-darwin/issues/122 )
+    extraConfig = ''
+    set -g default-command "\${pkgs.fish}/bin/fish"
+    ''
+    + builtins.readFile ../../shared/multiplexer/tmux.conf;
+  };
+}
+#+end_src
+
+The ~tmux.conf~ configuration file which is read by ~tmux.nix~
+
+#+begin_src sh :tangle "~/.config/nixcfg/modules/shared/multiplexer/tmux.conf" :mkdirp yes
+set -g mouse on
+set -s escape-time 0
+set -g base-index 1
+set -g set-clipboard on
+set -g history-limit 10000000
+set -g detach-on-destroy off
+set -g allow-rename on
+set -g automatic-rename on
+set -g renumber-windows on
+set-option -g focus-events on
+set-option -g default-terminal 'screen-256color'
+set-option -g terminal-overrides ',xterm-256color:RGB'
+set-option -g allow-passthrough on
+
+set -g status "on"
+set -g status-interval 2
+set -g status-style 'bg=default'
+set -g status-position top
+set -g status-right "#[fg=yellow,bold]#I"
+set -g status-left-length 200
+set -g status-left "#[fg=blue,bold]#S | #[fg=white,nobold]"
+
+set -g pane-active-border-style 'fg=green,bg=default'
+set -g pane-border-style 'fg=brightblack,bg=default'
+
+set -g message-command-style bg=default,fg=yellow
+set -g message-style bg=default,fg=yellow
+set -g mode-style bg=default,fg=yellow
+
+set -g window-status-format '#[fg=gray,nobold]#W'
+set -g window-status-current-format '#[fg=green,bold]#W'
+
+bind c new-window -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+
+bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+
+# set -g default-command /opt/homebrew/bin/fish
+# set -g default-shell /opt/homebrew/bin/fish
+# set -g default-command /etc/profiles/per-user/st/bin/fish
+# set -g default-shell /etc/profiles/per-user/st/bin/fish
+#+end_src
+
+*** WEZTERM
+~wezterm.nix~ reads the configuration from ~wezterm.lua~ defined in the ~/modules/shared/terminals/~ directory.
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/wezterm.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.wezterm = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    extraConfig = builtins.readFile ../../shared/terminals/wezterm.lua;
+  };
+}
+#+end_src
+
+The ~wezterm.lua~ configuration file which is read by ~wezterm.nix~
+
+#+begin_src lua :tangle "~/.config/nixcfg/modules/shared/terminals/wezterm.lua" :mkdirp yes
+local wezterm = require("wezterm")
+
+return {
+
+  -- gpu acceleration provided by "metal" on macos
+  front_end = "WebGpu",
+
+  -- updates
+  check_for_updates = true,
+
+  -- scrollback
+  scrollback_lines = 3500,
+
+  -- multiplexer
+  default_prog = { "/etc/profiles/per-user/st/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
+
+  -- colors
+  color_scheme = "Gruvbox Dark (Gogh)",
+  -- color_scheme = "Catppuccin Macchiato",
+
+  -- cursor blink
+  default_cursor_style = "BlinkingBar",
+
+  -- font
+  font = wezterm.font_with_fallback({
+      { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+      { family = "SF Pro", weight = "Medium", italic = false, },
+  }),
+  font_size = 10.0,
+
+  -- opacity
+  window_background_opacity = 0.70,
+
+  -- blur
+  macos_window_background_blur = 30,
+
+  -- padding
+  window_padding = {
+    left = 40,
+    right = 40,
+    top = 40,
+    bottom = 40,
+  },
+
+  inactive_pane_hsb = {
+    saturation = 0.24,
+    brightness = 0.5,
+  },
+
+  -- window decorations
+  window_decorations = "RESIZE",
+
+  -- tab bar
+  enable_tab_bar = false,
+
+  -- keybindings
+  keys = {
+    {
+      key = "f",
+      mods = "CTRL",
+      action = wezterm.action.ToggleFullScreen,
+    },
+  },
+}
+#+end_src
+
+*** YAZI
+A terminal file manager written in ~rust~. The plugin ~prepend_previewers~ allows previewing audio metadata and cover art within ~yazi~ via ~exifaudio~
+- dependencies
+  + ~exiftool~ installed and in ~PATH~
+  + ( optional ) ~mediainfo~ can be used for more accurate metadata
+- install [[https://github.com/Sonico98/exifaudio.yazi][exifaudio]]
+
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/yazi.nix" :mkdirp yes
+{ pkgs, ...}:
+
+{
+  programs.yazi = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    settings = {
+      manager = {
+        linemode = "size";
+        show_hidden = true;
+        sort_by = "natural";
+      };
+      play = [
+        { run = "mpv --force-window '$@'"; }
+      ];
+      plugin = {
+        prepend_previewers = [
+          { mime = "audio/*"; run = "exifaudio"; }
+        ];
+      };
+      archive = [
+        { desc = "extract here"; run = "unar '$'";  }
+      ];
+    };
+  };
+}
+#+end_src
+
+*** ZOXIDE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zoxide.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.zoxide = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+  };
+}
+#+end_src
+
+*** ZSH
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/zsh.nix" :mkdirp yes
+{ config, pkgs, ... }:
+
+{
+  programs.zsh = {
+    enable = true;
+    dotDir = ".config/zsh"; # directory where `zsh` configurations should be located
+    autocd = true; # automatically enter into a directory if typed directly into shell
+    autosuggestion = {
+      enable = true;
+      highlight = "fg=#b8bb26,bg=#ebdbb2,bold,underline";
+    };
+    enableCompletion = true; # enable `zsh` completion
+    # initialization commands to run when completion is enabled
+    completionInit = ''
+    autoload -U compinit
+    zstyle ':completion:*' menu select
+    zstyle ':completion::complete:*' use-cache on
+    zstyle ':completion::complete:*' cache-path "$dotDir/.zcompcache"
+    zmodload zsh/complist
+    compinit
+    _comp_options+=(globdots)
+    setopt menucomplete
+    '';
+
+    # REVIEW :: global setting; ( to make the env.vars available in other shell(s) as well e.g. fish )
+    # envExtra = ''
+    # # -- INITIALIZE HOMEBREW ENV -- #
+    # eval "$(/opt/homebrew/bin/brew shellenv)"
+
+    # # -- EMACS PATH -- #
+    # export PATH="$HOME/.emacs.d/bin:$PATH"
+
+    # # -- NIX PATHS -- #
+    # export PATH="/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:$PATH"
+    # export PATH="/etc/profiles/per-user/${config.home.username}/bin:$PATH"
+    # '';
+
+    # options related to commands history configuration
+    history = {
+      ignoreDups = true;
+      ignoreSpace = true;
+      expireDuplicatesFirst = true;
+      extended = true;
+      share = true;
+      size = 100000;
+      save = 100000;
+    };
+
+    # plugins to source in `.zshrc`
+    plugins = [
+      {
+        name = "vi-mode";
+        src = pkgs.zsh-vi-mode;
+        file = "share/zsh-vi-mode/zsh-vi-mode.plugin.zsh";
+      }
+    ];
+
+    # attribute set that maps aliases to command strings
+    shellAliases = {
+      cat = "bat";
+      cd = "z";
+      cp = "xcp";
+      df = "df -h";
+      la = "eza -a";
+      ll = "eza -l";
+      ls = "eza -al";
+      lt = "eza -aT";
+      vi = "nvim";
+    };
+
+    # enable syntax highlighting
+    syntaxHighlighting = {
+      enable = true;
+      highlighters = [ "brackets" "cursor" "line" "main" "pattern" "regexp" "root" ];
+    };
+  };
+}
+#+end_src
+
+*** FONTS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/shared/fonts.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  fonts.fontconfig.enable = true;
+
+  home.packages = [
+    (pkgs.nerdfonts.override { fonts = [ "Iosevka" "JetBrainsMono"  ]; })
+  ];
+
+  fonts.fontconfig.defaultFonts.monospace = [
+    "JetBrainsMono Nerd Font"
+    "Iosevka Nerd Font"
+  ];
+}
+#+end_src
+
+*** PACKAGES
+#+begin_src nix :tangle "~/.config/nixcfg/modules/shared/packages.nix" :mkdirp yes
+{ pkgs, ... }:
+
+with pkgs; [
+age # simple, modern and secure file enryption tool
+cmatrix
+coreutils
+dust
+exiftool
+gnugrep
+gnumake
+htop
+jq
+mediainfo
+nil
+nixfmt-rfc-style
+nmap
+ripgrep
+rm-improved
+sd
+speedtest-rs
+sqlite
+tealdeer
+tokei
+tree
+unzip
+wget
+xcp
+xh
+zip
+]
+#+end_src
+
+** DEVSHELL
+#+begin_src nix :tangle "~/.config/nixcfg/modules/devshell/shell.nix" :mkdirp yes
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  name = " offsec ";
+
+  # REVIEW :: set of packages for offsec
+  buildInputs = with pkgs; [
+    # -- base -- #
+    # bat # a modern replacement for `cat` with syntax highlighting
+    # clang # `c` compiler
+    # cmake # build system generator
+    # coreutils # provides `gnu`core utilities
+    # gcc # `gnu` c compiler
+
+    # -- api client -- #
+    # atac # `api` client (postman-like)
+
+    # -- exploitation -- #
+    # flawz # `tui` for browsing `cve` security vulnerabilities
+
+    # -- text editors -- #
+    # neovim
+    # vim
+
+    # -- recon -- #
+    # dnsrecon # `dns` reconnaissance tool
+    # nmap # network scanner/mapper
+    # nikto # web server scanner
+    # snmpcheck # snmp scanner
+    # sslscan # ssl/tls scanner
+
+    # -- networking -- #
+    # doggo # dns-client
+    # termshark # `tui` for tshark
+
+    # -- passowrd -- #
+    # crunch # wordlist generator
+    # hashcat # password ~recovery~/cracker
+    # john # passowrd cracking tool
+    # ncrack # network authentication cracker
+
+    # -- sniffing -- #
+    # mitmproxy # a `tls/ssl`-capable interception `http` proxy
+    # proxychains-ng # force `tcp` connection to go through proxy
+
+    # -- web -- #
+    # dirbuster # directory and file brute-forcing tool
+    # ffuf # fuzzer for discovering hidden directories and files
+    # gobuster # directory and file brute-forcing tool
+    # sqlmap # `sql` injection tool
+    # wfuzz # web application fuzzer
+    # whatweb # web technology scanner
+    # wpscan # # wordpress vulneraability scanner
+
+    # -- dev -- #
+    # ansible # it-automation tool
+    # cargo # rust package manager
+    # ghc # `haskell` compiler
+    # git # version control system
+    # go # `go` language compiler
+    # jq # cli `json` processor
+    # kubectl # kubernetes cli
+    # openssl # toolkit for `ssl/tls`
+    # python3 # `python` programming language
+    # rustc # `rust` compiler
+    # stack # `haskell` build tool
+    # terraform # infrastructure as code
+    # yq # `yaml` processor
+
+    # -- shell -- #
+    # bashInteractive # interactive shell
+    # fish # friendly interactive shell
+    # zsh # `z` shell
+  ];
+
+  # shellHook = ''
+  # '';
+}
+#+end_src
+
+The command ~nix develop~ is used to enter a development environment defined by the ~shell.nix~ file. It sets up the environment specified in the file, making the listed tools and configurations available in an isolated shell.
+
+* ⚠️ APPLYING THE CONFIGURATION
+** BUILD
+This command builds the ~darwin~ configuration specified in the ~flake.nix~ file. It produces a ~result~ that can be used to switch the system configuration. This is only required once. The installation will probably fail if there's already a ~/etc/nix/nix.conf~ file present which is installed with the ~nix determinate systems~ installer. You can rename it to ~/etc/nix/nix.conf.bak~ and relaunch the command below.
+#+begin_src sh
+nix --extra-experimental-features 'nix-command flakes' build .#darwinConfigurations.${hostname}.system
+#+end_src
+
+** SWITCH
+This command switches the system to the newly built configuration. The ~darwin-rebuild~, which is part of ~nix-darwin~, applies the changes specified in the build. Make sure to replace ~${hostname}~ with the actual ~hostname~ of the system.
+
+#+begin_src sh
+./result/sw/bin/darwin-rebuild switch --flake .#${hostname}
+#+end_src
+
+* ☣️ UNINSTALLATION
+** UNINSTALLING NIX DARWIN
+If you have ~nix-darwin~ configured, uninstalling ~nix~ might fail using the ~determinate systems~ uninstaller because ~nix-darwin~ overwrites the ~/etc/nix/nix.conf~ file. To avoid issues, uninstall ~nix-darwin~ first.
+
+Use the provided uninstaller to remove ~nix-darwin~. This script cleans up ~nix-darwin~ configurations and related systems integration. Ensure the ~darwin-uninstaller~ script is available in the ~~/.config/nix-darwin~ directory.
+#+begin_src sh
+# navigate to the directory where the uninstaller is located
+z ~/.config/nix-darwin
+
+# execute the uninstaller script to remove `nix-darwin`
+./result/sw/bin/darwin-uninstaller
+#+end_src
+
+or, if the symbolic link is not available, directly reference the uninstaller script in the ~nix store~:
+#+begin_src sh
+# replace the <nix-store-path> with the actual path of the `darwin-uninstaller` in the `nix-store`
+/nix/store/<nix-store-path>-darwin-uninstaller/bin/darwin-uninstaller
+#+end_src
+
+** UNINSTALLING NIX
+After removing ~nix-darwin~, you can proceed to uninstall ~nix~. The ~determinate systems~ installer provides an uninstaller script for removing ~nix~ and its associated files. Before running the ~determinate systems~ uninstaller script, ensure to restore the ~/etc/nix.conf.bak~ file ( depending how it was renamed during the ~nix-darwin~ installation ) back to ~/etc/nix/nix.conf~
+
+#+begin_src sh
+# run the Determinate Systems uninstaller script
+/nix/nix-installer uninstall
+#+end_src
+
+** ADDITIONAL CLEANUP
+If there are leftover files or directories after uninstallation, clean them up manually. Common directories to check include:
+- Remove the ~nix~ directory
+  #+begin_src sh
+sudo rip /nix
+  #+end_src
+
+- Remove ~nix~ configuration files
+  #+begin_src
+sudo rip /etc/nix
+sudo rip /etc/profile.d/nix.sh
+  #+end_src
+
+- Remove ~nix~ ~user~ and ~group~
+#+begin_src sh
+sudo dscl . -delete /Users/nixbld
+sudo dscl . -delete /Groups/nixbld
+#+end_src
+
+- Clean up ~environment variables~
+  + ~bashrc~
+  + ~zshrc~
+  + ~/.config/fish/config.fish~
+
+If ever errors are encountered during/after uninstallion, refer to the [[https://nix.dev/manual/nix/2.22/installation/uninstall][nix reference manual]] for additional guidance on manually uninstalling ~nix~ from the system.
