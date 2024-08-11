@@ -1,72 +1,67 @@
 #+title: DOTFILES
 #+author: s.t
 
-** TABLE OF CONTENTS :toc:
-  - [[#-tldr][🚀 TL;DR]]
-  - [[#-gnu-stow][🧰 GNU STOW]]
-  - [[#️-tools-i-use][⚙️ TOOLS I USE]]
-  - [[#-operating-system][💻 OPERATING SYSTEM]]
-  - [[#-gears][🔩 GEARS]]
+* 🚀 TL;DR
+This repository contains my personal configuration files ( ~dotfiles~ ) managed using ~gnu stow~, ~nix~ and ~nix-darwin~.
 
-** 🚀 TL;DR
-This respository holds my ~dotfiles~ managed by ~GNU stow~ for both macOS and Linux systems.
+** TABLE OF CONTENTS :toc:quote:
+#+BEGIN_QUOTE
+- [[#-tldr][🚀 TL;DR]]
+- [[#-key-features][📝 KEY FEATURES]]
+- [[#-gnu-stow][🧰 GNU STOW]]
+- [[#️-nix-darwin][🛠️ NIX-DARWIN]]
+- [[#-daily-toolset][⚙ DAILY TOOLSET]]
+- [[#-operating-system][💻 OPERATING SYSTEM]]
+- [[#-gears][🔩 GEARS]]
+#+END_QUOTE
+
+* 📝 KEY FEATURES
+- [[https://www.gnu.org/software/stow/][gnu stow]]: manages and symlinks configurations for various tools and applications, simplifying the management of multiple configurations
+- [[https://nixos.org/][nix]]: enables ~declarative~ package management and system configuration and, the ability to define the environment in a ~reproducible~ way
+- [[https://github.com/LnL7/nix-darwin][nix-darwin]]: customizes ~macos~ system configurations using ~nix~ for a consistent and manageable setup
+
+* 🧰 GNU STOW
+~dotfiles~ are symlinked on my machines via ~gnu stow~, a ~symlink~ farm manager.
 
 #+begin_quote
-Currently undergoing a transition, I'm working on converting my existing configuration files into literate-config format using Emacs Org Mode. As this transition unfolds, updates will be regularly pushed to this repo.
+also using home-manager to manage some of the tools I use
 #+end_quote
 
-** 🧰 GNU STOW
-~dotfiles~ are symlinked on my machines using [[https://www.gnu.org/software/stow/][GNU Stow]], a symlink farm manager. Below is a quick guide on how to use it.
-*** INSTALLATION
-#+begin_src sh
-brew install stow
-#+end_src
-
-*** DON't MODIFY THE FILESYSTEM
-#+begin_src sh
-stow -vn tmux
-#+end_src
-
-*** STOW PACKAGE
+- ~stow~ package
 #+begin_src sh
 stow -v tmux
 #+end_src
 
-*** UNSTOW PACKAGE
+- ~unstow~ package
 #+begin_src sh
 stow -vD tmux
 #+end_src
 
-*** RESTOW PACKAGE
+- ~restow~ package
 #+begin_src sh
 stow -vR tmux
 #+end_src
 
-** ⚙️ TOOLS I USE
-*** [[https://github.com/alacritty/alacritty][alacritty]] - Terminal
-*** [[https://github.com/brndnmtthws/conky][conky]] - Free, light-weight system monitor for X
-*** [[https://github.com/hlissner/doom-emacs][doom-emacs]] - An Emacs framework for the stubborn martian hacker
-*** [[https://dunst-project.org/][dunst]] - Dunst notification Daemon
-*** [[https://github.com/leftwm/leftwm][leftwm]] - A tiling window manager written in Rust
-*** [[https://github.com/MusicPlayerDaemon/MPD][mpd]] - Music Player Daemon
-*** [[https://github.com/mpv-player/mpv][mpv]] - Media player
-*** [[https://github.com/ncmpcpp/ncmpcpp][ncmpcpp]] - NCurses Music Player Client (Plus Plus)
-*** [[https://github.com/neovim/neovim][neovim]] - Vim-fork focused on extensibility and usability
-*** [[https://github.com/polybar/polybar][polybar]] - A fast and easy-to-use tool for creating status bars
-*** [[https://github.com/qutebrowser/qutebrowser][qutebrowser]] - Keyboard-driven, vim-like browser
-*** [[https://github.com/ranger/ranger][ranger]] - A VIM-inspired filemanager for the console
-*** [[https://github.com/davatorium/rofi][rofi]] - Window switcher, application launcher, and dmenu replacement
-*** [[https://github.com/starship/starship][starship]] - Shell prompt
-*** [[https://wezfurlong.org/wezterm/index.html][wezterm]] - Powerful cross-platform terminal emulator and multiplexer
-*** [[https://github.com/jaor/xmobar][xmobar]] - Status bar
-*** [[https://github.com/xmonad/xmonad][xmonad]] - Tiling window manager for X11
-*** [[https://github.com/pwmt/zathura][zathura]] - Document viewer
+* 🛠️ NIX-DARWIN
+For detailed instructions and configuration for ~nix-darwin~, refer to [[https://github.com/s-takoor/dotfiles/tree/main/nixcfg/.config/nixcfg][nixpkgs]] where a comprehensive setup information is provided.
 
-** 💻 OPERATING SYSTEM
-*** [[https://archlinux.org/][Arch Linux]] - A lightweight and flexible Linux® distribution that tries to Keep It Simple.
-*** [[https://www.apple.com][MacBook Air]] - macOS Sonoma
-*** [[https://www.apple.com][MacBook Pro]] - macOS Sonoma
+* ⚙ DAILY TOOLSET
+Below are the tools I use daily:
+- [[https://github.com/alacritty/alacritty][alacritty]] - terminal emulator
+- [[https://github.com/hlissner/doom-emacs][doom-emacs]] - an ~emacs~ framework for the stubborn martian hacker
+- [[https://github.com/MusicPlayerDaemon/MPD][mpd]] - server-side application for playing music
+- [[https://github.com/mpv-player/mpv][mpv]] - media player
+- [[https://github.com/ncmpcpp/ncmpcpp][ncmpcpp]] - ~ncurses~ music player client (plus plus)
+- [[https://github.com/neovim/neovim][neovim]] - ~vim~-fork focused on extensibility and usability
+- [[https://github.com/starship/starship][starship]] - shell prompt
+- [[https://github.com/tmux/tmux/wiki][tmux]] - terminal multiplexer
+- [[https://wezfurlong.org/wezterm/index.html][wezterm]] - terminal emulator
 
-** 🔩 GEARS
-*** [[https://www.razer.com/gaming-mice/razer-deathadder-v2-mini][Razer DeathAdder V2 Mini]] - Gaming mouse
-*** [[https://www.razer.com/gaming-keyboards/razer-huntsman-tournament-edition/RZ03-03080200-R3U1][Razer Huntsman Tournament Edition - US - Black Keycaps]] - Gaming keyboard
+* 💻 OPERATING SYSTEM
+- [[https://archlinux.org/][Arch Linux]] - A lightweight and flexible Linux® distribution that tries to Keep It Simple.
+- [[https://www.apple.com][MacBook Air]] - macos sonoma
+- [[https://www.apple.com][MacBook Pro]] - macos sonoma
+
+* 🔩 GEARS
+- [[https://www.razer.com/gaming-mice/razer-deathadder-v2-mini][Razer DeathAdder V2 Mini]] - gaming mouse
+- [[https://www.razer.com/gaming-keyboards/razer-huntsman-tournament-edition/RZ03-03080200-R3U1][Razer Huntsman Tournament Edition - US - Black Keycaps]] - gaming keyboard

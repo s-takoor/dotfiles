@@ -26,6 +26,10 @@ This repository contains the configurations for setting up ~macos~ along with th
 - [[#️-applying-the-configuration][⚠️ APPLYING THE CONFIGURATION]]
   - [[#build][BUILD]]
   - [[#switch][SWITCH]]
+  - [[#update][UPDATE]]
+  - [[#list-generations][LIST GENERATIONS]]
+  - [[#switch-to-a-different-generation][SWITCH TO A DIFFERENT GENERATION]]
+  - [[#manual-clean-up][MANUAL CLEAN UP]]
 - [[#️-uninstallation][☣️ UNINSTALLATION]]
   - [[#uninstalling-nix-darwin][UNINSTALLING NIX DARWIN]]
   - [[#uninstalling-nix][UNINSTALLING NIX]]
@@ -59,14 +63,14 @@ tokei ~/.config/nixcfg/*
 | Language                                                                      | Files | Lines | Code | Comments | Blanks |
 | =============================================================================== |       |       |      |          |        |
 | Lua                                                                           |     1 |    64 |   35 |       14 |     15 |
-| Nix                                                                           |    51 |  1444 | 1096 |      216 |    132 |
-| Org                                                                           |     1 |  1990 | 1513 |      224 |    253 |
+| Nix                                                                           |    52 |  1529 | 1137 |      250 |    142 |
+| Org                                                                           |     1 |  2081 | 1574 |      243 |    264 |
 | =============================================================================== |       |       |      |          |        |
-| Total                                                                         |    53 |  3498 | 2644 |      454 |    400 |
+| Total                                                                         |    54 |  3674 | 2746 |      507 |    421 |
 | =============================================================================== |       |       |      |          |        |
 
 * 🗒️ FEATURES
-- [[https://nixos.wiki/wiki/Flakes][Flakes]]: enhances ~reproducibility~ and ~modularity~ in ~nix~
+- [[https://nixos.wiki/wiki/Flakes][Flakes]]: enhances ~reproducibility~ and ~modularity~ in ~nix~ configurations
 - [[https://nix-community.github.io/home-manager/][Home-Manager]]: manages user configurations and environment settings
 - [[https://nixos.org/][Nix]]: core package manager for declarative system configuration
 - [[https://github.com/nixos/nixpkgs?tab=readme-ov-file][Nixpkgs]]: package repository providing the software available through ~nix~
@@ -111,9 +115,9 @@ Here's an example of the ~std.out~ from the ~nix doctor~ or ~nix config check~ (
 ~Nix~ provides a ~declarative~, ~immutable~ and ~reproducible~ approach to system management. Although still considered as experimental, ~flakes~ are a core component of this approach, ensuring ~consistency~ and ~reliability~ in system configurations.
 
 * ❄️ FLAKE
-The standard format for the ~flake.nix~ consists of:
-- ~inputs~ which are dependencies of the flake required for the configuration and,
-- ~outputs~ which are function that returns the build results of the flake based on the inputs, shaping the final setup
+The ~flake.nix~ is the main entry-point. The standard format for the ~flake.nix~ consists of:
+- ~inputs~: which are dependencies of the flake required for the configuration and,
+- ~outputs~: which are function that returns the build results of the flake based on the inputs, shaping the final setup
 
 #+begin_quote
 Trust in the ~code~ with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge it, and it shall direct thy paths, ensuring ~reproducible~, ~declarative~, and ~reliable~ software management.
@@ -123,6 +127,7 @@ Trust in the ~code~ with all thine heart; and lean not unto thine own understand
 {
   description = " s-takoor's darwin system flake ";
 
+  # dependencies
   inputs = {
     # import nixpkgs unstable branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -153,6 +158,7 @@ Trust in the ~code~ with all thine heart; and lean not unto thine own understand
       # -- system settings -- #
       hostname = "MacBook-Air";
       system = "aarch64-darwin";
+
       # -- packages settings -- #
       pkgs = import nixpkgs {
         inherit system;
@@ -165,25 +171,25 @@ Trust in the ~code~ with all thine heart; and lean not unto thine own understand
     in {
       # -- custom settings -- #
       # define `macos` configuration for `MacBook-Air`
-        darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
-          inherit system pkgs;
-          specialArgs = { inherit home hostname inputs username; };
-          modules = [
-            ./modules/darwin/configuration.nix
-            home-manager.darwinModules.home-manager
-          ];
-        };
+      darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
+        inherit system pkgs;
+        specialArgs = { inherit home hostname inputs username; };
+        modules = [
+          ./modules/darwin/configuration.nix
+          home-manager.darwinModules.home-manager
+        ];
+      };
 
-        # expose the package set, including overlays, for convenience.
-        darwinPackages = self.darwinConfigurations."${hostname}".pkgs;
+      # expose the package set, including overlays, for convenience.
+      darwinPackages = self.darwinConfigurations."${hostname}".pkgs;
 
-        # development environment
-        devShells.${system} = {
-          default = import ./modules/devshell/shell.nix {
-            inherit pkgs;
-          };
+      # development environment
+      devShells.${system} = {
+        default = import ./modules/devshell/shell.nix {
+          inherit pkgs;
         };
       };
+    };
 }
 #+end_src
 
@@ -260,9 +266,15 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
     };
   };
 
-  # enable touch id for `sudo` authentication
+  # the platform where the nix-darwin configuration will run
+  nixpkgs.hostPlatform = {
+    system = "aarch64-darwin";
+  };
+
+  # enable touch id for `sudo` authentication; NOTE :: not applicable to the mac-mini
+  # REVIEW :: `pam-reattach` still needs to be manually added to `/etc/pam.d/sudo`
   security = {
-    pam.enableSudoTouchIdAuth = true; # not relevant to the mac-mini
+    pam.enableSudoTouchIdAuth = true;
   };
 
   # manage the `nix` daemon service through `nix-darwin` ( recommended )
@@ -691,7 +703,7 @@ This ~home.nix~ file defines user-specific settings and package installations. I
     ./programs/fzf
     ./programs/mise
     ./programs/nix-index
-    # ./programs/nixvim/default.nix # keeping disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix )
+    # ./programs/nixvim # REVIEW :: disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix ) [https://github.com/NixOS/nixpkgs/issues/333677]
     ./programs/starship
     ./programs/thefuck
     ./programs/tmux
@@ -1962,16 +1974,58 @@ The command ~nix develop~ is used to enter a development environment defined by 
 
 * ⚠️ APPLYING THE CONFIGURATION
 ** BUILD
-This command builds the ~darwin~ configuration specified in the ~flake.nix~ file. It produces a ~result~ that can be used to switch the system configuration. This is only required once. The installation will probably fail if there's already a ~/etc/nix/nix.conf~ file present which is installed with the ~nix determinate systems~ installer. You can rename it to ~/etc/nix/nix.conf.bak~ and relaunch the command below.
+This command builds the ~darwin~ configuration specified in the ~flake.nix~ file. This generates a ~result~ that can be used to switch the system configuration. This is only required once to build the system configuration.
+
+#+begin_quote
+If there's already an ~/etc/nix/nix.conf~ ( installed via the ~nix~ ~determinate systems~ ) file from a previous installation, rename it to ~/etc/nix/nix.conf.bak~ to avoid conflicts during the build process.
+#+end_quote
+
+The following command builds the configuration:
 #+begin_src sh
 nix --extra-experimental-features 'nix-command flakes' build .#darwinConfigurations.${hostname}.system
 #+end_src
 
 ** SWITCH
-This command switches the system to the newly built configuration. The ~darwin-rebuild~, which is part of ~nix-darwin~, applies the changes specified in the build. Make sure to replace ~${hostname}~ with the actual ~hostname~ of the system.
+This command applies the newly built configuration. The ~darwin-rebuild~ command, part of ~nix-darwin~, applies the changes specified in the build. Make sure to replace ~${hostname}~ with the actual ~hostname~ of the system.
 
+Apply the newly built configuration:
 #+begin_src sh
 ./result/sw/bin/darwin-rebuild switch --flake .#${hostname}
+#+end_src
+
+** UPDATE
+To update all inputs and dependencies, which in turn updates the ~fake.lock~ file, use the following command:
+#+begin_src sh
+nix flake update
+#+end_src
+
+After updating, it is recommended to perform a ~darwin-rebuild switch~ to apply any new changes.
+
+** LIST GENERATIONS
+Run the following command to list all system generations
+#+begin_src sh
+darwin-rebuild --list-generations
+#+end_src
+
+This command lists all available system generations, including their generation numbers and descriptions.
+
+** SWITCH TO A DIFFERENT GENERATION
+To switch to a different system generation, first identify the generation number from the list obtained using the above command. Then, run the following command to switch to that generation:
+#+begin_src sh
+sudo darwin-rebuild switch --generation <generation_number>
+#+end_src
+
+Replace the ~<generation_number>~ with the desired generation number.
+
+To return to the most recent system generation, use:
+#+begin_src sh
+sudo darwin-rebuild switch --generation current
+#+end_src
+
+** MANUAL CLEAN UP
+If manual cleanup is required, run the following command to clean up old and unused package versions, including previous system generations, to reclaim disk space:
+#+begin_src sh
+sudo nix-collect-garbage -d
 #+end_src
 
 * ☣️ UNINSTALLATION
