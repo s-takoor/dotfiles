@@ -703,7 +703,7 @@ This ~home.nix~ file defines user-specific settings and package installations. I
     ./programs/fzf
     ./programs/mise
     ./programs/nix-index
-    # ./programs/nixvim # REVIEW :: disabled for now ( error: Alias @astrojs/language-server is still in node-packages.nix ) [https://github.com/NixOS/nixpkgs/issues/333677]
+    ./programs/nixvim
     ./programs/starship
     ./programs/thefuck
     ./programs/tmux

@@ -39,7 +39,7 @@ Number of lines to store in scrollback history
 Sets up =WezTerm= to run ~tmux~ rather than the ~shell~ by default
 #+begin_src rust :tangle "wezterm.lua"
   -- Multiplexer
-  default_prog = { "/opt/homebrew/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
+   default_prog = { "/etc/profiles/per-user/st/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
 #+end_src
 
 *** COLOR SCHEME

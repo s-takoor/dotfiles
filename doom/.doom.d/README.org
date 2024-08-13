@@ -22,20 +22,19 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
   - [[#pro-tip][PRO TIP]]
 - [[#configel][CONFIG.EL]]
   - [[#about][ABOUT]]
-  - [[#fonts][FONTS]]
-  - [[#emms][EMMS]]
-  - [[#ellama][ELLAMA]]
-  - [[#nerd-icons][NERD ICONS]]
-  - [[#line-spacing][LINE SPACING]]
-  - [[#spacious-padding][SPACIOUS PADDING]]
-  - [[#theme][THEME]]
-  - [[#imenu-list][IMENU-LIST]]
-  - [[#minimal-ui][MINIMAL UI]]
-  - [[#set-frame-opacity][SET FRAME OPACITY]]
   - [[#beacon-mode][BEACON MODE]]
-  - [[#configure-line-numbers][CONFIGURE LINE NUMBERS]]
-  - [[#doom-modeline][DOOM MODELINE]]
   - [[#centaur-tabs][CENTAUR-TABS]]
+  - [[#ellama][ELLAMA]]
+  - [[#fonts][FONTS]]
+  - [[#frame-opacity][FRAME OPACITY]]
+  - [[#imenu-list][IMENU-LIST]]
+  - [[#jinx][JINX]]
+  - [[#line-numbers][LINE NUMBERS]]
+  - [[#line-spacing][LINE SPACING]]
+  - [[#minimal-ui][MINIMAL UI]]
+  - [[#modeline][MODELINE]]
+  - [[#spacious-padding][SPACIOUS PADDING]]
+  - [[#modus-theme][MODUS THEME]]
   - [[#org-auto-tangle][ORG-AUTO-TANGLE]]
   - [[#org-alert][ORG-ALERT]]
   - [[#org-babel-configuration][ORG-BABEL CONFIGURATION]]
@@ -43,24 +42,8 @@ This is my literate *DOOM EMACS* configuration, written in [[https://orgmode.org
   - [[#org-modern][ORG-MODERN]]
   - [[#org-latex][ORG-LATEX]]
   - [[#pdf-tools][PDF-TOOLS]]
-  - [[#jinx][JINX]]
-  - [[#vertico][VERTICO]]
-  - [[#vertico-buffer][VERTICO BUFFER]]
-  - [[#vertico-directory][VERTICO DIRECTORY]]
-  - [[#vertico-multiform][VERTICO MULTIFORM]]
-  - [[#marginalia][MARGINALIA]]
-  - [[#savehist][SAVEHIST]]
-  - [[#orderless][ORDERLESS]]
-  - [[#consult][CONSULT]]
-  - [[#embark][EMBARK]]
-  - [[#corfu][CORFU]]
-  - [[#dabbrev][DABBREV]]
-  - [[#cape][CAPE]]
-  - [[#eglot][EGLOT]]
-  - [[#infrastructure-as-code][INFRASTRUCTURE AS CODE]]
+  - [[#rainbow-mode][RAINBOW MODE]]
   - [[#rss][RSS]]
-  - [[#shell][SHELL]]
-  - [[#vterm][VTERM]]
 - [[#initel][INIT.EL]]
 - [[#packagesel][PACKAGES.EL]]
 #+END_QUOTE
@@ -119,48 +102,22 @@ Some general info
       user-mail-address "shashiduth.takoor@gmail.com")
 #+end_src
 
-** FONTS
-A ~nerd font~ with support for glyphs (icons).
+** BEACON MODE
 #+begin_src emacs-lisp :tangle "config.el"
-(setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-symbol-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
+(beacon-mode t)
 #+end_src
 
-** EMMS
-The ~emms~ module enables ~Emacs~ to be used as a music player. The following configuration makes use of [[https://www.musicpd.org/][mpd]] as a backend server and [[https://musicpd.org/clients/mpc/][mpc]] to update the music database.
+** CENTAUR-TABS
 #+begin_src emacs-lisp :tangle "config.el"
-;; Load all stable features in Emms
-;; (require 'emms-setup)
-;; (emms-all)
-
-;; MetaData reader about track information
-;; (require 'emms-info-libtag)
-;; (add-to-list 'emms-info-functions 'emms-info-libtag)
-
-;; Emms list of players
-;; (setq emms-player-list '(emms-player-mpd)) ;; or mpv
-;; (add-to-list 'emms-info-functions 'emms-info-mpd)
-
-;; MPD configuration
-;; (setq emms-player-mpd-server-name "localhost")
-;; (setq emms-player-mpd-server-port "6600")
-
-;; Music directory
-;; (setq emms-source-file-default-directory "~/Music")
-
-;; APE / FLAC commands
-;; (require 'emms-cue)
-;; (add-to-list 'emms-info-functions 'emms-info-cueinfo)
-
-;; Keybindings
-;; (global-set-key (kbd "C-c C-o") #'emms-smart-browse)
-;; (global-set-key (kbd "C-c C-r") #'emms-player-mpd-update-all-reset-cache)
-
-;; Automatically update MPD database on startup
-;; (add-hook 'after-init-hook #'emms-player-mpd-update-all-reset-cache)
+(setq centaur-tabs-default-font "JetBrainsMono NF" ;;Iosevka NF
+      centaur-tabs-set-bar 'right
+      centaur-tabs-set-icons t
+      centaur-tabs-gray-out-icons 'buffer
+      centaur-tabs-height 24
+      centaur-tabs-set-modified-marker t
+      centaur-tabs-style "bar"
+      centaur-tabs-close-button "⨂"
+      centaur-tabs-modified-marker "⨀")
 #+end_src
 
 ** ELLAMA
@@ -172,24 +129,40 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 ;; (setq ellama-provider (make-llm-ollama :chat-model "gemma:2b" :embedding-model "gemma:2b"))
 #+end_src
 
-** NERD ICONS
-~nerd icons~ is an alternative to ~all-the-icons~. A ~nerd font~ is required on the system.
+** FONTS
+A ~nerd font~ with support for glyphs (icons).
 #+begin_src emacs-lisp :tangle "config.el"
-;; Icons
-(require 'nerd-icons)
+(setq doom-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-big-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-serif-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-symbol-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 12 :weight 'light))
+#+end_src
 
-;; Icons Completion
-(require 'nerd-icons-completion)
-(nerd-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+** FRAME OPACITY
+#+begin_src emacs-lisp :tangle "config.el"
+(set-frame-parameter (selected-frame) 'alpha '(70 . 90))
+(add-to-list 'default-frame-alist '(alpha . (70 . 90)))
+#+end_src
 
-;; Icons Dired
-(require 'nerd-icons-dired)
-(add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
+** IMENU-LIST
+#+begin_src emacs-lisp :tangle "config.el"
+(setq imenu-list-auto-resize t
+      imenu-list-focus-after-activation t)
+#+end_src
 
-;; Icons Treemacs
-(require 'treemacs-nerd-icons)
-(treemacs-load-theme "nerd-icons")
+** JINX
+~jinx~ is a fast just-in-time spell-checker for Emacs.
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'jinx)
+
+;; Enable Jinx globally
+(add-hook 'emacs-startup-hook #'global-jinx-mode)
+#+end_src
+
+** LINE NUMBERS
+#+begin_src emacs-lisp :tangle "config.el"
+(setq display-line-numbers-type 'relative)
 #+end_src
 
 ** LINE SPACING
@@ -197,9 +170,31 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 (setq-default line-spacing 0)
 #+end_src
 
+** MINIMAL UI
+#+begin_src emacs-lisp :tangle "config.el"
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(show-paren-mode 1)
+(add-to-list 'default-frame-alist '(undecorated-round . t))
+#+end_src
+
+** MODELINE
+#+begin_src emacs-lisp :tangle "config.el"
+(require 'doom-modeline)
+
+(setq doom-modeline-enable-word-count t
+      doom-modeline-battery t
+      doom-modeline-icon t
+      doom-modeline-time t
+      doom-modeline-time-icon t
+      doom-modeline-lsp t)
+#+end_src
+
 ** SPACIOUS PADDING
 #+begin_src emacs-lisp :tangle "config.el"
-(require 'spacious-padding)
+;; (require 'spacious-padding)
+
 
 (setq spacious-padding-widths
       '( :internal-border-width 15
@@ -211,13 +206,18 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
          :left-fringe-width 20
          :right-fringe-width 20))
 
+(setq spacious-padding-subtle-mode-line
+      `( :mode-line-active 'default
+         :mode-line-inactive vertical-border))
+
 ;; Enable spacious-padding mode
 (spacious-padding-mode 1)
 #+end_src
 
-** THEME
+** MODUS THEME
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'modus-themes)
+
 (custom-set-variables
  '(modus-themes-variable-pitch-ui t)
  '(modus-themes-bold-constructs t)
@@ -236,71 +236,6 @@ The ~Emacs Large LAnguage Model Assistant (ELLAMA)~ module is used for interacti
 (load-theme 'modus-vivendi-tritanopia t)
 #+end_src
 
-** IMENU-LIST
-#+begin_src emacs-lisp :tangle "config.el"
-(setq imenu-list-auto-resize t
-      imenu-list-focus-after-activation t)
-
-;; Keybinding for imenu-list-smart-toggle
-(map! :leader
-     (:prefix ("t" . "Toggle")
-      :desc "Toggle imenu shown in a sidebar" "i" #'imenu-list-smart-toggle))
-#+end_src
-
-** MINIMAL UI
-#+begin_src emacs-lisp :tangle "config.el"
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(show-paren-mode 1)
-(add-to-list 'default-frame-alist '(undecorated-round . t))
-#+end_src
-
-** SET FRAME OPACITY
-#+begin_src emacs-lisp :tangle "config.el"
-(set-frame-parameter (selected-frame) 'alpha '(70 . 50))
-(add-to-list 'default-frame-alist '(alpha . (70 . 50)))
-#+end_src
-
-** BEACON MODE
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'beacon)
-(beacon-mode 1)
-#+end_src
-
-** CONFIGURE LINE NUMBERS
-#+begin_src emacs-lisp :tangle "config.el"
-(setq display-line-numbers-type 'relative)
-#+end_src
-
-** DOOM MODELINE
-#+begin_src emacs-lisp :tangle "config.el"
-(after! doom-modeline
-(setq doom-modeline-enable-word-count t
-      doom-modeline-window-width-limit nil
-      doom-modeline-battery t
-      doom-modeline-icon t
-      doom-modeline-major-mode-icon t
-      doom-modeline-major-mode-color-icon t
-      doom-modeline-time t
-      doom-modeline-time-icon t
-      doom-modeline-lsp t
-      doom-modeline-bar-width 4))
-#+end_src
-
-** CENTAUR-TABS
-#+begin_src emacs-lisp :tangle "config.el"
-(setq centaur-tabs-default-font "JetBrainsMono NF" ;;Iosevka NF
-      centaur-tabs-set-bar 'right
-      centaur-tabs-set-icons t
-      centaur-tabs-gray-out-icons 'buffer
-      centaur-tabs-height 24
-      centaur-tabs-set-modified-marker t
-      centaur-tabs-style "bar"
-      centaur-tabs-close-button "⨂"
-      centaur-tabs-modified-marker "⨀")
-#+end_src
-
 ** ORG-AUTO-TANGLE
 The ~org-auto-tangle~ package automatically tangle org files on save. This is achieved by adding the option ~#+auto_tangle: t~. If instead you would like to manually tangle the org file on save, the following emacs keybindings can be used ~C-c C-v C-t~
 
@@ -314,10 +249,13 @@ The tangling process happens asynchronously, therefore it will not block the cur
 ** ORG-ALERT
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'org-alert)
-(setq org-alert-interval 1200)
-(setq org-alert-notification-title "Org Alert Reminder!")
-(custom-set-variables '(alert-default-style 'osx-notifier))
-(org-alert-enable)
+(setq org-alert-interval 1200
+      org-alert-notify-cutoff 10
+      org-alert-notify-after-event-cutoff 10
+      org-alert-notification-title "Org Alert Reminder!")
+
+(require 'alert)
+(setq alert-default-style 'osx-notifier)
 #+end_src
 
 ** ORG-BABEL CONFIGURATION
@@ -414,210 +352,15 @@ The ~org modern~ package implements a modern style for Org buffers using font lo
               pdf-view-use-imagemagick nil)
 #+end_src
 
-** JINX
-~jinx~ is a fast just-in-time spell-checker for Emacs.
+** RAINBOW MODE
 #+begin_src emacs-lisp :tangle "config.el"
-(require 'jinx)
-
-;; Enable Jinx globally
-(add-hook 'emacs-startup-hook #'global-jinx-mode)
-#+end_src
-
-** VERTICO
-The ~vertico~ package provides a performant and minimalistic vertical completion IO based on the default completion system.
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'vertico)
-(vertico-mode 1)
-
-(setq vertico-count 10
-      vertico-resize t
-      vertico-cycle t)
-#+end_src
-
-** VERTICO BUFFER
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'vertico-buffer)
-(vertico-buffer-mode 1)
-#+end_src
-
-** VERTICO DIRECTORY
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'vertico-directory)
-(add-hook 'rfn-eshadow-update-overlay 'vertico-directory-tidy)
-#+end_src
-
-** VERTICO MULTIFORM
-#+begin_src emacs-lisp :tangle "config.el"
-(vertico-multiform-mode)
-(vertico-multiform-mode 1)
-
-;; Configure the display per command
-(setq vertico-multiform-commands
-      '((consult-imenu buffer indexed)))
-
-;; Configure the display per completion category
-(setq vertico-multiform-categories
-      '((file grid)
-        (consult-grep buffer)))
-#+end_src
-
-** MARGINALIA
-The ~marginalia~ package adds annotations to the completion candidates at the margin of the minibuffer.
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'marginalia)
-(marginalia-mode)
-#+end_src
-
-** SAVEHIST
-The ~savehist~ package persist history over Emacs restarts. ~vertico~ sorts by history position.
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'savehist)
-(savehist-mode)
-#+end_src
-
-** ORDERLESS
-This package provides an ~orderless~ completion style that divides the pattern into space-separated components, and matches candidates that match all of the components in any order. Each component can match in any one of several ways: ~literally~, as a ~regexp~, as an ~initialism~, in the flex style, or as ~multiple word prefixes~. ~regexp~ and ~literal~ matches are enabled by default.
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'orderless)
-(setq completion-styles '(orderless basic flex initials substring)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
-#+end_src
-
-** CONSULT
-The ~consult~ module provides search and navigation commands based on the Emacs completion function [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-Completion.html][completing-read]].
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'consult)
-(add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
-(setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format
-        xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref
-        completion-in-region-function #'consult-completion-in-region)
-
-(bind-key "C-x C-r" #'consult-recent-file)
-(bind-key "C-x h" #'consult-outline)
-(bind-key "C-x b" #'consult-buffer)
-(bind-key "C-c h" #'consult-history)
-#+end_src
-
-** EMBARK
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'embark)
-(setq prefix-help-command #'embark-prefix-help-command)
-(add-to-list 'display-buffer-alist
-             '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-               nil
-               (window-parameters (mode-line-format . none))))
-
-;; Embark-Consult
-(require 'embark-consult)
-(add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode)
-#+end_src
-
-** CORFU
-The ~corfu~ module enhances in-buffer completion with a small completion popup. The current candidates are shown in a popup below or above the point.
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'corfu)
-(require 'nerd-icons-corfu)
-
-;; Corfu configuration
-(custom-set-variables
- '(corfu-cycle t)
- '(corfu-auto t)
- '(corfu-auto-delay 0.8)
- '(corfu-auto-prefix 2)
- '(corfu-separator ?\s)
- '(corfu-popupinfo-delay '(0.5 . 0.2))
- '(corfu-preview-current 'insert)
- '(corfu-preselect 'prompt)
- '(corfu-on-exact-match nil))
-
-(bind-keys
- :map corfu-map
- ("M-SPC" . corfu-insert-separator)
- ("TAB" . corfu-next)
- ([tab] . corfu-next)
- ("S-TAB" . corfu-previous)
- ([backtab] . corfu-previous)
- ("S-<return>" . corfu-insert)
- ("RET" . nil))
-
-(global-corfu-mode)
-(corfu-history-mode)
-(corfu-popupinfo-mode)
-
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (setq-local corfu-quit-at-boundary t
-                        corfu-quit-no-match t
-                        corfu-auto nil)
-            (corfu-mode)))
-
-;; Nerd Icons Corfu configuration
-(custom-set-variables
- '(nerd-icons-default-face 'corfu-default))
-
-(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-#+end_src
-
-** DABBREV
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'dabbrev)
-(add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-(add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-#+end_src
-
-** CAPE
-The ~cape~ module provides Completion At Point Extensions which can be used in combination with ~corfu~, ~company~ or the default completion UI. The completion backends used by completion-at-point are so called completion-at-point-functions (~capfs~).
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'cape)
-
-(bind-keys
- ("C-c p p" . completion-at-point)
- ("C-c p t" . complete-tag)
- ("C-c p d" . cape-dabbrev)
- ("C-c p h" . cape-history)
- ("C-c p f" . cape-file)
- ("C-c p e" . cape-elisp-block)
- ("C-c p s" . cape-elisp-symbol)
- ("C-c p \\" . cape-tex)
- ("C-c p _" . cape-tex)
- ("C-c p ^" . cape-tex))
-
-(add-to-list 'completion-at-point-functions #'cape-dabbrev)
-(add-to-list 'completion-at-point-functions #'cape-file)
-(add-to-list 'completion-at-point-functions #'cape-elisp-block)
-(add-to-list 'completion-at-point-functions #'cape-history)
-(add-to-list 'completion-at-point-functions #'cape-tex)
-(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-
-(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-(advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-#+end_src
-
-** EGLOT
-#+begin_src emacs-lisp :tangle "config.el"
-(add-hook 'nix-mode-hook 'eglot-ensure)
-#+end_src
-** INFRASTRUCTURE AS CODE
-The ~terraform~ module adds support for working with [[https://www.terraform.io/][Terraform]] files in ~Doom Emacs~. It includes syntax highlighting, intelligent code completion and, the ability to run ~Terraform~ commands directly from ~Emacs~.
-#+begin_src emacs-lisp :tangle "config.el"
-;; (require 'terraform-mode)
-;; (add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
-;; (add-to-list 'auto-mode-alist '("\\.tfvars\\'" . terraform-mode))
-;; (add-to-list 'auto-mode-alist '("\\.hcl\\'" . terraform-mode))
-
-;; Customize indentation level
-;; (setq terraform-indent-level 4)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 #+end_src
 
 ** RSS
 The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~init.el~ allows the use of ~org-mode~ to manage RSS feeds. I've added an example of my ~elfeed.org~ file which can be found [[https://github.com/s-takoor/emacs-org-docs/tree/main/rss][here]]. This file is located in my ~{org-directory}/elfeed.org~.
 #+begin_src emacs-lisp :tangle "config.el"
 (require 'elfeed-goodies)
-;; (elfeed-goodies/setup)
 
 ;; News filtering
 (after! elfeed
@@ -627,19 +370,6 @@ The ~elfeed~ module is an RSS reader for ~Emacs~. The ~+org~ module flag in my ~
 (add-hook! 'elfeed-search-mode-hook #'elfeed-update)
 
 (global-set-key (kbd "C-x w") 'elfeed)
-#+end_src
-
-** SHELL
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'fish-mode)
-#+end_src
-
-** VTERM
-#+begin_src emacs-lisp :tangle "config.el"
-(require 'vterm)
-(setq shell-file-name (executable-find "bash"))
-(setq-default vterm-shell (executable-find "fish"))
-(setq-default explicit-shell-file-name (executable-find "fish"))
 #+end_src
 
 * INIT.EL
@@ -662,10 +392,11 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
 
        :completion
        ;;company           ; the ultimate code completion backend
+       (corfu +orderless +dabbrev)               ; complete with cap(f), cape and a flying feather!
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
-       (vertico +orderless +icons)           ; the search engine of the future
+       (vertico +childframe +icons)           ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -696,7 +427,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       (format +onsave)  ; automated prettiness
+       (format +lsp +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
        ;;multiple-cursors  ; editing in many places at once
@@ -707,9 +438,9 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       dired             ; making dired pretty [functional]
+       (dired +icons)             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ;;ibuffer         ; interactive buffer management
+       (ibuffer +icons)         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -720,29 +451,29 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        vterm             ; the best terminal emulation in Emacs
 
        :checkers
-       (syntax +childframe)              ; tasing you for every semicolon you forget
-       ;;(spell +flyspell) ; tasing you for misspelling mispelling
+       (syntax +childframe +flymake +icons)              ; tasing you for every semicolon you forget
+       (spell +enchant) ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
-       ;;ansible
+       ;; ansible               ; a crucible for infrastructure as code
        ;;biblio            ; Writes a PhD for you (citation needed)
        ;;collab            ; buffers with friends
        ;;debugger          ; FIXME stepping through code, to help you add bugs
-       ;;direnv
-       ;;docker
+       ;;direnv              ; be direct about your environment
+       ;;docker              ; port everything to containers
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
-       lookup              ; navigate your code and its documentation
+       (lookup +dictionary +docsets +offline)              ; navigate your code and its documentation
        (lsp +eglot)               ; M-x vscode
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       rgb               ; creating color strings
+       ;; rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
@@ -781,7 +512,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;(haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
-       ;;json              ; At least it ain't XML
+       (json +lsp +tree-sitter)              ; At least it ain't XML
        ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
@@ -789,7 +520,7 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        (latex +latexmk +lsp +fold)             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
-       ;;lua               ; one-based indices? one-based indices
+       (lua +lsp +tree-sitter)               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        (nix +lsp +tree-sitter)               ; I hereby declare "nix geht mehr!"
@@ -798,23 +529,23 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python +tree-sitter)            ; beautiful is better than ugly
+       ;; (python +tree-sitter)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust +lsp +tree-sitter)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;(rust +lsp +tree-sitter)       ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       (sh +fish +tree-sitter)               ; she sells {ba,z,fi}sh shells on the C xor
+       (sh +fish +lsp +tree-sitter)               ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        ;;web               ; the tubes
-       yaml              ; JSON, but readable
+       (yaml +lsp + tree-sitter)              ; JSON, but readable
        ;;zig               ; C, but simpler
 
        :email
@@ -834,8 +565,6 @@ Alternatively, press ~gd~ (or ~C-c c d~) on a module to browse its directory (fo
        ;; literate
        (default +bindings +smartparens))
 #+end_src
-
-#+RESULTS:
 
 * PACKAGES.EL
 The ~package.el~ file lists all packages to be installed with ~Doom Emacs~. Each line specifies the name of a package and any additional configuration options. After declaring the package name in the ~packages.el~ file, you will have to run ~doom sync~ on the command line or ~SPC h r r~, then restart ~Emacs~ for the changes to take effect -- or use ~M-x doom/reload~.
@@ -875,30 +604,18 @@ Doom's packages are pinned to a specific commit and updated from release to rele
 
 #+begin_src emacs-lisp :tangle "packages.el"
 (package! beacon)
-(package! cape)
-(package! consult)
-(package! corfu)
-(package! dabbrev)
 (package! elfeed-goodies)
 ;; (package! ellama)
-(package! embark)
-(package! embark-consult)
-;; (package! emms-player-mpv)
 (package! engrave-faces)
 (package! fish-mode)
 (package! imenu-list)
 (package! jinx)
-(package! marginalia)
 (package! modus-themes)
-(package! nerd-icons)
-(package! nerd-icons-completion)
-(package! nerd-icons-corfu)
-(package! nerd-icons-dired)
-(package! orderless)
 (package! org-alert)
 (package! org-auto-tangle)
 (package! org-modern)
+(package! ns-auto-titlebar)
+(package! osx-dictionary)
+(package! osx-trash)
 (package! spacious-padding)
-;; (package! terraform-mode)
-(package! treemacs-nerd-icons)
 #+end_src
