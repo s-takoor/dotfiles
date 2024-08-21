@@ -32,24 +32,24 @@
 
 * ⚠️ CAUTION
 #+begin_quote
-This setup has yet to be tested on a ~Windows~ machine. Proceed with caution and ensure you have a backup of your data first.
+This setup has been tested on a ~windows 11~ machine. Proceed with caution and ensure you have a backup of your data first.
 #+end_quote
 
 * 🚀 TL;DR
-The following aims to setup a pre-configured development environment for a ~Windows~ system.
+The following aims to setup a pre-configured development environment for the ~windows~ operating system.
 
 * 📝 USAGE
-The command below will initiate the configuration of the system according to the provided configuration file(s) located at ~C:\Users\<username>\dsc\<config-file-name>.yaml~. There are four ~winget~ configuration files defined for this setup.
+The command below will initiate the configuration of the system according to the provided configuration file(s). There are four ~winget~ configuration files defined for this setup.
 
 #+begin_src sh
 winget configure -f <C:/Users/<username>/dsc/config-file-name.dsc.yaml>
 #+end_src
 
 * 🤖 SETUP
-Below is a quick overview of how I setup my ~Windows~ machine using ~winget~ and the relevant configuration file(s).
+Below is a quick overview of how to setup a ~windows~ machine using ~winget~ and the relevant configuration file(s).
 
 ** SANE DEFAULTS
-The ~sys.conf.dsc.yaml~ file modifies various ~Windows~ system settings.
+The ~sys.conf.dsc.yaml~ file modifies various ~windows~ system settings.
 
 #+begin_src yaml :tangle "~/dotfiles/windows/dsc/sys.conf.dsc.yaml" :mkdip yes
 # yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
@@ -209,6 +209,13 @@ properties:
         allowPrerelease: true
       settings:
         id: RedHat.Podman
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives: :
+        description: Install PowerShell 7
+        allowPrerelease: true
+      settings:
+        id: Microsoft.PowerShell
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
