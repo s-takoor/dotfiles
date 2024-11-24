@@ -369,7 +369,7 @@ Handles the configuration for ~sketchybar~, a highly customizable replacement fo
 {
   # configures the sketchybar service
   services.sketchybar = {
-    enable = true;
+    enable = false;
     # TODO :: move sketchybar configuration here
     # currently managed by gnu stow
     # config = ''
@@ -613,7 +613,7 @@ _:
   "nmap"
   "pandoc"
   "pam-reattach" # module for re-attaching to the authenticating user's per-session bootstrap namespace on macos
-  "texlive"
+  # "texlive"
   "unar"
 ]
 #+end_src
@@ -655,9 +655,13 @@ _:
 
   # tiling window manager for macos ( without any security compromise "SIP" )
   {
-    name = "amethyst";
+    name = "aerospace";
     greedy = true;
   }
+  # {
+  #   name = "amethyst";
+  #   greedy = true;
+  # }
 ]
 #+end_src
 
@@ -672,6 +676,7 @@ _:
   "homebrew/bundle"
   "homebrew/services"
   # "koekeishiya/formulae" # tap for skhd ( using skhd services from `nix-darwin` )
+  "nikitabobko/tap" # tap for aerospace tiling window manager
 ]
 #+end_src
 
@@ -693,6 +698,7 @@ This ~home.nix~ file defines user-specific settings and package installations. I
 {
   imports = [
     # TODO :: to further modularize with `mkEnableOption` for toggling programs )
+    ./programs/aerospace
     ./programs/alacritty
     ./programs/bat
     ./programs/bun
@@ -729,6 +735,140 @@ This ~home.nix~ file defines user-specific settings and package installations. I
   programs = {
     home-manager.enable = true;
   };
+}
+#+end_src
+*** AEROSPACE
+Tiling window manager for ~macOS~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/aerospace/default.nix" :mkdirp yes
+{ ... }:{
+
+home.file.".aerospace.toml".text = ''
+
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalization settings
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Accordion layout settings
+accordion-padding = 30
+
+# Default root container settings
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# Mouse follows focus settings
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focus-changed = ['move-mouse window-lazy-center']
+
+# Automatically unhide macOS hidden apps
+automatically-unhide-macos-hidden-apps = true
+
+# Key mapping preset
+[key-mapping]
+preset = 'qwerty'
+
+# Gaps settings
+[gaps]
+inner.horizontal = 10
+inner.vertical =   10
+outer.left =       10
+outer.bottom =     10
+outer.top =        30
+outer.right =      10
+
+# Main mode bindings
+[mode.main.binding]
+# Launch applications
+alt-shift-enter = 'exec-and-forget open -na alacritty'
+alt-shift-s = 'exec-and-forget open -a "Safari"'
+alt-shift-b = 'exec-and-forget open -a "Brave Browser"'
+
+# Window management
+alt-q = "close"
+alt-slash = 'layout tiles horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
+alt-m = 'fullscreen'
+
+# Focus movement
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Window movement
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Resize windows
+alt-shift-minus = 'resize smart -50'
+alt-shift-equal = 'resize smart +50'
+
+# Workspace management
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+# Move windows to workspaces
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+# Workspace navigation
+alt-tab = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# Enter service mode
+alt-shift-semicolon = 'mode service'
+
+# Service mode bindings
+[mode.service.binding]
+# Reload config and exit service mode
+esc = ['reload-config', 'mode main']
+
+# Reset layout
+r = ['flatten-workspace-tree', 'mode main']
+
+# Toggle floating/tiling layout
+f = ['layout floating tiling', 'mode main']
+
+# Close all windows but current
+backspace = ['close-all-windows-but-current', 'mode main']
+
+# Join with adjacent windows
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
+
+# Window detection rules
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'Emacs'
+run = 'move-node-to-workspace 4'
+'';
 }
 #+end_src
 
@@ -1662,10 +1802,11 @@ return {
 
   -- font
   font = wezterm.font_with_fallback({
-      { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+      -- { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+      { family = "GohuFont 14 Nerd Font", weight = "Medium", italic = false, },
       { family = "SF Pro", weight = "Medium", italic = false, },
   }),
-  font_size = 10.0,
+  font_size = 11.0,
 
   -- opacity
   window_background_opacity = 0.70,
@@ -2079,4 +2220,4 @@ sudo dscl . -delete /Groups/nixbld
   + ~zshrc~
   + ~/.config/fish/config.fish~
 
-If ever errors are encountered during/after uninstallion, refer to the [[https://nix.dev/manual/nix/2.22/installation/uninstall][nix reference manual]] for additional guidance on manually uninstalling ~nix~ from the system.
+If ever errors are encountered during/after uninstallation, refer to the [[https://nix.dev/manual/nix/2.22/installation/uninstall][nix reference manual]] for additional guidance on manually uninstalling ~nix~ from the system.
