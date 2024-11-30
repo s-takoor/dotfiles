@@ -354,7 +354,7 @@ Configures the ~skhd~ simple hotkey daemon, which allows defining and managing c
       shift + cmd - r : open -na "Brave Browser" # opens brave browser
       shift + cmd - e : emacsclient -c -n -a "" # opens emacs client in a new frame
       ctrl + alt - p : mpc toggle # toggles playback in mpd (mpc)
-      ctrl + alt - f : mpc next # skips to the next tracj in mpd
+      ctrl + alt - f : mpc next # skips to the next track in mpd
       ctrl + alt - b : mpc prev # skips to previous track in mpd
     '';
     };
@@ -651,7 +651,7 @@ _:
   "iglance" # FOSS macos system monitor
 
   # tweaks
-  "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
+  # "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
 
   # tiling window manager for macos ( without any security compromise "SIP" )
   {
@@ -744,70 +744,79 @@ Tiling window manager for ~macOS~
 
 home.file.".aerospace.toml".text = ''
 
-# Start AeroSpace at login
+after-login-command = []
+
+after-startup-command = []
+
+# start aerospace at login
 start-at-login = true
 
-# Normalization settings
+# normalization settings
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# Accordion layout settings
+# accordion layout settings
 accordion-padding = 30
 
-# Default root container settings
+# default root container settings
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
-# Mouse follows focus settings
+# mouse follows focus settings
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = ['move-mouse window-lazy-center']
 
-# Automatically unhide macOS hidden apps
+# automatically unhide macos hidden apps
 automatically-unhide-macos-hidden-apps = true
 
-# Key mapping preset
+# key mapping preset
 [key-mapping]
 preset = 'qwerty'
 
-# Gaps settings
+# gaps settings
 [gaps]
 inner.horizontal = 10
 inner.vertical =   10
 outer.left =       10
 outer.bottom =     10
-outer.top =        30
+outer.top =        40
 outer.right =      10
 
-# Main mode bindings
+# main mode bindings
 [mode.main.binding]
-# Launch applications
-alt-shift-enter = 'exec-and-forget open -na alacritty'
-alt-shift-s = 'exec-and-forget open -a "Safari"'
-alt-shift-b = 'exec-and-forget open -a "Brave Browser"'
 
-# Window management
+# launch applications
+alt-a = 'exec-and-forget open -a Arc'
+alt-b = 'exec-and-forget open -a "Brave Browser"'
+alt-e = 'exec-and-forget emacsclient -c -n -a ""'
+alt-f = 'exec-and-forget open -a Finder'
+alt-s = 'exec-and-forget open -a Safari'
+alt-t = 'exec-and-forget open -a Alacritty'
+alt-w = 'exec-and-forget open -a WezTerm'
+
+# window management
 alt-q = "close"
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 alt-m = 'fullscreen'
 
-# Focus movement
+# focus movement
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# Window movement
+# window movement
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
-# Resize windows
+# https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
-# Workspace management
+# https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
@@ -817,8 +826,9 @@ alt-6 = 'workspace 6'
 alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
 
-# Move windows to workspaces
+# https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
@@ -828,46 +838,68 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-0 = 'move-node-to-workspace 10'
 
-# Workspace navigation
+# https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
+
+# https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
-# Enter service mode
+# https://nikitabobko.github.io/AeroSpace/commands#mode
 alt-shift-semicolon = 'mode service'
 
-# Service mode bindings
+# 'service' binding mode declaration.
+# https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-# Reload config and exit service mode
+
+# reload config and exit service mode
 esc = ['reload-config', 'mode main']
 
 # Reset layout
 r = ['flatten-workspace-tree', 'mode main']
 
-# Toggle floating/tiling layout
+# toggle floating/tiling layout
 f = ['layout floating tiling', 'mode main']
 
-# Close all windows but current
+# close all windows but current
 backspace = ['close-all-windows-but-current', 'mode main']
 
-# Join with adjacent windows
+# join with adjacent windows
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
-# Window detection rules
+# window detection rules
 [[on-window-detected]]
 if.app-id = 'org.alacritty'
-run = 'move-node-to-workspace 1'
+run = 'move-node-to-workspace 1 --focus-follows-window'
+
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = "move-node-to-workspace 1 --focus-follows-window"
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = 'move-node-to-workspace 2 --focus-follows-window'
 
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
-run = 'move-node-to-workspace 2'
+run = 'move-node-to-workspace 2 --focus-follows-window'
 
 [[on-window-detected]]
-if.app-id = 'Emacs'
-run = 'move-node-to-workspace 4'
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2 --focus-follows-window'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace 3 --focus-follows-window'
+
+[[on-window-detected]]
+if.app-id = 'org.gnu.Emacs'
+run = 'move-node-to-workspace 4 --focus-follows-window'
+
 '';
 }
 #+end_src
