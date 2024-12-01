@@ -165,9 +165,11 @@ Trust in the ~code~ with all thine heart; and lean not unto thine own understand
         # TODO :: overlays allows customizing the `nixpkgs` attribute set
         overlays = [ ];
       };
+
       # -- user settings -- #
       home = "/Users/st/";
       username = "st";
+
     in {
       # -- custom settings -- #
       # define `macos` configuration for `MacBook-Air`
@@ -205,10 +207,11 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
 {
   imports = [
     ./environment
-    ./homebrew/homebrew.nix
-    ./services/skhd.nix
-    ./services/sketchybar.nix
-    ./system/system.nix
+    ./homebrew
+    # ./services/aerospace
+    # ./services/skhd
+    # ./services/sketchybar
+    ./system
   ];
 
   # user-specific information, paths and shell settings
@@ -271,7 +274,8 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
     system = "aarch64-darwin";
   };
 
-  # enable touch id for `sudo` authentication; NOTE :: not applicable to the mac-mini
+  # enable touch id for `sudo` authentication;
+  # NOTE :: not applicable to the mac-mini
   # REVIEW :: `pam-reattach` still needs to be manually added to `/etc/pam.d/sudo`
   security = {
     pam.enableSudoTouchIdAuth = true;
@@ -336,26 +340,165 @@ If ~nix~ or ~nix-darwin~ is uninstalled, remember to restore ~/etc/shells.before
 }
 #+end_src
 
+*** HOMEBREW
+Configures the management of ~homebrew~ packages through ~nix-darwin~. It facilitates ~installing~ / ~updating~ / ~updating~ / ~upgrading~ ~homebrew~ ~taps~, ~formulae~, and ~casks~ as well as optionally managing ~mac app store~ apps
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/default.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  homebrew = {
+    enable = true;
+    global = {
+      brewfile = true; # use the brewfile for managing homebrew packages
+    };
+    onActivation = {
+      autoUpdate = true; # homebrew auto-update
+      # cleanup = "zap"; NOTE :: uninstalls all formulae ( and associated files ) not listed in the brewfile ( &/or declared in the brews/casks.nix )
+      upgrade = true; # upgrade all installed homebrew packages
+      # flags to use for debugging
+      # extraFlags = [
+      #   "--verbose"
+      #   "--debug"
+      # ];
+    };
+    brews = pkgs.callPackage ./brews.nix {}; # homebrew formulae
+    casks = pkgs.callPackage ./casks.nix {}; # homebrew casks
+    taps = pkgs.callPackage ./taps.nix {}; # homebrew taps
+    # masApps = pkgs.callPackage ./masApps.nix {}; # homebrew mac app store apps
+  };
+}
+#+end_src
+
+**** BREWS
+Defines a list of ~homebrew~ ~formulae~ to be installed, with additional options such as service restarts or linking.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/brews.nix" :mkdirp yes
+_:
+
+[
+  "cidr" # perform various actions on `cidr` ranges
+  {
+    name = "emacs-plus"; # gnu-emacs for macos with additional functionalities over the regular emacs package
+    args = [
+      "with-native-comp"
+      "with-modern-doom3-icon"
+    ];
+    link = true; # link the formulae to the homebrew prefix
+  }
+  "enchant"
+  "ffmpeg"
+  "imagemagick"
+  "llvm"
+  "mpc" # command-line client for music player daemon (mpd)
+  {
+    name = "mpd";
+    restart_service = "changed"; # the version from home-manager is not supported for aarch64-darwin and there no mpd services in nix-darwin
+  }
+  "ncmpcpp" # visualizer_type spectrum error with home-manager
+  "nmap"
+  "pandoc"
+  "pam-reattach" # module for re-attaching to the authenticating user's per-session bootstrap namespace on macos
+  # "texlive"
+  "unar"
+]
+#+end_src
+
+**** CASKS
+List of ~homebrew~ ~casks~ to be installed.
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/casks.nix" :mkdirp yes
+_:
+
+[
+  # browsers
+  {
+    name = "arc";
+    greedy = true;
+  }
+  {
+    name = "brave-browser";
+    greedy = true;
+  }
+
+  # entertainment
+  {
+    name = "mpv"; # REVIEW :: ( media player for the command line - will move to home-manager when build failure for swift has been addressed )
+    greedy = true;
+  }
+
+  # fonts ( used for sketchybar )
+  "font-sf-mono"
+  "font-sf-pro"
+  "sf-symbols"
+
+  # productivity
+  "raycast" # better launcher for mac vs spotlight or alfred
+  "maccy" # clipboard tool for history
+  "iglance" # FOSS macos system monitor
+
+  # tweaks
+  # "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
+
+  # tiling window manager for macos ( without any security compromise "SIP" )
+  {
+    name = "aerospace";
+    greedy = true;
+  }
+  # {
+  #   name = "amethyst";
+  #   greedy = true;
+  # }
+]
+#+end_src
+
+**** TAPS
+List of additional ~homebrew~ repositories to ~tap~. ~taps~ provide access to extra formulae and casks
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/taps.nix" :mkdirp yes
+_:
+
+[
+  "d12frosted/emacs-plus" # tap for emacs+
+  # "FelixKratz/formulae" # tap for sketchybar ( using sketchybar services `nix-darwin` )
+  "homebrew/bundle"
+  "homebrew/services"
+  # "koekeishiya/formulae" # tap for skhd ( using skhd services from `nix-darwin` )
+  "nikitabobko/tap" # tap for aerospace tiling window manager
+]
+#+end_src
+
 *** SERVICES
 This section configures various services on ~macos~ using ~nix-darwin~. It includes setup for applications that enhances productivity and system functionality.
 
+**** AEROSPACE
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/aerospace/default.nix" :mkdirp yes
+{ pkgs, ... }: {
+  services.aerospace = {
+    # BUG :: keeping disabled for now; https://github.com/LnL7/nix-darwin/issues/1142;
+    # TODO :: to migrate to services.aerospace once issue resolved;
+    # HACK :: used via homebrew for now;
+    enable = false;
+    # package = pkgs.aerospace;
+  };
+}
+#+end_src
+
 **** SKHD
 Configures the ~skhd~ simple hotkey daemon, which allows defining and managing custom keyboard shortcuts. These shortcuts can launch applications, control media playback, and perform other actions directly from the keyboard.
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/skhd.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/skhd/default.nix" :mkdirp yes
 { ... }:
 
 {
   # configures the skhd service to enable custom hotkeys on macos
   services.skhd = {
-      enable = true;
-      skhdConfig = ''
-      shift + cmd - return : open -a wezterm # opens wezterm
-      shift + cmd - a : open -na "arc" # opens arc browser
-      shift + cmd - r : open -na "Brave Browser" # opens brave browser
-      shift + cmd - e : emacsclient -c -n -a "" # opens emacs client in a new frame
-      ctrl + alt - p : mpc toggle # toggles playback in mpd (mpc)
-      ctrl + alt - f : mpc next # skips to the next track in mpd
-      ctrl + alt - b : mpc prev # skips to previous track in mpd
+    # REVIEW :: disabled for now;
+    # INFO :: testing implementation via aerospace; working fine so far;
+    enable = false;
+    skhdConfig = ''
+      # shift + cmd - return : open -a wezterm # opens wezterm
+      # shift + cmd - a : open -na "arc" # opens arc browser
+      # shift + cmd - r : open -na "Brave Browser" # opens brave browser
+      # shift + cmd - e : emacsclient -c -n -a "" # opens emacs client in a new frame
+      # ctrl + alt - p : mpc toggle # toggles playback in mpd (mpc)
+      # ctrl + alt - f : mpc next # skips to the next track in mpd
+      # ctrl + alt - b : mpc prev # skips to previous track in mpd
     '';
     };
 }
@@ -363,13 +506,18 @@ Configures the ~skhd~ simple hotkey daemon, which allows defining and managing c
 
 **** SKETCHYBAR
 Handles the configuration for ~sketchybar~, a highly customizable replacement for the ~macos~ status bar.
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/sketchybar.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/sketchybar/default.nix" :mkdirp yes
 { ... }:
 
 {
   # configures the sketchybar service
   services.sketchybar = {
+    # REVIEW :: keeping disabled for now
     enable = false;
+    # extraPackages = [
+    #   pkgs.aerospace
+    #   pkgs.jq
+    # ];
     # TODO :: move sketchybar configuration here
     # currently managed by gnu stow
     # config = ''
@@ -392,7 +540,7 @@ This configuration defines various system-level settings and user preferences fo
   + ~NSGlobalDomain~: defaults applied across all applications
   + ~spaces~: configuration for display and space management
   + ~trackpad~: ~trackpad~ settings for user input customization
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/system/system.nix" :mkdirp yes
+#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/system/default.nix" :mkdirp yes
 { ... }:
 
 {
@@ -522,7 +670,7 @@ This configuration defines various system-level settings and user preferences fo
         ApplePressAndHoldEnabled = false;
         AppleShowAllExtensions = true;
         AppleShowAllFiles = false;
-        _HIHideMenuBar = true;
+        _HIHideMenuBar = false; # REVIEW :: keeping disabled for now until sketchybar has been re-implemented
         InitialKeyRepeat = 10;
         KeyRepeat = 1;
         NSScrollAnimationEnabled = true;
@@ -556,130 +704,6 @@ This configuration defines various system-level settings and user preferences fo
 }
 #+end_src
 
-*** HOMEBREW
-Configures the management of ~homebrew~ packages through ~nix-darwin~. It facilitates ~installing~ / ~updating~ / ~updating~ / ~upgrading~ ~homebrew~ ~taps~, ~formulae~, and ~casks~ as well as optionally managing ~mac app store~ apps
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/homebrew.nix" :mkdirp yes
-{ pkgs, ... }:
-
-{
-  homebrew = {
-    enable = true;
-    global = {
-      brewfile = true; # use the brewfile for managing homebrew packages
-    };
-    onActivation = {
-      autoUpdate = true; # homebrew auto-update
-      # cleanup = "zap"; NOTE :: uninstalls all formulae ( and associated files ) not listed in the brewfile ( &/or declared in the brews/casks.nix )
-      upgrade = true; # upgrade all installed homebrew packages
-      # flags to use for debugging
-      # extraFlags = [
-      #   "--verbose"
-      #   "--debug"
-      # ];
-    };
-    brews = pkgs.callPackage ./brews.nix {}; # homebrew formulae
-    casks = pkgs.callPackage ./casks.nix {}; # homebrew casks
-    taps = pkgs.callPackage ./taps.nix {}; # homebrew taps
-    # masApps = pkgs.callPackage ./masApps.nix {}; # homebrew mac app store apps
-  };
-}
-#+end_src
-
-**** BREWS
-Defines a list of ~homebrew~ ~formulae~ to be installed, with additional options such as service restarts or linking.
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/brews.nix" :mkdirp yes
-_:
-
-[
-  "cidr" # perform various actions on `cidr` ranges
-  {
-    name = "emacs-plus"; # gnu-emacs for macos with additional functionalities over the regular emacs package
-    args = [
-      "with-native-comp"
-      "with-modern-doom3-icon"
-    ];
-    link = true; # link the formulae to the homebrew prefix
-  }
-  "enchant"
-  "ffmpeg"
-  "imagemagick"
-  "llvm"
-  "mpc" # command-line client for music player daemon (mpd)
-  {
-    name = "mpd";
-    restart_service = "changed"; # the version from home-manager is not supported for aarch64-darwin and there no mpd services in nix-darwin
-  }
-  "ncmpcpp" # visualizer_type spectrum error with home-manager
-  "nmap"
-  "pandoc"
-  "pam-reattach" # module for re-attaching to the authenticating user's per-session bootstrap namespace on macos
-  # "texlive"
-  "unar"
-]
-#+end_src
-
-**** CASKS
-List of ~homebrew~ ~casks~ to be installed.
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/casks.nix" :mkdirp yes
-_:
-
-[
-  # browsers
-  {
-    name = "arc";
-    greedy = true;
-  }
-  {
-    name = "brave-browser";
-    greedy = true;
-  }
-
-  # entertainment
-  {
-    name = "mpv"; # REVIEW :: ( media player for the command line - will move to home-manager when build failure for swift has been addressed )
-    greedy = true;
-  }
-
-  # fonts ( used for sketchybar )
-  "font-sf-mono"
-  "font-sf-pro"
-  "sf-symbols"
-
-  # productivity
-  "raycast" # better launcher for mac vs spotlight or alfred
-  "maccy" # clipboard tool for history
-  "iglance" # FOSS macos system monitor
-
-  # tweaks
-  # "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
-
-  # tiling window manager for macos ( without any security compromise "SIP" )
-  {
-    name = "aerospace";
-    greedy = true;
-  }
-  # {
-  #   name = "amethyst";
-  #   greedy = true;
-  # }
-]
-#+end_src
-
-**** TAPS
-List of additional ~homebrew~ repositories to ~tap~. ~taps~ provide access to extra formulae and casks
-#+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/homebrew/taps.nix" :mkdirp yes
-_:
-
-[
-  "d12frosted/emacs-plus" # tap for emacs+
-  # "FelixKratz/formulae" # tap for sketchybar ( using sketchybar services `nix-darwin` )
-  "homebrew/bundle"
-  "homebrew/services"
-  # "koekeishiya/formulae" # tap for skhd ( using skhd services from `nix-darwin` )
-  "nikitabobko/tap" # tap for aerospace tiling window manager
-]
-#+end_src
-
 ** HOME-MANAGER
 ~Home-Manager~ integrates with ~nix~ to manage user environments ~declaratively~. In other words, ~home-manager~ allows:
 - installing software ~declaratively~ in the ~user profile~, rather than using ~nix-env~
@@ -693,7 +717,7 @@ Embrace the ~home-manager~, for it is the shepherd of thy ~home~ configuration. 
 *** HOME
 This ~home.nix~ file defines user-specific settings and package installations. It imports various program configurations, including terminal emulators, development tools, and utilities, for a customized user environment.
 #+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/home.nix" :mkdirp yes
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
@@ -721,14 +745,25 @@ This ~home.nix~ file defines user-specific settings and package installations. I
   ];
 
   home = {
-    # state version to ensure compatibility with home manager updates
-    # home manager can be updated without changing this value
-    stateVersion = "24.05";
     file = {
       # TODO :: to include attribute set of files to link into the user home directory
       # keeping empty for now; to source `editor` and `window manager` at a later stage ( wip )
     };
-    packages = pkgs.callPackage ../shared/packages.nix {}; # set of packages to appear in the user environment
+    # set of packages to appear in the user environment
+    packages = pkgs.callPackage ../shared/packages.nix {};
+
+    # shell aliases :: REVIEW
+    shellAliases = {
+    # d-act = "darwin-rebuild activate --flake ${inputs.self}";
+    # d-bld = "darwin-rebuild build --flake ${inputs.self}";
+    # d-chck = "darwin-rebuild check --flake ${inputs.self}";
+    d-ls-gen= "darwin-rebuild --list-generations";
+    # d-switch = "darwin-rebuild switch --flake ${inputs.self}";
+    };
+
+    # state version to ensure compatibility with home manager updates
+    # home manager can be updated without changing this value
+    stateVersion = "24.05";
   };
 
   # let home manager install and manage itself
@@ -737,55 +772,42 @@ This ~home.nix~ file defines user-specific settings and package installations. I
   };
 }
 #+end_src
+
 *** AEROSPACE
-Tiling window manager for ~macOS~
+~AeroSpace~ is an ~i3~-like tiling window manager for ~macOS~
 #+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/aerospace/default.nix" :mkdirp yes
 { ... }:{
 
 home.file.".aerospace.toml".text = ''
-
 after-login-command = []
-
 after-startup-command = []
-
-# start aerospace at login
 start-at-login = true
 
-# normalization settings
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# accordion layout settings
 accordion-padding = 30
 
-# default root container settings
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
-# mouse follows focus settings
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 on-focus-changed = ['move-mouse window-lazy-center']
 
-# automatically unhide macos hidden apps
 automatically-unhide-macos-hidden-apps = true
 
-# key mapping preset
 [key-mapping]
 preset = 'qwerty'
 
-# gaps settings
 [gaps]
 inner.horizontal = 10
 inner.vertical =   10
 outer.left =       10
 outer.bottom =     10
-outer.top =        40
+outer.top =        10
 outer.right =      10
 
-# main mode bindings
 [mode.main.binding]
-
-# launch applications
 alt-a = 'exec-and-forget open -a Arc'
 alt-b = 'exec-and-forget open -a "Brave Browser"'
 alt-e = 'exec-and-forget emacsclient -c -n -a ""'
@@ -794,19 +816,20 @@ alt-s = 'exec-and-forget open -a Safari'
 alt-t = 'exec-and-forget open -a Alacritty'
 alt-w = 'exec-and-forget open -a WezTerm'
 
-# window management
+alt-ctrl-p = 'exec-and-forget mpc toggle'
+alt-ctrl-f = 'exec-and-forget mpc next'
+alt-ctrl-b = 'exec-and-forget mpc prev'
+
 alt-q = "close"
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 alt-m = 'fullscreen'
 
-# focus movement
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# window movement
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
