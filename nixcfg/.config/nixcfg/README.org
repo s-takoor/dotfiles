@@ -208,7 +208,7 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
   imports = [
     ./environment
     ./homebrew
-    # ./services/aerospace
+    ./services/aerospace
     # ./services/skhd
     # ./services/sketchybar
     ./system
@@ -328,6 +328,15 @@ If ~nix~ or ~nix-darwin~ is uninstalled, remember to restore ~/etc/shells.before
       # SHELL = "${pkgs.fish}/bin/fish";
       SHELL = "${pkgs.zsh}/bin/zsh";
     };
+
+    # HACK :: adding touch id support for tmux sessions and terminal emulator
+    # NOTE :: ensure pam_reattach is installed on the system ( ref: home-manager >> packages )
+    # INFO :: sudo_local :: local config file which survives system update and is included for sudo
+    etc."pam.d/sudo_local".text = ''
+      # Managed by Nix Darwin
+      auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so
+      auth       sufficient     pam_tid.so
+    '';
   };
 
   programs = with pkgs; {
@@ -419,10 +428,10 @@ _:
   }
 
   # entertainment
-  {
-    name = "mpv"; # REVIEW :: ( media player for the command line - will move to home-manager when build failure for swift has been addressed )
-    greedy = true;
-  }
+  # {
+  #   name = "mpv"; # REVIEW :: ( media player for the command line - will move to home-manager when build failure for swift has been addressed )
+  #   greedy = true;
+  # }
 
   # fonts ( used for sketchybar )
   "font-sf-mono"
@@ -432,16 +441,16 @@ _:
   # productivity
   "raycast" # better launcher for mac vs spotlight or alfred
   "maccy" # clipboard tool for history
-  "iglance" # FOSS macos system monitor
+  # "iglance" # FOSS macos system monitor
 
   # tweaks
   # "notunes"  # REVIEW :: ( was getting annoyed with apple music constantly popping-up due to core-audio setup in mpd.conf - core-audio issues with Hi-Res audio playback )
 
   # tiling window manager for macos ( without any security compromise "SIP" )
-  {
-    name = "aerospace";
-    greedy = true;
-  }
+  # {
+  #   name = "aerospace";
+  #   greedy = true;
+  # }
   # {
   #   name = "amethyst";
   #   greedy = true;
@@ -460,7 +469,7 @@ _:
   "homebrew/bundle"
   "homebrew/services"
   # "koekeishiya/formulae" # tap for skhd ( using skhd services from `nix-darwin` )
-  "nikitabobko/tap" # tap for aerospace tiling window manager
+  # "nikitabobko/tap" # tap for aerospace tiling window manager
 ]
 #+end_src
 
@@ -471,11 +480,113 @@ This section configures various services on ~macos~ using ~nix-darwin~. It inclu
 #+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/aerospace/default.nix" :mkdirp yes
 { pkgs, ... }: {
   services.aerospace = {
-    # BUG :: keeping disabled for now; https://github.com/LnL7/nix-darwin/issues/1142;
-    # TODO :: to migrate to services.aerospace once issue resolved;
-    # HACK :: used via homebrew for now;
-    enable = false;
-    # package = pkgs.aerospace;
+    # BUG :: https://github.com/LnL7/nix-darwin/issues/1142;
+    # TODO :: to fully migrate to services.aerospace once issue resolved;
+    # HACK :: the following is a partial configurationwith working parts
+    enable = true;
+    settings = {
+
+      key-mapping.preset = "qwerty";
+
+      # containers that have only one child are "flattened"
+      enable-normalization-flatten-containers = true;
+
+      # containers that nest into each other must have opposite orientations
+      enable-normalization-opposite-orientation-for-nested-containers = true;
+
+      start-at-login = false;
+
+      gaps = {
+        inner.horizontal = 10;
+        inner.vertical =   10;
+        outer.left =       10;
+        outer.bottom =     10;
+        outer.top =        10;
+        outer.right =      10;
+      };
+
+      mode.main.binding = {
+        alt-a = "exec-and-forget open -a Arc";
+        alt-b = "exec-and-forget open -a 'Brave Browser'";
+        alt-e = "exec-and-forget emacsclient -c -n -a ''";
+        alt-f = "exec-and-forget open -a Finder";
+        alt-s = "exec-and-forget open -a Safari";
+        alt-t = "exec-and-forget open -a Alacritty";
+        alt-w = "exec-and-forget open -a WezTerm";
+
+        alt-ctrl-p = "exec-and-forget mpc toggle";
+        alt-ctrl-f = "exec-and-forget mpc next";
+        alt-ctrl-b = "exec-and-forget mpc prev";
+
+        alt-q = "close";
+        alt-slash = "layout tiles horizontal vertical";
+        alt-comma = "layout accordion horizontal vertical";
+        alt-m = "fullscreen";
+
+        alt-h = "focus left";
+        alt-j = "focus down";
+        alt-k = "focus up";
+        alt-l = "focus right";
+
+        alt-shift-h = "move left";
+        alt-shift-j = "move down";
+        alt-shift-k = "move up";
+        alt-shift-l = "move right";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#resize
+        alt-shift-minus = "resize smart -50";
+        alt-shift-equal = "resize smart +50";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#workspace
+        alt-1 = "workspace 1";
+        alt-2 = "workspace 2";
+        alt-3 = "workspace 3";
+        alt-4 = "workspace 4";
+        alt-5 = "workspace 5";
+        alt-6 = "workspace 6";
+        alt-7 = "workspace 7";
+        alt-8 = "workspace 8";
+        alt-9 = "workspace 9";
+        alt-0 = "workspace 10";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
+        alt-shift-1 = "move-node-to-workspace 1";
+        alt-shift-2 = "move-node-to-workspace 2";
+        alt-shift-3 = "move-node-to-workspace 3";
+        alt-shift-4 = "move-node-to-workspace 4";
+        alt-shift-5 = "move-node-to-workspace 5";
+        alt-shift-6 = "move-node-to-workspace 6";
+        alt-shift-7 = "move-node-to-workspace 7";
+        alt-shift-8 = "move-node-to-workspace 8";
+        alt-shift-9 = "move-node-to-workspace 9";
+        alt-shift-0 = "move-node-to-workspace 10";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
+        alt-tab = "workspace-back-and-forth";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
+        alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
+
+        # https://nikitabobko.github.io/AeroSpace/commands#mode
+        alt-shift-semicolon = "mode service";
+      };
+
+      # 'service' binding mode declaration.
+      # https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+      mode.service.binding = {
+        # reload config and exit service mode
+        esc = "reload-config";
+
+        # toggle floating/tiling layout
+
+        # close all windows but current
+      };
+
+      # window detection rules
+      # BUG :: workspace-to-monitor-force-assignment option and fix on-window-detected type  https://github.com/LnL7/nix-darwin/pull/1208
+      on-window-detected = [
+      ];
+    };
   };
 }
 #+end_src
@@ -612,7 +723,7 @@ This configuration defines various system-level settings and user preferences fo
           AutomaticCheckEnabled = true;
           ScheduleFrequency = 1; # check for software updates daily
           AutomaticDownload = 1; # download newly available updates in the background
-          CriticalUpdateInstall = 1; # install system data files & security updats
+          CriticalUpdateInstall = 1; # install system data files & security updates
         };
 
         # -- window manager settings -- #
@@ -648,7 +759,7 @@ This configuration defines various system-level settings and user preferences fo
         _FXShowPosixPathInTitle = true;
         FXDefaultSearchScope = "SCcf"; # search scope to current folder
         FXEnableExtensionChangeWarning = false; # disable warnings when changing file extensions
-        FXPreferredViewStyle = "Nlsv"; # change the default finder view to list view
+        FXPreferredViewStyle = "clmv";  # "Nlsv"; change the default finder view to list view
         QuitMenuItem = true; # allow quitting of finder
         ShowPathbar = true; # show path breadcrumbs in finder
         ShowStatusBar = true; # show status bar ( bottom of finder ) with item/disk space stats
@@ -923,6 +1034,9 @@ run = 'move-node-to-workspace 3 --focus-follows-window'
 if.app-id = 'org.gnu.Emacs'
 run = 'move-node-to-workspace 4 --focus-follows-window'
 
+[[on-window-detected]]
+if.app-id = 'io.mpv'
+run = 'move-node-to-workspace 8 --focus-follows-window'
 '';
 }
 #+end_src
@@ -936,7 +1050,7 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
   programs.alacritty = {
     enable = true;
     settings = {
-      live_config_reload = true;
+      general.live_config_reload = true;
       # shell = {
       #   program = "${pkgs.zsh}/bin/zsh";
       #   program = "${pkgs.tmux}/bin/tmux";
@@ -1041,7 +1155,9 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    nix-direnv.enable = true;
+    nix-direnv = {
+      enable = true;
+    };
   };
 }
 #+end_src
@@ -1057,7 +1173,7 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
     enableBashIntegration = true;
     enableFishIntegration = true;
     enableZshIntegration = true;
-    icons = true;
+    icons = "auto";
     extraOptions = [
       "--group-directories-first"
       "--header"
@@ -1270,11 +1386,12 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
     ./plugins/lsp.nix
     ./plugins/lualine.nix
     ./plugins/noice.nix
-    ./plugins/notify.nix
+    ./plugins/snacks.nix
     ./plugins/telescope.nix
     ./plugins/treesitter.nix
     ./plugins/trouble.nix
     ./plugins/vim-nix.nix
+    ./plugins/web-devicons.nix
     ./plugins/which-key.nix
   ];
 
@@ -1545,8 +1662,8 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
 
     servers = {
       clangd.enable = true;
-      lua-ls.enable = true;
-      nil-ls.enable = true;
+      lua_ls.enable = true;
+      nil_ls.enable = true;
       texlab.enable = true;
       yamlls.enable = true;
     };
@@ -1559,7 +1676,7 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
 {
   programs.nixvim.plugins.lualine = {
     enable = true;
-    globalstatus = true;
+    settings.options.globalstatus = true;
   };
 }
 #+end_src
@@ -1569,18 +1686,6 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
 {
   programs.nixvim.plugins.noice = {
     enable = true;
-  };
-}
-#+end_src
-
-***** NOTIFY
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/notify.nix" :mkdirp yes
-{
-  programs.nixvim.plugins.notify = {
-    enable = true;
-    backgroundColour = "#000000";
-    fps = 60;
-    render = "default";
   };
 }
 #+end_src
@@ -1595,6 +1700,36 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
       opleader.line = "<C-b>";
       toggler.line = "<C-b>";
     };
+  };
+}
+#+end_src
+
+***** SNACKS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/snacks.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.snacks = {
+    enable = true;
+
+    settings = {
+      bigfile = {
+        enabled = true;
+      };
+      notifier = {
+        enabled = true;
+        timeout = 3000;
+      };
+      quickfile = {
+        enabled = false;
+      };
+      statuscolumn = {
+        enabled = false;
+      };
+      words = {
+        debounce = 100;
+        enabled = true;
+      };
+    };
+
   };
 }
 #+end_src
@@ -1659,6 +1794,20 @@ run = 'move-node-to-workspace 4 --focus-follows-window'
 {
   programs.nixvim.plugins.nix = {
     enable = true;
+  };
+}
+#+end_src
+
+***** WEB-DEVICONS
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/web-devicons.nix" :mkdirp yes
+{
+  programs.nixvim.plugins.web-devicons = {
+    enable = true;
+
+    settings = {
+      color_icons = true;
+      strict = true;
+    };
   };
 }
 #+end_src
@@ -1839,11 +1988,14 @@ return {
   -- gpu acceleration provided by "metal" on macos
   front_end = "WebGpu",
 
+  -- animation
+  max_fps = 60,
+
   -- updates
   check_for_updates = true,
 
   -- scrollback
-  scrollback_lines = 3500,
+  scrollback_lines = 2000,
 
   -- multiplexer REVIEW :: hardcoded path for `tmux`
   default_prog = { "/etc/profiles/per-user/st/bin/tmux", "new-session", "-A", "-D", "-s", "main" },
@@ -1857,11 +2009,14 @@ return {
 
   -- font
   font = wezterm.font_with_fallback({
-      -- { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
       { family = "GohuFont 14 Nerd Font", weight = "Medium", italic = false, },
-      { family = "SF Pro", weight = "Medium", italic = false, },
+      -- { family = "JetBrainsMono NF", weight = "Medium", italic = false, },
+      -- { family = "SF Pro", weight = "Medium", italic = false, },
   }),
   font_size = 11.0,
+
+  -- enable harfbuzz features for ligatures and glyph shaping
+  harfbuzz_features = { 'liga', 'calt', 'clig' },
 
   -- opacity
   window_background_opacity = 0.70,
@@ -2040,14 +2195,18 @@ return {
 {
   fonts.fontconfig.enable = true;
 
-  home.packages = [
-    (pkgs.nerdfonts.override { fonts = [ "Iosevka" "JetBrainsMono"  ]; })
-  ];
+  # home.packages = [
+  #   (pkgs.nerdfonts.override { fonts = [ "Iosevka" "JetBrainsMono"  ]; })
+  # ];
 
-  fonts.fontconfig.defaultFonts.monospace = [
-    "JetBrainsMono Nerd Font"
-    "Iosevka Nerd Font"
+  home.packages = with pkgs; [
+    nerd-fonts.iosevka
+    nerd-fonts.jetbrains-mono
   ];
+  # fonts.fontconfig.defaultFonts.monospace = [
+  #   "JetBrainsMono Nerd Font"
+  #   "Iosevka Nerd Font"
+  # ];
 }
 #+end_src
 
@@ -2056,6 +2215,7 @@ return {
 { pkgs, ... }:
 
 with pkgs; [
+aerospace
 age # simple, modern and secure file enryption tool
 cmatrix
 coreutils
@@ -2066,8 +2226,10 @@ gnumake
 htop
 jq
 mediainfo
+mpv
 nil
 nixfmt-rfc-style
+pam-reattach
 ripgrep
 rm-improved
 sd
