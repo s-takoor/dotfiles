@@ -62,11 +62,12 @@ tokei ~/.config/nixcfg/*
 | =============================================================================== |       |       |      |          |        |
 | Language                                                                      | Files | Lines | Code | Comments | Blanks |
 | =============================================================================== |       |       |      |          |        |
-| Lua                                                                           |     1 |    64 |   35 |       14 |     15 |
-| Nix                                                                           |    52 |  1529 | 1137 |      250 |    142 |
-| Org                                                                           |     1 |  2081 | 1574 |      243 |    264 |
+| Lua                                                                           |     1 |    71 |   36 |       18 |     17 |
+| Nix                                                                           |    57 |  1900 | 1369 |      332 |    199 |
+| Org                                                                           |     1 |  2481 | 1828 |      326 |    327 |
+| TOML                                                                          |     2 |   297 |  204 |       29 |     64 |
 | =============================================================================== |       |       |      |          |        |
-| Total                                                                         |    54 |  3674 | 2746 |      507 |    421 |
+| Total                                                                         |    62 |  4749 | 3437 |      705 |    607 |
 | =============================================================================== |       |       |      |          |        |
 
 * 🗒️ FEATURES
@@ -209,8 +210,8 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
     ./environment
     ./homebrew
     ./services/aerospace
-    # ./services/skhd
-    # ./services/sketchybar
+    # ./services/skhd # REVIEW :: using aerospace
+    # ./services/sketchybar # TODO :: review config
     ./system
   ];
 
@@ -282,12 +283,21 @@ In this setup ~nix-darwin~ is utilized to handle system-level configurations, in
   };
 
   # manage the `nix` daemon service through `nix-darwin` ( recommended )
+  # auto upgrade nix package and the daemon service
   services = {
     # enable the `nix` daemon service
     nix-daemon = {
       enable = true;
     };
   };
+
+  documentation = {
+    enable = true;
+    doc.enable = true;
+    info.enable = true;
+    man.enable = true;
+  };
+
 }
 #+end_src
 
@@ -455,6 +465,12 @@ _:
   #   name = "amethyst";
   #   greedy = true;
   # }
+
+  # terminal
+  {
+    name = "ghostty";
+    greedy = true;
+  }
 ]
 #+end_src
 
@@ -478,20 +494,17 @@ This section configures various services on ~macos~ using ~nix-darwin~. It inclu
 
 **** AEROSPACE
 #+begin_src nix :tangle "~/.config/nixcfg/modules/darwin/services/aerospace/default.nix" :mkdirp yes
-{ pkgs, ... }: {
+{ pkgs, ... }:
+
+{
   services.aerospace = {
-    # BUG :: https://github.com/LnL7/nix-darwin/issues/1142;
-    # TODO :: to fully migrate to services.aerospace once issue resolved;
-    # HACK :: the following is a partial configurationwith working parts
     enable = true;
     settings = {
 
       key-mapping.preset = "qwerty";
 
-      # containers that have only one child are "flattened"
       enable-normalization-flatten-containers = true;
 
-      # containers that nest into each other must have opposite orientations
       enable-normalization-opposite-orientation-for-nested-containers = true;
 
       start-at-login = false;
@@ -510,6 +523,7 @@ This section configures various services on ~macos~ using ~nix-darwin~. It inclu
         alt-b = "exec-and-forget open -a 'Brave Browser'";
         alt-e = "exec-and-forget emacsclient -c -n -a ''";
         alt-f = "exec-and-forget open -a Finder";
+        alt-g = "exec-and-forget open -a ghostty";
         alt-s = "exec-and-forget open -a Safari";
         alt-t = "exec-and-forget open -a Alacritty";
         alt-w = "exec-and-forget open -a WezTerm";
@@ -561,30 +575,107 @@ This section configures various services on ~macos~ using ~nix-darwin~. It inclu
         alt-shift-9 = "move-node-to-workspace 9";
         alt-shift-0 = "move-node-to-workspace 10";
 
-        # https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
         alt-tab = "workspace-back-and-forth";
-
-        # https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
-
-        # https://nikitabobko.github.io/AeroSpace/commands#mode
         alt-shift-semicolon = "mode service";
       };
 
-      # 'service' binding mode declaration.
-      # https://nikitabobko.github.io/AeroSpace/guide#binding-modes
       mode.service.binding = {
-        # reload config and exit service mode
-        esc = "reload-config";
+        esc = [
+          "reload-config"
+          "mode main"
+        ];
 
-        # toggle floating/tiling layout
+        r = [
+          "flatten-workspace-tree"
+          "mode main"
+        ];
 
-        # close all windows but current
+        f = [
+          "layout floating tiling"
+          "mode main"
+        ];
+
+        backspace = [
+          "close-all-windows-but-current"
+          "mode main"
+        ];
       };
 
-      # window detection rules
-      # BUG :: workspace-to-monitor-force-assignment option and fix on-window-detected type  https://github.com/LnL7/nix-darwin/pull/1208
+      on-focus-changed = [
+        "move-mouse window-lazy-center"
+      ];
+
+      on-focused-monitor-changed = [
+        "move-mouse monitor-lazy-center"
+      ];
+
       on-window-detected = [
+        # HACK :: run `aerospace list-apps` to identify the app-id
+        {
+          "if" = {
+            app-id = "org.alacritty";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 1 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "com.mitchellh.ghostty";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 1 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "com.github.wez.wezterm";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 1 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "company.thebrowser.Browser";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 2 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "com.apple.finder";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 3 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "org.gnu.Emacs";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 4 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "io.mpv";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 8 --focus-follows-window";
+        }
+
+        {
+          "if" = {
+            app-id = "com.apple.Safari";
+          };
+          check-further-callbacks = false;
+          run = "move-node-to-workspace 2 --focus-follows-window";
+        }
+
       ];
     };
   };
@@ -833,7 +924,6 @@ This ~home.nix~ file defines user-specific settings and package installations. I
 {
   imports = [
     # TODO :: to further modularize with `mkEnableOption` for toggling programs )
-    ./programs/aerospace
     ./programs/alacritty
     ./programs/bat
     ./programs/bun
@@ -845,6 +935,7 @@ This ~home.nix~ file defines user-specific settings and package installations. I
     ./programs/mise
     ./programs/nix-index
     ./programs/nixvim
+    ./programs/nushell
     ./programs/starship
     ./programs/thefuck
     ./programs/tmux
@@ -865,11 +956,11 @@ This ~home.nix~ file defines user-specific settings and package installations. I
 
     # shell aliases :: REVIEW
     shellAliases = {
-    # d-act = "darwin-rebuild activate --flake ${inputs.self}";
-    # d-bld = "darwin-rebuild build --flake ${inputs.self}";
-    # d-chck = "darwin-rebuild check --flake ${inputs.self}";
-    d-ls-gen= "darwin-rebuild --list-generations";
-    # d-switch = "darwin-rebuild switch --flake ${inputs.self}";
+      # d-act = "darwin-rebuild activate --flake ${inputs.self}";
+      # d-bld = "darwin-rebuild build --flake ${inputs.self}";
+      # d-chck = "darwin-rebuild check --flake ${inputs.self}";
+      d-ls-gen= "darwin-rebuild --list-generations";
+      # d-switch = "darwin-rebuild switch --flake ${inputs.self}";
     };
 
     # state version to ensure compatibility with home manager updates
@@ -881,163 +972,6 @@ This ~home.nix~ file defines user-specific settings and package installations. I
   programs = {
     home-manager.enable = true;
   };
-}
-#+end_src
-
-*** AEROSPACE
-~AeroSpace~ is an ~i3~-like tiling window manager for ~macOS~
-#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/aerospace/default.nix" :mkdirp yes
-{ ... }:{
-
-home.file.".aerospace.toml".text = ''
-after-login-command = []
-after-startup-command = []
-start-at-login = true
-
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
-
-accordion-padding = 30
-
-default-root-container-layout = 'tiles'
-default-root-container-orientation = 'auto'
-
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = ['move-mouse window-lazy-center']
-
-automatically-unhide-macos-hidden-apps = true
-
-[key-mapping]
-preset = 'qwerty'
-
-[gaps]
-inner.horizontal = 10
-inner.vertical =   10
-outer.left =       10
-outer.bottom =     10
-outer.top =        10
-outer.right =      10
-
-[mode.main.binding]
-alt-a = 'exec-and-forget open -a Arc'
-alt-b = 'exec-and-forget open -a "Brave Browser"'
-alt-e = 'exec-and-forget emacsclient -c -n -a ""'
-alt-f = 'exec-and-forget open -a Finder'
-alt-s = 'exec-and-forget open -a Safari'
-alt-t = 'exec-and-forget open -a Alacritty'
-alt-w = 'exec-and-forget open -a WezTerm'
-
-alt-ctrl-p = 'exec-and-forget mpc toggle'
-alt-ctrl-f = 'exec-and-forget mpc next'
-alt-ctrl-b = 'exec-and-forget mpc prev'
-
-alt-q = "close"
-alt-slash = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
-alt-m = 'fullscreen'
-
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
-
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
-
-# https://nikitabobko.github.io/AeroSpace/commands#resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
-
-# https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-alt-0 = 'workspace 10'
-
-# https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
-
-# https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-alt-tab = 'workspace-back-and-forth'
-
-# https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
-# https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-shift-semicolon = 'mode service'
-
-# 'service' binding mode declaration.
-# https://nikitabobko.github.io/AeroSpace/guide#binding-modes
-[mode.service.binding]
-
-# reload config and exit service mode
-esc = ['reload-config', 'mode main']
-
-# Reset layout
-r = ['flatten-workspace-tree', 'mode main']
-
-# toggle floating/tiling layout
-f = ['layout floating tiling', 'mode main']
-
-# close all windows but current
-backspace = ['close-all-windows-but-current', 'mode main']
-
-# join with adjacent windows
-alt-shift-h = ['join-with left', 'mode main']
-alt-shift-j = ['join-with down', 'mode main']
-alt-shift-k = ['join-with up', 'mode main']
-alt-shift-l = ['join-with right', 'mode main']
-
-# window detection rules
-[[on-window-detected]]
-if.app-id = 'org.alacritty'
-run = 'move-node-to-workspace 1 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm'
-run = "move-node-to-workspace 1 --focus-follows-window"
-
-[[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser'
-run = 'move-node-to-workspace 2 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'com.brave.Browser'
-run = 'move-node-to-workspace 2 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'com.apple.Safari'
-run = 'move-node-to-workspace 2 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'com.apple.finder'
-run = 'move-node-to-workspace 3 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'org.gnu.Emacs'
-run = 'move-node-to-workspace 4 --focus-follows-window'
-
-[[on-window-detected]]
-if.app-id = 'io.mpv'
-run = 'move-node-to-workspace 8 --focus-follows-window'
-'';
 }
 #+end_src
 
@@ -1154,6 +1088,7 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
   programs.direnv = {
     enable = true;
     enableBashIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
     nix-direnv = {
       enable = true;
@@ -1172,6 +1107,7 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
     icons = "auto";
     extraOptions = [
@@ -1322,6 +1258,40 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
     };
   };
 }
+#+end_src
+
+*** GHOSTTY
+~ghostty~ is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration. According to issue [[https://github.com/ghostty-org/ghostty/issues/1633][#1633]]; installing ~ghostty~ via ~Nix~ on ~macOS~ (and integrating it with ~Home Manager~) is currently not officially supported or recommended by the developer. The [[https://ghostty.org/docs/install/binary#nix-flake][Nix Flake]] for ~ghostty~ may not produce a fully functional ~macOS~ application without the necessary integration with ~Xcode~, and even with modifications, it could lead to issues such as missing features or broken functionality. Sticking with the ~homebrew~ installation as a safer and more reliable option for now.
+#+begin_src nix :tangle "~/.config/ghostty/config" :mkdirp yes
+auto-update = check
+
+background-blur-radius = 20
+background-opacity = 0.7
+
+copy-on-select = clipboard
+
+cursor-style = bar
+
+font-family = GohuFont 14 Nerd Font
+font-size = 11
+font-feature = liga
+font-feature = calt
+font-feature = clig
+
+macos-option-as-alt = true
+macos-titlebar-style = hidden
+
+mouse-hide-while-typing = true
+
+theme = GruvboxDark
+
+shell-integration-features = true
+shell-integration = fish
+
+window-decoration = true
+window-padding-balance = true
+window-padding-x = 20,20
+window-padding-y = 20,20
 #+end_src
 
 *** MISE
@@ -1631,7 +1601,7 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
 ***** COLORIZER
 #+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nixvim/plugins/colorizer.nix" :mkdirp yes
 {
-  programs.nixvim.plugins.nvim-colorizer = {
+  programs.nixvim.plugins.colorizer = {
     enable = true;
   };
 }
@@ -1826,6 +1796,35 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
 }
 #+end_src
 
+*** NUSHELL
+Modern ~shell~ written in ~Rust~
+#+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/nushell/default.nix" :mkdirp yes
+{ pkgs, ... }:
+
+{
+  programs.nushell = {
+    enable = true;
+    # envFile = ''
+    #   $env.PATH = '/opt/homebrew/bin'
+    # '';
+    shellAliases  = {
+      cat = "bat";
+      cd = "z";
+      cp = "xcp";
+      df = "df -h";
+      la = "eza -a";
+      ll = "eza -l";
+      ls = "eza -al";
+      lt = "eza -aT";
+      # HACK :: macOS :: keeping /usr/bin/open as open since nushell has its own open command wicth different semantics and shadows
+      nu-open = "open";
+      open = "^open"; # escapes the the nushell open command, invoking the system's open command
+      vi = "nvim";
+    };
+  };
+}
+#+end_src
+
 *** STARSHIP
 [[https://starship.rs/][starship]] is a minimal, blazing-fast, and infinitely customizable prompt for any shell
 #+begin_src nix :tangle "~/.config/nixcfg/modules/home-manager/programs/starship/default.nix" :mkdirp yes
@@ -1836,6 +1835,7 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
     settings = {
       add_newline = false;
@@ -1889,10 +1889,11 @@ run = 'move-node-to-workspace 8 --focus-follows-window'
 {
   programs.thefuck = {
     enable = true;
+    # enableInstantMode = true; # REVIEW :: experimental
     enableBashIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
-    # enableInstantMode = true; # REVIEW :: experimental
   };
 }
 #+end_src
@@ -2068,6 +2069,7 @@ return {
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
     settings = {
       manager = {
@@ -2101,6 +2103,7 @@ return {
     enable = true;
     enableBashIntegration = true;
     enableFishIntegration = true;
+    enableNushellIntegration = true;
     enableZshIntegration = true;
   };
 }
@@ -2195,18 +2198,14 @@ return {
 {
   fonts.fontconfig.enable = true;
 
-  # home.packages = [
-  #   (pkgs.nerdfonts.override { fonts = [ "Iosevka" "JetBrainsMono"  ]; })
-  # ];
-
   home.packages = with pkgs; [
     nerd-fonts.iosevka
     nerd-fonts.jetbrains-mono
+    nerd-fonts.gohufont
+    nerd-fonts.iosevka
+    nerd-fonts.meslo-lg
+    nerd-fonts.symbols-only
   ];
-  # fonts.fontconfig.defaultFonts.monospace = [
-  #   "JetBrainsMono Nerd Font"
-  #   "Iosevka Nerd Font"
-  # ];
 }
 #+end_src
 
@@ -2215,7 +2214,7 @@ return {
 { pkgs, ... }:
 
 with pkgs; [
-aerospace
+# aerospace # managed by nix-darwin services
 age # simple, modern and secure file enryption tool
 cmatrix
 coreutils
